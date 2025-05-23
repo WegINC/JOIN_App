@@ -1,0 +1,129 @@
+body {
+    background-color: #f6f7f8;
+    margin: 0;
+    font-family: 'Inter';
+}
+
+.sign-up-content{
+    max-width: 1440px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.sign-up-container {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 598px;
+    border-radius: 30px;
+    box-shadow: 0px 0px 10px 2px #f0f0f0;
+    gap: 32px;
+}
+
+h1 {
+    text-align: center;
+    width: 315px;
+    height: 73px;
+    gap: 16px;
+    font-weight: 700;
+    font-size: 61px;
+}
+
+.input-sign-up {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 422px;
+}
+
+.input-sign-up input {
+    color: #FFFFFF;
+    border-radius: 10px;
+    border: 1px;
+    border-style: groove;
+    border-color: #D1D1D1;
+    gap: 10px;
+    padding-left: 21px;
+    padding-top: 12px;
+    padding-right: 21px;
+    padding-bottom: 12px;
+    width: 100%;
+}
+
+.name-icon {
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding-left: 12px;
+    width: 100%; 
+}
+
+.confirm-passwort-icon {
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding-left: 12px;
+    width: 100%; 
+}
+
+.email-icon {
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding-left: 12px;
+    width: 100%; 
+}
+
+.passwort-icon {
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding-left: 12px;
+    width: 100%; 
+}
+
+.checkbox-label {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin: 0;
+  margin-right: 6px;
+  width: 16px;
+  height: 16px;
+}
+
+.sign-up-button {
+    display: flex;
+    justify-content: center;
+    width: 322px;
+    height: 48px;
+    padding-bottom: 50px;
+}
+
+.sign-up {
+    background-color: #2a3647;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    padding-top: 15px;
+    padding-right: 24px;
+    padding-bottom: 15px;
+    padding-left: 24px;
+    text-align: center;
+}
