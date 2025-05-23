@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Task</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles/add_task.css" />
+    <link rel="stylesheet" href="assets/fonts/font.css" />
+  </head>
+
+  <body>
+    <div class="nav-bar">
+      <img class="join-logo" src="assets/img/Capa 2.png" alt="Join Logo" />
+    </div>
+
+    <div class="add_task_container">
+      <h1>Add Task</h1>
+
+      <div class="task-form-columns">
+        <div class="column">
+          <label for="title">Title<span class="required">*</span></label>
+          <input type="text" id="title" placeholder="Enter a title" />
+
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            placeholder="Enter a Description"
+            rows="5"
+          ></textarea>
+
+          <label for="due">Due date<span class="required">*</span></label>
+          <input type="date" id="due" />
+        </div>
+
+        <div class="column">
+          <label>Priority</label>
+          <div class="priority-buttons">
+            <button style="background-color: red; color: white">
+              Urgent ↑
+            </button>
+            <button class="medium">Medium =</button>
+            <button style="background-color: lightgreen">Low ↓</button>
+          </div>
+
+          <label for="assigned">Assigned to</label>
+          <select id="assigned">
+            <option>Select contacts to assign</option>
+          </select>
+
+          <label for="category">Category<span class="required">*</span></label>
+          <select id="category">
+            <option>Select task category</option>
+          </select>
+
+          <label for="subtasks">Subtasks</label>
+          <div style="display: flex; gap: 10px">
+            <input class="subtask-input" placeholder="Add new subtask" />
+            <button>+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="cancel">Cancel ✖</button>
+        <button class="create">Create Task ✔</button>
+      </div>
+
+      <p style="color: red; margin-top: 20px">*This field is required</p>
+    </div>
+  </body>
+</html>
