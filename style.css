@@ -38,6 +38,10 @@ body {
     cursor: pointer;
 }
 
+.nav-button:hover {
+    background-color: #29abe2;
+}
+
 .login-content {
     max-width: 1440px;
     width: 100%;
@@ -119,10 +123,13 @@ h1 {
     padding-bottom: 60px;
 }
 
+.login-button a {
+    text-decoration: none;
+}
+
 .login {
     text-align: center;
     width: 110px;
-    height: 48px;
     background-color: #2b3646;
     color: white;
     border: 1px;
@@ -136,9 +143,12 @@ h1 {
     cursor: pointer;
 }
 
+.login:hover {
+    background-color: #29abe2;
+}
+
 .guest {
     width: 177px;
-    height: 48px;
     background-color: white;
     color: #2b3646;
     border-radius: 8px;
@@ -152,4 +162,9 @@ h1 {
     padding-bottom: 15px;
     padding-left: 24px;
     cursor: pointer;
+}
+
+.guest:hover {
+    color: #29abe2;
+    border-color: #29abe2;
 }

@@ -42,6 +42,13 @@ h1 {
     height: 32px;
 }
 
+.arrow-left-button img:hover {
+    background-color: rgb(234, 234, 234);
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+}
+
 .input-sign-up {
     display: flex;
     flex-direction: column;
@@ -112,6 +119,7 @@ h1 {
 
 .checkbox-label a {
     text-decoration: none;
+    color: #29abe2;
 }
 
 .checkbox-label a:hover {
@@ -133,6 +141,10 @@ h1 {
     padding-bottom: 50px;
 }
 
+.sign-up-button a {
+    text-decoration: none;
+}
+
 .sign-up {
     background-color: #2a3647;
     color: white;
@@ -143,4 +155,8 @@ h1 {
     padding-bottom: 15px;
     padding-left: 24px;
     text-align: center;
+}
+
+.sign-up:hover {
+    background-color: #29abe2;
 }
