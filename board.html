@@ -1,91 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Kanban Board</title>
-    <link rel="stylesheet" href="./styles/board.css" />
-  </head>
-  <body>
-    <div class="side-navbar">
-      <div class="sidebar-img">
-        <img src="assets/img/Capa 1.png" alt="" />
-      </div>
-      <div class="sidebar-menu">
-        <a href="summary.html">
-          <img src="assets/icons/summary_icon.png" alt="" />Summary
-        </a>
-        <a href="add_task.html">
-          <img src="assets/icons/add_task_icon.png" alt="" />Add Task
-        </a>
-        <a href="board.html">
-          <img src="assets/icons/board_icon.png" alt="" />Board
-        </a>
-        <a href="contacts.html">
-          <img src="assets/icons/contacts_icon.png" alt="" />Contacts
-        </a>
-      </div>
-      <div class="sidebar-bottom">
-        <a href="privacy_policy.html"> <img src="" alt="" />Privacy Policy</a>
-        <a href="legal_notice.html"> <img src="" alt="" />Legal notice</a>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Kanban Board</title>
+  <link rel="stylesheet" href="./styles/board.css" />
+</head>
+
+<body>
+  <div class="side-navbar">
+    <div class="sidebar-img">
+      <img src="assets/img/Capa 1.png" alt="" />
+    </div>
+    <div class="sidebar-menu">
+      <a href="summary.html">
+        <img src="assets/icons/summary_icon.png" alt="" />Summary
+      </a>
+      <a href="add_task.html">
+        <img src="assets/icons/add_task_icon.png" alt="" />Add Task
+      </a>
+      <a href="board.html">
+        <img src="assets/icons/board_icon.png" alt="" />Board
+      </a>
+      <a href="contacts.html">
+        <img src="assets/icons/contacts_icon.png" alt="" />Contacts
+      </a>
+    </div>
+    <div class="sidebar-bottom">
+      <a href="privacy_policy.html"> <img src="" alt="" />Privacy Policy</a>
+      <a href="legal_notice.html"> <img src="" alt="" />Legal notice</a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="top-navbar">
+      <span>Kanban Projekt Management Tool</span>
+      <div class="user-name">
+        <a href="help.html"><img src="assets/icons/help.png" alt=""></a>
+        <button>
+          <img src="assets/icons/profile.png" alt="">
+        </button>
       </div>
     </div>
 
-    <div class="main-content">
-      <header class="header">
-        <h2>Kanban Project Management Tool</h2>
-        <div class="user-circle"></div>
-      </header>
-
-      <div class="board-header">
-        <h1>Board</h1>
-        <div class="task-actions">
-          <input type="text" placeholder="Find Task" />
-          <button class="add-task">Add task +</button>
-        </div>
-      </div>
-
-      <div class="kanban-board">
-        <div class="column">
-          <h3>To do</h3>
-          <p class="no-tasks"></p>
-        </div>
-
-        <div class="column">
-          <h3>In progress</h3>
-          <div class="task-card user-story">
-            <p class="task-title">Kochwelt Page & Recipe Recommender</p>
-            <p>Build start page with recipe recommendation...</p>
-            <div class="subtask">1/2 Subtasks</div>
-            <div class="assigned-users">AA MB</div>
-          </div>
-        </div>
-
-        <div class="column">
-          <h3>Await feedback</h3>
-          <div class="task-card technical-task">
-            <p class="task-title">HTML Base Template Creation</p>
-            <p>lorem ipsum</p>
-            <div class="assigned-users">CE CA AV</div>
-          </div>
-          <div class="task-card user-story">
-            <p class="task-title">lorem ipsum</p>
-            <p>lorem ipsum</p>
-            <div class="assigned-users">User</div>
-          </div>
-        </div>
-
-        <div class="column">
-          <h3>Done</h3>
-          <div class="task-card technical-task">
-            <p class="task-title">lorem ipsum</p>
-            <p>lorem ipsum</p>
-            <div class="subtask">2/2 Subtasks</div>
-            <div class="assigned-users">EK EZ</div>
-          </div>
-        </div>
+    <div class="board-header">
+      <h1>Board</h1>
+      <div class="task-actions">
+        <input type="text" placeholder="Find Task" />
+        <button class="add-task">Add task +</button>
       </div>
     </div>
 
-    <script src="./app.js"></script>
-  </body>
+    <div class="kanban-board">
+      <div class="column">
+        <h3>To do</h3>
+        <p class="no-tasks"></p>
+      </div>
+
+      <div class="column">
+        <h3>In progress</h3>
+        <div class="task-card user-story">
+          <p class="task-title">Kochwelt Page & Recipe Recommender</p>
+          <p>Build start page with recipe recommendation...</p>
+          <div class="subtask">1/2 Subtasks</div>
+          <div class="assigned-users">AA MB</div>
+        </div>
+      </div>
+
+      <div class="column">
+        <h3>Await feedback</h3>
+        <div class="task-card technical-task">
+          <p class="task-title">HTML Base Template Creation</p>
+          <p>lorem ipsum</p>
+          <div class="assigned-users">CE CA AV</div>
+        </div>
+        <div class="task-card user-story">
+          <p class="task-title">lorem ipsum</p>
+          <p>lorem ipsum</p>
+          <div class="assigned-users">User</div>
+        </div>
+      </div>
+
+      <div class="column">
+        <h3>Done</h3>
+        <div class="task-card technical-task">
+          <p class="task-title">lorem ipsum</p>
+          <p>lorem ipsum</p>
+          <div class="subtask">2/2 Subtasks</div>
+          <div class="assigned-users">EK EZ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+
 </html>

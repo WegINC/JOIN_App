@@ -98,31 +98,31 @@ body {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 20px 40px;
   min-height: 100vh;
   box-sizing: border-box;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
-  background-color: white;
-  padding: 20px;
-  border-radius: 12px;
+.top-navbar {
+    background-color: white;
+    height: 96px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 100px;
+    padding-right: 40px;
+    box-shadow: 3px 5px 5px 1px #cdcdcd;
 }
 
-.user-circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: #e0e0e0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #2a3647;
+.user-name {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-name button {
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
 .board-header {
@@ -130,6 +130,11 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 61px;
+  font-weight: 700;
 }
 
 .task-actions input {
