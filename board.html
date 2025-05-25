@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kanban Board</title>
+    <link rel="stylesheet" href="./styles/board.css" />
+  </head>
+  <body>
+    <div class="nav-bar">
+      <div class="nav-left">
+        <img class="join-logo" src="./assets/img/Capa 1.png" alt="Join Logo" />
+        <nav>
+          <ul>
+            <li><a href="#" class="nav-item">Summary</a></li>
+            <li><a href="#" class="nav-item">Add Task</a></li>
+            <li><a href="#" class="nav-item selected">Board</a></li>
+            <li><a href="#" class="nav-item">Contacts</a></li>
+          </ul>
+        </nav>
+        <div class="nav-footer">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Legal notice</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <header class="header">
+        <h2>Kanban Project Management Tool</h2>
+        <div class="user-circle">SM</div>
+      </header>
+
+      <div class="board-header">
+        <h1>Board</h1>
+        <div class="task-actions">
+          <input type="text" placeholder="Find Task" />
+          <button class="add-task">Add task +</button>
+        </div>
+      </div>
+
+      <div class="kanban-board">
+        <div class="column">
+          <h3>To do</h3>
+          <p class="no-tasks">No tasks to do</p>
+        </div>
+
+        <div class="column">
+          <h3>In progress</h3>
+          <div class="task-card user-story">
+            <p class="task-title">Kochwelt Page & Recipe Recommender</p>
+            <p>Build start page with recipe recommendation...</p>
+            <div class="subtask">1/2 Subtasks</div>
+            <div class="assigned-users">AA MB</div>
+          </div>
+        </div>
+
+        <div class="column">
+          <h3>Await feedback</h3>
+          <div class="task-card technical-task">
+            <p class="task-title">HTML Base Template Creation</p>
+            <p>Create reusable HTML base templates...</p>
+            <div class="assigned-users">CE CA AV</div>
+          </div>
+          <div class="task-card user-story">
+            <p class="task-title">Daily Kochwelt Recipe</p>
+            <p>Implement daily recipe and portion calculator...</p>
+            <div class="assigned-users">ES TW</div>
+          </div>
+        </div>
+
+        <div class="column">
+          <h3>Done</h3>
+          <div class="task-card technical-task">
+            <p class="task-title">CSS Architecture Planning</p>
+            <p>Define CSS naming conventions and structure...</p>
+            <div class="subtask">2/2 Subtasks</div>
+            <div class="assigned-users">EK EZ</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,166 @@
+body {
+  margin: 0;
+  background-color: #f6f7f8;
+  display: flex;
+  font-family: Arial, sans-serif;
+}
+
+.nav-bar {
+  background-color: #2a3647;
+  width: 220px;
+  min-height: 100vh;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+}
+
+.nav-left {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.nav-left .join-logo {
+  height: 60px;
+  margin-bottom: 30px;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-item {
+  display: block;
+  padding: 12px;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.nav-item:hover,
+.nav-item.selected {
+  background-color: #091931;
+}
+
+.nav-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 12px;
+  padding-left: 20px;
+  padding-bottom: 20px;
+}
+
+.main-content {
+  margin-left: 220px;
+  width: calc(100% - 220px);
+  padding: 20px 40px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.user-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #2a3647;
+}
+
+.board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.task-actions input {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.task-actions .add-task {
+  background-color: #2a3647;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.kanban-board {
+  display: flex;
+  gap: 20px;
+}
+
+.column {
+  background-color: #e7e7e7;
+  padding: 20px;
+  border-radius: 16px;
+  width: 22%;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.column h3 {
+  margin-top: 0;
+}
+
+.task-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.task-card .task-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.user-story {
+  border-left: 4px solid #0038ff;
+}
+
+.technical-task {
+  border-left: 4px solid #29abe2;
+}
+
+.assigned-users {
+  font-size: 12px;
+  margin-top: 10px;
+  color: #555;
+}
+
+.subtask {
+  font-size: 12px;
+  color: #777;
+  margin-top: 10px;
+}
+
+.no-tasks {
+  color: #888;
+  font-style: italic;
+  font-size: 14px;
+}
