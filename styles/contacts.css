@@ -87,3 +87,33 @@ padding-left: 348px;
 .sidebar-bottom a:hover {
     color: #29abe2;
 }
+
+.contacts-container {
+    display: flex;
+    flex: 1;
+    width: 100%;
+}
+
+.top-navbar {
+    background-color: white;
+    height: 96px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 100px;
+    padding-right: 40px;
+    box-shadow: 3px 5px 5px 1px #cdcdcd;
+}
+
+.user-name {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-name button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
