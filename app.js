@@ -1,33 +1,33 @@
 const tasks = [
   {
-    title: "Kochwelt Page & Recipe Recommender",
-    description: "Build start page with recipe recommendation...",
+    title: "lorem Ipsum",
+    description: "beispiel...",
     status: "in-progress",
     category: "User Story",
     subtasks: { done: 1, total: 2 },
     assignees: ["AA", "MB"]
   },
   {
-    title: "HTML Base Template Creation",
-    description: "Create reusable HTML base templates...",
+    title: "lorem ipsum",
+    description: "lorem ipsum...",
     status: "await-feedback",
     category: "Technical Task",
-    assignees: ["CE", "CA", "AV"]
+    assignees: ["User", "User", "User"]
   },
   {
-    title: "Daily Kochwelt Recipe",
-    description: "Implement daily recipe and portion calculator...",
+    title: "lorem ipsum",
+    description: "lorem...",
     status: "await-feedback",
     category: "User Story",
-    assignees: ["ES", "TW"]
+    assignees: ["User", "User"]
   },
   {
-    title: "CSS Architecture Planning",
-    description: "Define CSS naming conventions and structure...",
+    title: "lorem ipsum",
+    description: "lorem ipsum...",
     status: "done",
     category: "Technical Task",
     subtasks: { done: 2, total: 2 },
-    assignees: ["EK", "EZ"]
+    assignees: ["User", "User"]
   }
 ];
 
@@ -60,7 +60,6 @@ function createTaskCard(task, index) {
   assignees.innerText = task.assignees.join(" ");
   card.appendChild(assignees);
 
-  // Arrow Controls
   const arrows = document.createElement("div");
   arrows.style.display = "flex";
   arrows.style.justifyContent = "space-between";
