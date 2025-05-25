@@ -1,6 +1,7 @@
 body {
     margin: 0;
     font-family: 'Inter';
+    background-color: #f6f7f8;
 }
 
 .summary-main {
@@ -78,12 +79,46 @@ body {
 
 .summary-container {
     display: flex;
-    flex-grow: 1;
+    flex: 1;
+    width: 100%;
 }
 
 .top-navbar {
+    background-color: white;
     height: 96px;
+    width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    padding-left: 100px;
+    padding-right: 40px;
+}
+
+.user-name {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-name a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background-color: white;
+    border-radius: 50%;
+    border-color: grey;
+    width: 32px;
+    height: 32px;
+}
+
+.user-name button {
+    cursor: pointer;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+}
+
+.user-name button:hover {
+    
 }
