@@ -78,6 +78,7 @@ body {
 
 .summary-container {
     display: flex;
+    flex-direction: column;
     flex: 1;
     width: 100%;
 }
@@ -85,7 +86,6 @@ body {
 .top-navbar {
     background-color: white;
     height: 96px;
-    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -104,4 +104,29 @@ body {
     background: none;
     border: none;
     cursor: pointer;
+}
+
+.summary-content-headline {
+    padding-top: 100px;
+    padding-left: 96px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.separator {
+    background-color: #29abe2;
+    width: 2px;
+    height: 60px;
+    margin-right: 10px;
+}
+
+.headline-text-1 {
+    font-size: 61px;
+    font-weight: 700;
+}
+
+.headline-text-2 {
+    font-size: 27px;
+    font-weight: 400;
 }
