@@ -1,86 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Task</title>
-    <link rel="stylesheet" href="./styles/add_task.css" />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="assets/fonts/font.css" />
-  </head>
-  <body>
-    <div class="nav-bar">
-      <div class="nav-left">
-        <img class="join-logo" src="./assets/img/Capa 1.png" alt="Join Logo" />
-        <nav>
-          <ul>
-            <li><a href="summary.html" class="nav-item">Summary</a></li>
-            <li><a href="add_task.html" class="nav-item selected">Add Task</a></li>
-            <li><a href="board.html" class="nav-item">Board</a></li>
-            <li><a href="contacts.html" class="nav-item">Contacts</a></li>
-          </ul>
-        </nav>
-        <div class="nav-footer">
-          <a href="privacy_policy.html">Privacy Policy</a>
-          <a href="legal_notice.html">Legal notice</a>
+
+    <link rel="stylesheet" href="styles/add_task.css">
+    <link rel="stylesheet" href="assets/fonts/font.css">
+</head>
+
+<body>
+    <div class="add-task-main">
+      <div class="side-navbar">
+        <div class="sidebar-img">
+          <img src="assets/img/Capa 1.png" alt="">
+        </div>
+        <div class="sidebar-menu">
+          <a href="summary.html">
+            <img src="assets/icons/summary_icon.png" alt="">Summary
+          </a>
+          <a href="add_task.html">
+            <img src="assets/icons/add_task_icon.png" alt="">Add Task
+          </a>
+          <a href="board.html">
+            <img src="assets/icons/board_icon.png" alt="">Board
+          </a>
+          <a href="contacts.html">
+            <img src="assets/icons/contacts_icon.png" alt="">Contacts
+          </a>
+        </div>
+        <div class="sidebar-bottom">
+          <a href="privacy_policy.html">
+            <img src="" alt="">Privacy Policy</a>
+          <a href="legal_notice.html">
+            <img src="" alt="">Legal notice</a>
         </div>
       </div>
-    </div>
 
-    <div class="main-content">
-      <header class="header">
-        <h2>Kanban Project Management Tool</h2>
-        <div class="user-circle">SM</div>
-      </header>
-
-      <h1>Add Task</h1>
-
-      <div class="task-form-columns">
-        <div class="column">
-          <label for="title">Title<span class="required">*</span></label>
-          <input type="text" id="title" placeholder="Enter a title" />
-
-          <label for="description">Description</label>
-          <textarea id="description" placeholder="Enter a Description" rows="5">
-          </textarea>
-
-          <label for="due">Due date<span class="required">*</span></label>
-          <input type="date" id="due" />
-        </div>
-        <img src="./assets/img/Vector 4.png" />
-        <div class="column">
-          <label>Priority</label>
-          <div class="priority-buttons">
-            <button style="background-color: red; color: white">
-              Urgent ↑
+      <div class="add-task-container">
+        <div class="top-navbar">
+          <span>Kanban Projekt Management Tool</span>
+          <div class="user-name">
+            <a href="help.html"><img src="assets/icons/help.png" alt=""></a>
+            <button>
+              <img src="assets/icons/profile.png" alt="">
             </button>
-            <button class="medium">Medium =</button>
-            <button style="background-color: lightgreen">Low ↓</button>
-          </div>
-
-          <label for="assigned">Assigned to</label>
-          <select id="assigned">
-            <option>Select contacts to assign</option>
-          </select>
-
-          <label for="category">Category<span class="required">*</span></label>
-          <select id="category">
-            <option>Select task category</option>
-          </select>
-
-          <label for="subtasks">Subtasks</label>
-          <div style="display: flex; gap: 10px">
-            <input class="subtask-input" placeholder="Add new subtask" />
-            <button>+</button>
           </div>
         </div>
-      </div>
 
-      <div class="actions">
-        <button class="cancel">Clear ✖</button>
-        <button class="create">Create Task ✔</button>
-      </div>
+        <div class="add-task-content">
+          <div class="add-task-content-headline">
+            <span class="headline-text">Add Task</span>
+          </div>
 
-      <p style="color: red; margin-top: 20px">*This field is required</p>
+          <div class="form-sections">
+            <div class="main-infos">
+              <label for="title">Title<span class="required">*</span></label>
+              <input type="text" id="title" placeholder="Enter a title" />
+
+              <label for="description">Description</label>
+              <textarea id="description" placeholder="Enter a Description" rows="5"></textarea>
+
+              <label for="due">Due date<span class="required">*</span></label>
+              <input type="date" id="due" />
+
+              <p class="required-text">*This field is required</p>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="detailed-infos">
+              <label>Priority</label>
+              <div class="priority-buttons">
+                <button class="urgent">Urgent</button>
+                <button class="medium">Medium</button>
+                <button class="low">Low</button>
+              </div>
+
+              <label for="assigned">Assigned to</label>
+              <input type="text" id="assigned" placeholder="Select contacts to assign" />
+
+              <label for="category">Category<span class="required">*</span></label>
+              <input type="text" id="category" placeholder="Select task category" />
+
+              <label for="subtasks">Subtasks</label>
+              <input type="text" id="subtasks" placeholder="Add new tasks" />
+
+              <div class="form-buttons">
+                <button class="cancel">Clear</button>
+                <button class="create">Create Task</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
-  </body>
+
+</body>
+
 </html>

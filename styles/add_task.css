@@ -1,116 +1,179 @@
 body {
   margin: 0;
+  font-family: 'Inter';
   background-color: #f6f7f8;
-  display: flex;
+  overflow: hidden;
 }
 
-.nav-bar {
-  background-color: #2a3647;
-  width: 220px;
-  min-height: 100vh;
-  color: white;
+.add-task-main {
+    display: flex;
+    height: 100vh;
+}
+
+.side-navbar {
+    width: 232px;
+    background-color: #2a3647;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 15px;
+}
+
+.sidebar-img {
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar-img img {
+    width: 100px;
+    height: 120px;
+    padding: 48px;
+}
+
+.sidebar-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sidebar-menu img {
+    width: 30px;
+    height: 30px;
+}
+
+.sidebar-menu a {
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    width: 100%;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-menu a:hover {
+    background-color: #273041;
+}
+
+.sidebar-bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    padding-top: 192px;
+}
+
+.sidebar-bottom a {
+    text-decoration: none;
+    color: #A8A8A8;
+}
+
+.sidebar-bottom a:hover {
+    color: #29abe2;
+}
+
+.summary-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+}
+
+.add-task-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+}
+
+.top-navbar {
+    background-color: white;
+    height: 96px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 100px;
+    padding-right: 40px;
+    box-shadow: 3px 5px 5px 1px #cdcdcd;
+}
+
+.user-name {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-name button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.add-task-content-headline {
+    padding-top: 80px;
+    padding-left: 96px;
+    display: flex;
+    align-items: center;
+}
+
+.headline-text {
+    font-size: 61px;
+    font-weight: 700;
+}
+
+.form-sections {
   display: flex;
-  flex-direction: column;
+  gap: 32px;
+  padding: 40px 96px;
+  box-sizing: border-box;
   justify-content: space-between;
-  position: fixed;
 }
 
-.nav-left {
-  padding: 20px;
+.main-infos,
+.detailed-infos {
   display: flex;
   flex-direction: column;
-  gap: 30px;
-}
-
-.nav-left .join-logo {
-  height: 60px;
-  margin-bottom: 30px;
-}
-
-nav ul {
-  list-style: none;
-  padding: 0;
-}
-
-.nav-item {
-  display: block;
-  padding: 12px;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-.nav-item:hover,
-.nav-item.selected {
-  background-color: #091931;
-}
-
-.nav-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  font-size: 12px;
-  padding-left: 20px;
-  padding-bottom: 20px;
-}
-
-.main-content {
-  margin-left: 220px;
-  width: calc(100% - 220px);
-  padding: 20px 40px;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
-  background-color: white;
-}
-
-.user-circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: #e0e0e0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #2a3647;
-}
-
-.add_task_container {
-  background-color: white;
-  padding: 40px;
-  border-radius: 30px;
-  box-shadow: 0 0 10px 2px #e0e0e0;
-}
-
-.add_task_container h1 {
-  font-size: 48px;
-  margin-bottom: 30px;
-}
-
-.task-form-columns {
-  display: flex;
-  justify-content: space-between;
-  gap: 5%;
-}
-
-.column {
-  width: 45%;
-  display: flex;
-  flex-direction: column;
+  flex: 1;
   gap: 20px;
 }
 
-input, select, textarea {
-  padding: 10px;
-  border: 1px solid #d1d1d1;
-  border-radius: 8px;
+.main-infos label {
   font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.main-infos input,
+.main-infos textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px;
+  border-color: #D1D1D1;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  resize: none;
+  cursor: pointer;
+}
+
+.detailed-infos input {
+  cursor: pointer;
+}
+
+.required {
+  color: red;
+  margin-left: 4px;
+}
+
+.separator {
+  width: 2px;
+  background-color: #D1D1D1;
+  margin: 0 10px;
 }
 
 .priority-buttons {
@@ -124,22 +187,47 @@ input, select, textarea {
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+  flex: 1;
 }
 
-.priority-buttons .medium {
-  background-color: #ffa800;
+.urgent {
+  background-color: white;
+}
+
+.medium {
+  background-color: #FFA800;
   color: white;
 }
 
-.actions {
-  display: flex;
-  gap: 20px;
-  margin-top: 30px;
-  justify-content: flex-end;
+.low {
+  background-color: white;
 }
 
-.actions .cancel {
-  background-color: transparent;
+input, textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px;
+  border-color: #D1D1D1;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.required-text {
+  color: red;
+  font-size: 14px;
+  margin-top: 80px;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+  margin-top: 40px;
+}
+
+.cancel {
+  background-color: #F6F7F8;
   color: #2a3647;
   border: 2px solid #2a3647;
   padding: 12px 24px;
@@ -148,7 +236,7 @@ input, select, textarea {
   cursor: pointer;
 }
 
-.actions .create {
+.create {
   background-color: #2a3647;
   color: white;
   padding: 12px 24px;
@@ -157,8 +245,3 @@ input, select, textarea {
   font-weight: bold;
   cursor: pointer;
 }
-
-.required {
-  color: red;
-}
-
