@@ -94,6 +94,7 @@ body {
 .top-navbar {
     background-color: white;
     height: 96px;
+    line-height: 96px;
     display: flex;
     justify-content: space-between;
     align-items: center;
