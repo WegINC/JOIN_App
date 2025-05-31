@@ -103,9 +103,17 @@ body {
 }
 
 .user-name button {
-    background: none;
-    border: none;
+    height: 56px;
+    width: 56px;
+    border-radius: 50%;
+    background-color: white;
+    border: 3px solid;
+    border-color: #2A3647;
     cursor: pointer;
+}
+
+.user-name button:hover {
+    background-color: rgb(229, 229, 229);
 }
 
 .privacy_policy-headline {
