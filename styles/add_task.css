@@ -183,12 +183,21 @@ body {
 }
 
 .priority-buttons button {
-  padding: 10px 16px;
+  padding: 10px;
   border: none;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
   flex: 1;
+}
+
+.priority-buttons img {
+  height: 12px;
+  padding-left: 4px;
+}
+
+.equals {
+  width: 20px;
 }
 
 .urgent {
@@ -217,7 +226,7 @@ input, textarea {
 .required-text {
   color: red;
   font-size: 14px;
-  margin-top: 80px;
+  margin-top: 70px;
 }
 
 .form-buttons {

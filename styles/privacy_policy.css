@@ -89,6 +89,7 @@ body {
 .top-navbar {
     background-color: white;
     height: 96px;
+    line-height: 96px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -114,7 +115,6 @@ body {
     padding-left: 96px;
     display: flex;
     align-items: center;
-    gap: 30px;
 }
 
 .headline-text {
@@ -129,7 +129,6 @@ body {
     padding-left: 96px;
     padding-right: 96px;
     gap: 35px;
-
 }
 
 .subtitle {
