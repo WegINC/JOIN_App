@@ -2,108 +2,102 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <title>Kanban Board</title>
-  <link rel="stylesheet" href="./styles/board.css" />
-  <link rel="stylesheet" href="assets/fonts/font.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board</title>
+
+    <link rel="stylesheet" href="styles/board.css">
+    <link rel="stylesheet" href="assets/fonts/font.css">
 </head>
 
 <body>
-  <div class="side-navbar">
-    <div class="sidebar-img">
-      <img src="assets/img/Capa 1.png" alt="" />
-    </div>
-    <div class="sidebar-menu">
-      <a href="summary.html">
-        <img src="assets/icons/summary_icon.png" alt="" />Summary
-      </a>
-      <a href="add_task.html">
-        <img src="assets/icons/add_task_icon.png" alt="" />Add Task
-      </a>
-      <a href="board.html">
-        <img src="assets/icons/board_icon.png" alt="" />Board
-      </a>
-      <a href="contacts.html">
-        <img src="assets/icons/contacts_icon.png" alt="" />Contacts
-      </a>
-    </div>
-    <div class="sidebar-bottom">
-      <a href="privacy_policy.html"> <img src="" alt="" />Privacy Policy</a>
-      <a href="legal_notice.html"> <img src="" alt="" />Legal notice</a>
-    </div>
-  </div>
-
-  <div class="main-content">
-    <div class="top-navbar">
-      <span>Kanban Projekt Management Tool</span>
-      <div class="user-name">
-        <a href="help.html"><img src="assets/icons/help.png" alt=""></a>
-        <button id="user-name"></button>
-      </div>
-    </div>
-
-    <div class="board-header">
-      <h1>Board</h1>
-      <div class="task-actions">
-        <input type="text" placeholder="Find Task" />
-        <button class="add-task">Add task +</button>
-      </div>
-    </div>
-
-    <div class="column-titles">
-      <div class="task-titles">
-        <h3>To do</h3>
-      </div>
-      <div class="task-titles">
-        <h3>In progress</h3>
-      </div>
-      <div class="task-titles">
-        <h3>Await feedback</h3>
-      </div>
-      <div class="task-titles">
-        <h3>Done</h3>
-      </div>
-    </div>
-
-    <div class="kanban-board">
-      <div class="column">
-        <p class="no-tasks"></p>
-      </div>
-
-      <div class="column">
-        <div class="task-card user-story">
-          <p class="task-title">Kochwelt Page & Recipe Recommender</p>
-          <p>Build start page with recipe recommendation...</p>
-          <div class="subtask">1/2 Subtasks</div>
-          <div class="assigned-users">AA MB</div>
+    <div class="board-main">
+        <div class="side-navbar">
+            <div class="sidebar-img">
+                <img src="assets/img/Capa 1.png" alt="">
+            </div>
+            <div class="sidebar-menu">
+                <a href="summary.html">
+                    <img src="assets/icons/summary_icon.png" alt="">Summary
+                </a>
+                <a href="add_task.html">
+                    <img src="assets/icons/add_task_icon.png" alt="">Add Task
+                </a>
+                <a href="board.html">
+                    <img src="assets/icons/board_icon.png" alt="">Board
+                </a>
+                <a href="contacts.html">
+                    <img src="assets/icons/contacts_icon.png" alt="">Contacts
+                </a>
+            </div>
+            <div class="sidebar-bottom">
+                <a href="privacy_policy.html">
+                    <img src="" alt="">Privacy Policy</a>
+                <a href="legal_notice.html">
+                    <img src="" alt="">Legal notice</a>
+            </div>
         </div>
-      </div>
 
-      <div class="column">
-        <div class="task-card technical-task">
-          <p class="task-title">HTML Base Template Creation</p>
-          <p>lorem ipsum</p>
-          <div class="assigned-users">CE CA AV</div>
-        </div>
-        <div class="task-card user-story">
-          <p class="task-title">lorem ipsum</p>
-          <p>lorem ipsum</p>
-          <div class="assigned-users">User</div>
-        </div>
-      </div>
+        <div class="board-container">
+            <div class="top-navbar">
+                <span>Kanban Projekt Management Tool</span>
+                <div class="user-name">
+                    <a href="help.html"><img src="assets/icons/help.png" alt=""></a>
+                    <button id="user-name"></button>
+                </div>
+            </div>
 
-      <div class="column">
-        <div class="task-card technical-task">
-          <p class="task-title">lorem ipsum</p>
-          <p>lorem ipsum</p>
-          <div class="subtask">2/2 Subtasks</div>
-          <div class="assigned-users">EK EZ</div>
+            <div class="board-headline">
+                <div class="board-content-headline">
+                    <div class="headline-text">
+                      <span>Board</span>
+                    </div>
+
+                    <div class="headline-search-button">
+
+                      <div class="search-container">
+                          <input id="search-input" type="text" placeholder="Find Task">
+                          <div class="seaerch-separator"></div>
+                          <button id="searchButton">
+                            <img src="assets/icons/search.svg" alt="">
+                          </button>
+                      </div>
+
+                      <button class="add-task-button">Add Task <img src="assets/icons/add.svg" alt=""></button>
+
+                    </div>
+                </div>
+
+                <div class="column-titles">
+                    <span>To do </span>
+                    <button>+</button>
+                    <span>In progress</span>
+                    <button>+</button>
+                    <span>Await feedback</span>
+                    <button>+</button>
+                    <span>Done</span>
+                </div>
+
+            </div>
+
+            <div class="board-columns">
+                <div class="baord-column" id="toDo">
+
+                </div>
+                <div class="baord-column" id="inProgress">
+
+                </div>
+                <div class="baord-column" id="awaitFeedback">
+
+                </div>
+                <div class="baord-column" id="done">
+
+                </div>
+            </div>
+
         </div>
-      </div>
     </div>
-  </div>
 
-  <script src="./app.js"></script>
 </body>
 
 </html>
