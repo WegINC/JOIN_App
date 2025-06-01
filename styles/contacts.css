@@ -184,7 +184,7 @@ body {
     font-size: 20px;
     font-weight: bold;
     color: #2A3647;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
     display: block;
 }
 
@@ -254,3 +254,8 @@ h1 {
     color: #2A3647;
 }
 
+.contact-separator {
+    height: 1px;
+    background-color: #e0e0e0; /* sehr helles Grau */
+    margin: 16px 0;
+  }
