@@ -56,7 +56,7 @@ body {
 }
 
 .sidebar-menu a:hover {
-    background-color: #273041;
+    background-color: #374762;
 }
 
 .sidebar-bottom {
@@ -113,6 +113,45 @@ body {
 
 .user-name button:hover {
     background-color: rgb(229, 229, 229);
+}
+
+#user-name {
+  font-size: 28px;
+  font-weight: 700;
+  color: #29abe2;
+}
+
+.user-dropdown-wrapper {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background-color: #2a3647;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 100;
+    min-width: 160px;
+}
+
+.dropdown-menu a {
+    text-decoration: none;
+    color: white;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.dropdown-menu a:hover {
+    background-color: #374762;
+}
+
+.hidden {
+    display: none;
 }
 
 .board-content-headline {
@@ -184,7 +223,7 @@ body {
   border-radius: 10px;
   background-color: #2A3647;
   color: white;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   gap: 4px;
 }

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="assets/fonts/font.css">
 </head>
 
-<body>
+<body onclick="closeUserMenu(event)">
     <div class="help-main">
         <div class="side-navbar">
             <div class="sidebar-img">
@@ -43,7 +43,17 @@
                 <span>Kanban Projekt Management Tool</span>
                 <div class="user-name">
                     <a href="help.html"><img src="assets/icons/help.png" alt=""></a>
-                    <button id="user-name"></button>
+
+                    <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
+                        <button id="user-name" onclick="toggleUserMenu()">G</button>
+
+                        <div id="user-dropdown" class="dropdown-menu hidden">
+                            <a href="privacy_policy.html">Privacy Policy</a>
+                            <a href="legal_notice.html">Legal Notice</a>
+                            <a href="index.html">Log Out</a>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
 
@@ -91,5 +101,7 @@
         </div>
     </div>
 </body>
+
+<script src="scripts/board.js"></script>
 
 </html>
