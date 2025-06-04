@@ -81,7 +81,7 @@ body {
     text-decoration: none;
 }
 
-.summary-taskInfo-inner {
+.summary-task-inner {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -96,7 +96,7 @@ body {
 .task-info-text {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 4px;
 }
 
@@ -107,6 +107,7 @@ body {
 
 .task-label {
     color: #2A3647;
+    font-size: 16px;
 }
 
 .summary-taskInfo:hover .task-info-text .task-count,
@@ -124,6 +125,17 @@ body {
     justify-content: center;
     align-items: center;
     text-decoration: none;
+}
+
+.summary-taskDate:hover .task-info-text .task-count,
+.summary-taskDate:hover .task-info-text .task-label {
+  color: white;
+}
+
+.urgent-separator {
+    background-color: #D1D1D1;
+    width: 2px;
+    height: 80px;
 }
 
 .bottom-buttons {
