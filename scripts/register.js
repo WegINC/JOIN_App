@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       alert("Registrierung erfolgreich!");
-      window.location.href = "/index.html";
+      window.location.href = "/board.html";
     } catch (error) {
       console.error("Fehler bei der Registrierung:", error);
       alert("Es ist ein Fehler aufgetreten.");
