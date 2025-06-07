@@ -78,6 +78,7 @@ h1 {
     gap: 20px;
     height: 152px;
     width: 422px;
+
 }
 
 .input-login input {
@@ -92,6 +93,7 @@ h1 {
     padding-right: 21px;
     padding-bottom: 12px;
     width: 100%;
+    color: #2a3647;
 }
 
 .email-icon {

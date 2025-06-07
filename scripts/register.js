@@ -2,28 +2,35 @@
  * This function is used for the authentication of the Users in the Login.html
  * 
  */
-function onloadFunc(){
-        console.log("test");
-        signupContacts("",{"anton@gmail.com": "password"});
-}
+async function onloadFunc() {
+  const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app";
+  const emailInput = document.querySelector('input[name="email"]').value.trim();
+  const passwordInput = document.querySelector('input[name="password"]').value;
 
-let users = [];
-const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app/:";
+  if (!emailInput || !passwordInput) {
+    console.warn("Bitte E-Mail und Passwort eingeben.");
+    return;
+  }
 
+  try {
+    const response = await fetch(`${BASE_URL}/users.json`);
+    const users = await response.json();
 
+    let matchFound = false;
 
-async function loadContacts(path){
-    let response = await fetch(BASE_URL + path + ".json");
-    return responseToJson = await response.json();
-}
+    for (const [uid, user] of Object.entries(users)) {
+      if (user.email === emailInput && user.password === passwordInput) {
+        console.log("Login erfolgreich für:", user.name);
+        matchFound = true;
+        window.location.href = "/pages/board.html";
+        break;
+      }
+    }
 
-async function signupContacts(path= "", data) {
-    let response = await fetch(BASE_URL + path + ".json",{
-        method: "POST",
-        header: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data)
-    });
-    return responseToJson = await response.json();
+    if (!matchFound) {
+      console.warn("E-Mail oder Passwort falsch.");
+    }
+  } catch (error) {
+    console.error("Login-Fehler:", error);
+  }
 }
