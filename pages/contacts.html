@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/styles/contacts.css">
     <link rel="stylesheet" href="/assets/fonts/font.css">
 </head>
-<body onclick="closeUserMenu(event)">
+<body>
     <div class="wrapper">
         <div class="side-navbar">
             <div class="sidebar-img">
@@ -216,15 +216,22 @@
             </div>
           </div>
 
-          <div class="contacts-headline">
-            <h1>Contacts</h1>
-            <div class="seperator"></div>
-            <span class="text-headline">Better with a team</span>
+          <div id="contact-details-container" class="contact-details">
+            <!-- Fester Bereich -->
+            <div class="contact-header">
+              <h1>Contacts</h1>
+              <div class="seperator"></div>
+              <span class="text-headline">Better with a team</span>
+            </div>
+          
+            <!-- Dynamischer Bereich -->
+            <div id="contact-details-content"></div>
           </div>
         </section>
       </main>
     </div>
   </body>
-
+ 
   <script src="/scripts/board.js"></script>
+  <script src="/scripts/contacts.js" defer></script>
 </html>
