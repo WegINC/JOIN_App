@@ -113,3 +113,11 @@ body {
   color: #29abe2;
   border-color: #29abe2;
 }
+
+.task-card {
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
