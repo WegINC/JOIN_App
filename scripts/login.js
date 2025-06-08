@@ -7,8 +7,10 @@ async function onloadFunc() {
   const emailInput = document.querySelector('input[name="email"]').value.trim();
   const passwordInput = document.querySelector('input[name="password"]').value;
 
+  hideLoginError();
+
   if (!emailInput || !passwordInput) {
-    console.warn("Bitte E-Mail und Passwort eingeben.");
+    showLoginError("Bitte E-Mail und Passwort eingeben.");
     return;
   }
 
@@ -28,9 +30,26 @@ async function onloadFunc() {
     }
 
     if (!matchFound) {
-      console.warn("E-Mail oder Passwort falsch.");
+      showLoginError("E-Mail oder Passwort ist falsch.");
     }
   } catch (error) {
     console.error("Login-Fehler:", error);
+    showLoginError("Ein Fehler ist aufgetreten. Bitte später erneut versuchen.");
+  }
+}
+
+function showLoginError(message) {
+  const errorDiv = document.getElementById("login-error");
+  if (errorDiv) {
+    errorDiv.innerText = message;
+    errorDiv.style.display = "block";
+  }
+}
+
+function hideLoginError() {
+  const errorDiv = document.getElementById("login-error");
+  if (errorDiv) {
+    errorDiv.innerText = "";
+    errorDiv.style.display = "none";
   }
 }
