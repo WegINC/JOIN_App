@@ -208,9 +208,8 @@ h1 {
    justify-content: flex-start;
    flex-direction: column;
    position: relative;
-   top: 311px;
-   left: 774px;
-   gap: 21px;
+   top: 183px;
+   left: 460px;
    width: 600px;
    height: 5800px;
 
@@ -220,18 +219,24 @@ h1 {
     margin-top: 0;
     color: #2a3647;
   }
+
+  .contact-details-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 16px;
+  }
   
   .contact-initial {
-    width: 120px;
-    height: 120px;
-    border-radius: 100%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    font-size: 28px;
     color: white;
-    font-weight: 200;
-    font-size: 40px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    margin-bottom: 16px;
+    justify-content: center;
+    font-weight: bold;
   }
 
   h2{
@@ -239,43 +244,56 @@ h1 {
     font-size: 47px;
   }
   
-  .contact-actions {
-    margin: 16px 0;
+  .contact-name-actions {
     display: flex;
-    gap: 13px;
-    width: 159px;
-    height: 24px;
-    font-size: 16px;
-    font-weight: 400;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .contact-name-actions h2 {
+    margin: 0;
+    font-size: 28px;
+  }
+  
+  .contact-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
   }
   
   .contact-actions button {
     background: none;
-    font-weight: 400;
-    font-size: 16px;
     border: none;
+    color: #2A3647;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
   }
-  
+
   .contact-actions img {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
   }
 
-  .contact-text{
-    display: flex;
-    justify-content: flex-start;
-    gap: 59px;
-    width: 207px;
-    height: 74px;
-  }
+  .contact-text {
+  display: block;
+  margin: 32px 0 32px;
+  font-weight: bold;
+  font-size: 18px;
+}
 
   .contact-info-container{
     display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    gap: 22px;
     width: 140px;
     height: 128px;
     }
+
+    .contact-info-container p {
+        margin: 8px 0;
+        line-height: 1.6;
+      }
