@@ -91,6 +91,19 @@ body {
 .summary-taskInfo img {
     height: 60px;
     width: 60px;
+    transition: filter 0.3s ease;
+}
+
+.summary-taskInfo .icon-hover {
+  display: none;
+}
+
+.summary-taskInfo:hover .icon-default {
+  display: none;
+}
+
+.summary-taskInfo:hover .icon-hover {
+  display: inline;
 }
 
 .task-info-text {
