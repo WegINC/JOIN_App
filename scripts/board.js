@@ -36,26 +36,30 @@ function createTask() {
   const description = document.getElementById("description").value;
   const dueDate = document.getElementById("due").value;
   const category = document.getElementById("category").value;
-  const priority = selectedPriority || "Keine";
 
   if (!title || !dueDate || category === "Select task category") {
     alert("Bitte alle Pflichtfelder ausfüllen.");
     return;
   }
 
-  const newTask = document.createElement("div");
-  newTask.classList.add("task-card");
-  newTask.innerHTML = `
-    <h3>${title}</h3>
-    <p>${description}</p>
-    <p><strong>Fällig:</strong> ${dueDate}</p>
-    <p><strong>Kategorie:</strong> ${category}</p>
-    <p><strong>Priorität:</strong> ${priority}</p>
-  `;
+  const taskCard = document.createElement("div");
+  taskCard.classList.add("task-card");
 
-  const toDoColumn = document.getElementById("toDo");
-  toDoColumn.appendChild(newTask);
+    taskCard.innerHTML = `
+      <h3>${title}</h3>
+      <p>${description}</p>
+      <p><strong>Fällig:</strong> ${dueDate}</p>
+      <p><strong>Kategorie:</strong> ${category}</p>
+      <div class="task-arrows">
+        <button class="left-arrow">←</button>
+        <button class="right-arrow">→</button>
+      </div>
+    `;
 
+  taskCard.querySelector(".left-arrow").addEventListener("click", () => moveTask(taskCard, "left"));
+  taskCard.querySelector(".right-arrow").addEventListener("click", () => moveTask(taskCard, "right"));
+
+  document.getElementById("toDo").appendChild(taskCard);
   closePopup();
 }
 
@@ -108,5 +112,17 @@ function selectPriority(level) {
     buttons.low.classList.add("active");
     buttons.low.style.backgroundColor = "lightgreen";
     buttons.low.style.color = "#000";
+  }
+}
+function moveTask(taskCard, direction) {
+  const columns = ["toDo", "inProgress", "awaitFeedback", "done"];
+  const parentColumn = taskCard.closest(".board-column");
+  const currentIndex = columns.indexOf(parentColumn.id);
+
+  let newIndex = direction === "right" ? currentIndex + 1 : currentIndex - 1;
+
+  if (newIndex >= 0 && newIndex < columns.length) {
+    const targetColumn = document.getElementById(columns[newIndex]);
+    targetColumn.appendChild(taskCard);
   }
 }
