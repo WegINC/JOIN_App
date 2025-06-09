@@ -132,6 +132,7 @@ h1 {
   margin-right: 6px;
   width: 16px;
   height: 16px;
+  cursor: pointer;
 }
 
 .sign-up-button {
@@ -156,8 +157,11 @@ h1 {
     padding-bottom: 15px;
     padding-left: 24px;
     text-align: center;
+    border: none;
 }
 
 .sign-up:hover {
     background-color: #29abe2;
+    transition: 100ms ease-in-out;
+    box-shadow: 0px 4px 4px 0px #0000004e;
 }
