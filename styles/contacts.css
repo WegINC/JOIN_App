@@ -260,6 +260,14 @@ h1 {
     gap: 16px;
     margin-top: 8px;
   }
+
+  .edit-btn:hover{
+    color: #28abe2;
+  }
+
+  .delete-btn:hover{
+    color: #28abe2;
+  }
   
   .contact-actions button {
     background: none;
@@ -287,13 +295,220 @@ h1 {
   .contact-info-container{
     display: flex;
     justify-content: flex-start;
-    align-items: center;
     flex-direction: column;
-    width: 140px;
+    width: 180px;
     height: 128px;
     }
 
     .contact-info-container p {
-        margin: 8px 0;
-        line-height: 1.6;
+    margin: 8px 0;
+    line-height: 1.6;
+    }
+
+    #edit-contact-overlay {
+      position: fixed;
+      top: 200px;
+      left: 550px;
+      width: 1212px;
+      height: 592px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000; /* hoch genug, um alles zu überdecken */
+      animation: fadeIn 0.3s ease;
+      display: none;
+      cursor: pointer;
+    }
+    
+    .contact-edit-overlay {
+      display: flex;
+      background-color: white;
+      width: 800px;
+      max-width: 90%;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+      overflow: hidden;
+      animation: slideIn 0.4s ease;
+    }
+      
+      /* Linke Seite */
+.edit-overlay-left {
+  background-color: #2a3647;
+  color: white;
+  padding: 48px 40px;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+      .edit-overlay-left h1 {
+        font-size: 32px;
+        margin-bottom: 10px;
       }
+      
+      .edit-logo {
+        width: 50px;
+        margin-bottom: 32px;
+      }
+      
+      .edit-underline {
+        height: 3px;
+        background-color: #29abe2;
+        width: 80px;
+        margin-top: 8px;
+      }
+      
+      /* Rechte Seite */
+.edit-overlay-right {
+  background-color: white;
+  padding: 40px;
+  width: 80%;
+  height: 340px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.edit-close-btn {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  padding: 0; /* Kein zusätzlicher Innenabstand */
+}
+
+.edit-close-btn:hover {
+  background-color: #f0f0f0; /* modernes, helles Grau */
+}
+  
+.edit-avatar {
+  color: white;
+  font-size: 36px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-right: 40px;
+}
+      
+.edit-form .input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.edit-form .input-group img {
+  width: 24px;
+  height: 24px;
+}
+      
+      .input-group img {
+        margin-right: 10px;
+        width: 20px;
+      }
+      
+      .input-group input {
+        width: 280px;
+        border: none;
+        outline: none;
+        flex: 1;
+      }
+
+      .edit-form input {
+        flex-grow: 1;
+        padding: 8px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+      }
+      
+      .edit-actions {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        margin-top: 24px;
+      }
+      
+      .delete-btn {
+        background: none;
+        border: 1px solid #2A3647;
+        border-radius: 8px;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+
+      .edit-actions .delete-btn:hover{
+        border: 1px solid #29abe2;
+        color: #29ABE2;
+        font-weight: 700;
+      }
+      
+      .save-btn {
+        background-color: #2A3647;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+      }
+
+      .edit-actions .save-btn:hover{
+        background-color: #29ABE2;
+        font-weight: 700;
+      }
+
+      .edit-actions .delete-btn,
+      .edit-actions .save-btn {
+      padding: 10px 20px;
+      cursor: pointer;
+      }
+
+.edit-actions .delete-btn {
+  background-color: transparent;
+  color: #2A3647;
+}
+
+.edit-actions .save-btn {
+  background-color: #2a3647;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+
+/* Animationen */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
