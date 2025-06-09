@@ -114,10 +114,48 @@ body {
   border-color: #29abe2;
 }
 
+.board-columns {
+  display: flex;
+  gap: 24px;
+  padding: 32px 64px;
+  justify-content: space-between;
+  height: calc(100vh - 250px);
+  overflow-x: auto;
+}
+
+.board-column {
+  background-color: #e9ecf0;
+  padding: 16px;
+  flex: 1;
+  min-width: 250px;
+  border-radius: 8px;
+  overflow-y: auto;
+}
 .task-card {
   background-color: white;
   border: 1px solid lightgray;
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 10px;
+  width: 100%;
+}
+
+.task-arrows {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.task-arrows button {
+  padding: 5px 10px;
+  border: none;
+  background-color: #2a3647;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.task-arrows button:hover {
+  background-color: #1b2533;
 }

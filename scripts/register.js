@@ -1,3 +1,8 @@
+/**
+ * This function is used to add Contacts to the firebase Database
+ * 
+ */
+
 document.addEventListener("DOMContentLoaded", function () {
   const signupBtn = document.querySelector(".sign-up");
 

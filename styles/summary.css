@@ -124,7 +124,7 @@ body {
 }
 
 .summary-taskInfo:hover .task-info-text .task-count,
-.summary-taskInfo:hover .task-info-text .task-label {
+.summary-taskInfo:hover .task-info-text .task-label{
   color: white;
 }
 
