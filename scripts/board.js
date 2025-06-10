@@ -1,3 +1,5 @@
+const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app";
+
 function toggleUserMenu() {
   let dropdown = document.getElementById('user-dropdown');
   dropdown.classList.toggle('hidden');
@@ -10,6 +12,44 @@ function closeUserMenu(event) {
   if (!dropdownWrapper.contains(event.target)) {
     dropdown.classList.add('hidden');
   }
+}
+async function loadTasksFromFirebase() {
+  try {
+    const res = await fetch(`${BASE_URL}/tasks.json`);
+    const tasks = await res.json();
+
+    if (!tasks) return;
+
+    Object.entries(tasks).forEach(([id, task]) => {
+      const taskCard = document.createElement("div");
+      taskCard.classList.add("task-card");
+
+      taskCard.innerHTML = `
+        <h3>${task.title}</h3>
+        <p>${task.description}</p>
+        <p><strong>Fällig:</strong> ${task.dueDate}</p>
+        <p><strong>Kategorie:</strong> ${task.category}</p>
+        <div class="task-arrows">
+          <button class="left-arrow">←</button>
+          <button class="right-arrow">→</button>
+        </div>
+      `;
+
+      taskCard.querySelector(".left-arrow").addEventListener("click", () => moveTask(taskCard, "left"));
+      taskCard.querySelector(".right-arrow").addEventListener("click", () => moveTask(taskCard, "right"));
+
+      const column = document.getElementById(task.status);
+      if (column) {
+        column.appendChild(taskCard);
+      }
+    });
+  } catch (error) {
+    console.error("Fehler beim Laden der Aufgaben:", error);
+  }
+}
+
+function onloadBoard() {
+  loadTasksFromFirebase();
 }
 
 function openFloatingAddTaskPopup() {
@@ -42,25 +82,31 @@ function createTask() {
     return;
   }
 
-  const taskCard = document.createElement("div");
-  taskCard.classList.add("task-card");
+  const taskData = {
+    title,
+    description,
+    dueDate,
+    category,
+    priority: selectedPriority || "low",
+    assignedTo: {
+      uid_1: true
+    },
+    status: "toDo"
+  };
 
-    taskCard.innerHTML = `
-      <h3>${title}</h3>
-      <p>${description}</p>
-      <p><strong>Fällig:</strong> ${dueDate}</p>
-      <p><strong>Kategorie:</strong> ${category}</p>
-      <div class="task-arrows">
-        <button class="left-arrow">←</button>
-        <button class="right-arrow">→</button>
-      </div>
-    `;
-
-  taskCard.querySelector(".left-arrow").addEventListener("click", () => moveTask(taskCard, "left"));
-  taskCard.querySelector(".right-arrow").addEventListener("click", () => moveTask(taskCard, "right"));
-
-  document.getElementById("toDo").appendChild(taskCard);
-  closePopup();
+  fetch(`${BASE_URL}/tasks.json`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(taskData)
+  })
+    .then(res => res.json())
+    .then(() => {
+      closePopup();
+      loadTasksFromFirebase();
+    })
+    .catch(err => {
+      console.error("Fehler beim Speichern:", err);
+    });
 }
 
 window.addEventListener("click", function (event) {
@@ -73,6 +119,8 @@ window.addEventListener("click", function (event) {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+  onloadFunc();
+
   document.querySelectorAll(".column-titles button").forEach(button => {
     button.addEventListener("click", openFloatingAddTaskPopup);
   });
@@ -81,6 +129,10 @@ document.addEventListener("DOMContentLoaded", function () {
   if (addTaskButton) {
     addTaskButton.addEventListener("click", openFloatingAddTaskPopup);
   }
+
+  const initial = localStorage.getItem("userInitial") || "G";
+  const userNameButton = document.getElementById("user-name");
+  if (userNameButton) userNameButton.textContent = initial;
 });
 
 let selectedPriority = "";
@@ -135,6 +187,47 @@ window.addEventListener("DOMContentLoaded", () => {
     userNameButton.textContent = initial;
   }
 });
+
+function loadTasksFromFirebase() {
+
+  fetch(`${BASE_URL}/tasks.json`)
+    .then(res => res.json())
+    .then(tasks => {
+      clearColumns();
+      for (let key in tasks) {
+        const task = tasks[key];
+        const taskCard = document.createElement("div");
+        taskCard.classList.add("task-card");
+
+        taskCard.innerHTML = `
+          <h3>${task.title}</h3>
+          <p>${task.description}</p>
+          <p><strong>Fällig:</strong> ${task.dueDate}</p>
+          <p><strong>Kategorie:</strong> ${task.category}</p>
+          <div class="task-arrows">
+            <button class="left-arrow">←</button>
+            <button class="right-arrow">→</button>
+          </div>
+        `;
+
+        taskCard.querySelector(".left-arrow").addEventListener("click", () => moveTask(taskCard, "left"));
+        taskCard.querySelector(".right-arrow").addEventListener("click", () => moveTask(taskCard, "right"));
+
+        const targetColumn = document.getElementById(task.status || "toDo");
+        targetColumn.appendChild(taskCard);
+      }
+    })
+    .catch(err => {
+      console.error("Fehler beim Laden der Tasks:", err);
+    });
+}
+
+function clearColumns() {
+  ["toDo", "inProgress", "awaitFeedback", "done"].forEach(id => {
+    const col = document.getElementById(id);
+    if (col) col.innerHTML = "";
+  });
+}
 
 function logout() {
   localStorage.removeItem("userInitial");
