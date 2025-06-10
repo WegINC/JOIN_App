@@ -24,8 +24,13 @@ function setupButtons() {
   document.querySelectorAll(".column-titles button").forEach(btn =>
     btn.addEventListener("click", openFloatingAddTaskPopup)
   );
-  const addBtn = document.querySelector(".add-task-button");
-  if (addBtn) addBtn.addEventListener("click", openFloatingAddTaskPopup);
+    const addBtn = document.querySelector(".add-task-button");
+    if (addBtn) {
+      addBtn.addEventListener("click", () => {
+        popupStatus = "toDo";
+        openFloatingAddTaskPopup();
+      });
+}
 }
 
 function initUserInitial() {
@@ -68,7 +73,7 @@ function createTask() {
     dueDate,
     category,
     priority: selectedPriority || "low",
-    assignedTo: { uid_1: true }, // Platzhalter
+    assignedTo: { uid_1: true },
     status: "toDo"
   };
 
@@ -95,6 +100,7 @@ function loadTasks() {
         const task = tasks[id];
         const card = document.createElement("div");
         card.classList.add("task-card");
+        card.setAttribute("data-id", id);
 
         card.innerHTML = `
           <h3>${task.title}</h3>
@@ -128,11 +134,23 @@ function moveTask(card, direction) {
   const columns = ["toDo", "inProgress", "awaitFeedback", "done"];
   const currentColumn = card.closest(".board-column");
   const currentIndex = columns.indexOf(currentColumn.id);
-
   const newIndex = direction === "right" ? currentIndex + 1 : currentIndex - 1;
+
   if (newIndex >= 0 && newIndex < columns.length) {
-    const newColumn = document.getElementById(columns[newIndex]);
-    newColumn.appendChild(card);
+    const newStatus = columns[newIndex];
+    const taskId = card.getAttribute("data-id");
+
+    const targetColumn = document.getElementById(newStatus);
+    targetColumn.appendChild(card);
+
+    fetch(`${BASE_URL}/tasks/${taskId}.json`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus })
+    })
+    .then(res => res.json())
+    .then(() => console.log(`Task ${taskId} nach ${newStatus} verschoben.`))
+    .catch(err => console.error("Fehler beim Aktualisieren des Status:", err));
   }
 }
 
