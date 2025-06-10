@@ -126,3 +126,12 @@ function moveTask(taskCard, direction) {
     targetColumn.appendChild(taskCard);
   }
 }
+
+const userNameButton = document.getElementById("user-name");
+
+window.addEventListener("DOMContentLoaded", () => {
+  const initial = localStorage.getItem("userInitial") || "G";
+  if (userNameButton) {
+    userNameButton.textContent = initial;
+  }
+});

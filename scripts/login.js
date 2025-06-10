@@ -20,7 +20,8 @@ async function onloadFunc() {
       if (user.email === emailInput && user.password === passwordInput) {
         console.log("Login erfolgreich für:", user.name);
         matchFound = true;
-        window.location.href = "/pages/board.html";
+        localStorage.setItem("userInitial", user.name.charAt(0).toUpperCase());
+        window.location.href = "/pages/summary.html";
         break;
       }
     }
