@@ -135,3 +135,11 @@ window.addEventListener("DOMContentLoaded", () => {
     userNameButton.textContent = initial;
   }
 });
+
+function logout() {
+  localStorage.removeItem("userInitial");
+
+  // Optional: alle Daten löschen
+  // localStorage.clear();
+  window.location.href = "/index.html";
+}
