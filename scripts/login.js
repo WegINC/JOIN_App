@@ -1,7 +1,3 @@
-/**
- * This function is used for the authentication of the Users in the Login.html
- * 
- */
 async function onloadFunc() {
   const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app";
   const emailInput = document.querySelector('input[name="email"]').value.trim();
@@ -24,7 +20,8 @@ async function onloadFunc() {
       if (user.email === emailInput && user.password === passwordInput) {
         console.log("Login erfolgreich für:", user.name);
         matchFound = true;
-        window.location.href = "/pages/board.html";
+        localStorage.setItem("userInitial", user.name.charAt(0).toUpperCase());
+        window.location.href = "/pages/summary.html";
         break;
       }
     }

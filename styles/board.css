@@ -87,6 +87,8 @@ body {
 
 .add-task-button:hover {
   background-color: #29abe2;
+  transition: 100ms ease-in-out;
+  box-shadow: 0px 4px 4px 0px #0000004e;
 }
 
 .column-titles {

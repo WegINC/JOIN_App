@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="/assets/fonts/font.css">
 </head>
 
-<body onclick="closeUserMenu(event)">
+<body onload="onloadBoard()" onclick="closeUserMenu(event)">
     <div class="wrapper">
         <div class="side-navbar">
             <div class="sidebar-img">
@@ -50,7 +50,7 @@
                         <div id="user-dropdown" class="dropdown-menu hidden">
                             <a href="privacy_policy.html">Privacy Policy</a>
                             <a href="legal_notice.html">Legal Notice</a>
-                            <a href="/index.html">Log Out</a>
+                            <a href="#" onclick="logout()">Log Out</a>
                         </div>
                     </div>
 

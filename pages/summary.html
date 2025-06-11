@@ -49,7 +49,7 @@
                         <div id="user-dropdown" class="dropdown-menu hidden">
                             <a href="privacy_policy.html">Privacy Policy</a>
                             <a href="legal_notice.html">Legal Notice</a>
-                            <a href="/index.html">Log Out</a>
+                            <a href="#" onclick="logout()">Log Out</a>
                         </div>
                     </div>
 
@@ -68,7 +68,8 @@
                         <div class="top-buttons">
                             <a class="summary-taskInfo" href="board.html">
                                 <div class="summary-task-inner">
-                                    <img src="/assets/icons/to-do-icon.svg" alt="">
+                                    <img class="icon-default" src="/assets/icons/to-do-icon.svg" alt="">
+                                    <img class="icon-hover" src="/assets/icons/to-do-icon-hover.svg" alt="">
                                     <div class="task-info-text">
                                         <span class="task-count" id="task_count">0</span>
                                         <span class="task-label">To-Do</span>
@@ -78,7 +79,8 @@
 
                             <a class="summary-taskInfo" href="board.html">
                                 <div class="summary-task-inner">
-                                    <img src="/assets/icons/done-icon.svg" alt="">
+                                    <img class="icon-default" src="/assets/icons/done-icon.svg" alt="">
+                                    <img class="icon-hover" src="/assets/icons/done-icon-hover.svg" alt="">
                                     <div class="task-info-text">
                                         <span class="task-count" id="task_count">0</span>
                                         <span class="task-label">Done</span>
