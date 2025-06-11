@@ -263,10 +263,14 @@ h1 {
 
   .edit-btn:hover{
     color: #28abe2;
+    font-size: 14px;
+    font-weight: 700;
   }
 
   .delete-btn:hover{
     color: #28abe2;
+    font-size: 14px;
+    font-weight: 700;
   }
   
   .contact-actions button {
@@ -279,6 +283,14 @@ h1 {
     gap: 8px;
     cursor: pointer;
   }
+
+.contact-actions button:hover {
+  color: #28abe2;
+}
+
+.contact-actions button:hover img {
+  filter: brightness(0) saturate(100%) invert(46%) sepia(93%) saturate(405%) hue-rotate(162deg) brightness(98%) contrast(94%);
+}
 
   .contact-actions img {
     width: 20px;
@@ -314,7 +326,7 @@ h1 {
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 1000; /* hoch genug, um alles zu überdecken */
+      z-index: 1000;
       animation: fadeIn 0.3s ease;
       display: none;
       cursor: pointer;
@@ -331,7 +343,6 @@ h1 {
       animation: slideIn 0.4s ease;
     }
       
-      /* Linke Seite */
 .edit-overlay-left {
   background-color: #2a3647;
   color: white;
@@ -360,7 +371,7 @@ h1 {
         margin-top: 8px;
       }
       
-      /* Rechte Seite */
+
 .edit-overlay-right {
   background-color: white;
   padding: 40px;
@@ -386,13 +397,13 @@ h1 {
   cursor: pointer;
   border-radius: 50%;
   transition: background-color 0.2s ease, transform 0.2s ease;
-  padding: 0; /* Kein zusätzlicher Innenabstand */
+  padding: 0; 
 }
 
 .edit-close-btn:hover {
-  background-color: #f0f0f0; /* modernes, helles Grau */
+  background-color: #f0f0f0; 
 }
-  
+
 .edit-avatar {
   color: white;
   font-size: 36px;
@@ -496,7 +507,7 @@ h1 {
 }
 
 
-/* Animationen */
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }

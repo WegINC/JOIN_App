@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const contactDetailsContent = document.getElementById('contact-details-content');
   const overlayContainer = document.getElementById('edit-contact-overlay');
 
-  // Kontakt-Item klickbar machen
+  
   contactItems.forEach(item => {
     item.addEventListener('click', () => {
       contactItems.forEach(el => el.classList.remove('active'));
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Kontakt-Details anzeigen
+  
   function renderContactDetails(contact) {
     const { initials, name, email, avatarColor, element } = contact;
 
@@ -49,12 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
 
-    // Edit-Button Event
+    
     contactDetailsContent.querySelector('.edit-btn').addEventListener('click', () => {
       openEditOverlay(contact);
     });
 
-    // Delete-Button Event
     contactDetailsContent.querySelector('.delete-btn').addEventListener('click', () => {
       if (confirm(`Möchtest du ${name} wirklich löschen?`)) {
         element.remove();
@@ -63,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Overlay zum Bearbeiten anzeigen
   function openEditOverlay(contact) {
     const { initials, name, email, avatarColor, element } = contact;
 
@@ -122,13 +120,13 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
 
-    // Schließen-Button
+  
     overlayContainer.querySelector('.edit-close-btn').addEventListener('click', () => {
       overlayContainer.innerHTML = '';
       overlayContainer.style.display = 'none';
     });
 
-    // Löschen im Overlay
+   
     overlayContainer.querySelector('.delete-btn').addEventListener('click', () => {
       if (confirm(`Möchtest du ${name} wirklich löschen?`)) {
         element.remove();
@@ -138,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Speichern im Overlay
+    
     overlayContainer.querySelector('.save-btn').addEventListener('click', () => {
       const newName = document.getElementById('edit-name').value;
       const newEmail = document.getElementById('edit-email').value;
