@@ -177,6 +177,15 @@ function selectPriority(level) {
   }
 }
 
+const userNameButton = document.getElementById("user-name");
+
+window.addEventListener("DOMContentLoaded", () => {
+  const initial = localStorage.getItem("userInitial") || "G";
+  if (userNameButton) {
+    userNameButton.textContent = initial;
+  }
+});
+
 function logout() {
   localStorage.removeItem("userInitial");
   window.location.href = "/index.html";
