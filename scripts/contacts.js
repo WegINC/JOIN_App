@@ -1,3 +1,7 @@
+const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app";
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const contactItems = document.querySelectorAll('.contact-item');
   const contactDetailsContent = document.getElementById('contact-details-content');

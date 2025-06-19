@@ -1,39 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Task</title>
 
-    <link rel="stylesheet" href="/styles/standard.css">
-    <link rel="stylesheet" href="/styles/add_task.css">
-    <link rel="stylesheet" href="/assets/fonts/font.css">
-</head>
+    <link rel="stylesheet" href="/styles/standard.css" />
+    <link rel="stylesheet" href="/styles/add_task.css" />
+    <link rel="stylesheet" href="/assets/fonts/font.css" />
+    <style>
+      select {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #d1d1d1;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        cursor: pointer;
+      }
+    </style>
+  </head>
 
-<body onclick="closeUserMenu(event)">
+  <body onclick="closeUserMenu(event)">
     <div class="wrapper">
       <div class="side-navbar">
         <div class="sidebar-img">
-          <img src="/assets/img/Capa 1.png" alt="">
+          <img src="/assets/img/Capa 1.png" alt="" />
         </div>
         <div class="sidebar-menu">
-          <a href="summary.html">
-            <img src="/assets/icons/summary_icon.png" alt="">Summary
-          </a>
-          <a href="add_task.html">
-            <img src="/assets/icons/add_task_icon.png" alt="">Add Task
-          </a>
-          <a href="board.html">
-            <img src="/assets/icons/board_icon.png" alt="">Board
-          </a>
-          <a href="contacts.html">
-            <img src="/assets/icons/contacts_icon.png" alt="">Contacts
-          </a>
+          <a href="summary.html"
+            ><img src="/assets/icons/summary_icon.png" alt="" />Summary</a
+          >
+          <a href="add_task.html"
+            ><img src="/assets/icons/add_task_icon.png" alt="" />Add Task</a
+          >
+          <a href="board.html"
+            ><img src="/assets/icons/board_icon.png" alt="" />Board</a
+          >
+          <a href="contacts.html"
+            ><img src="/assets/icons/contacts_icon.png" alt="" />Contacts</a
+          >
         </div>
         <div class="sidebar-bottom">
-            <a href="privacy_policy.html">Privacy Policy</a>
-            <a href="legal_notice.html">Legal notice</a>
+          <a href="privacy_policy.html">Privacy Policy</a>
+          <a href="legal_notice.html">Legal notice</a>
         </div>
       </div>
 
@@ -41,18 +51,16 @@
         <div class="top-navbar">
           <span>Kanban Projekt Management Tool</span>
           <div class="user-name">
-            <a href="help.html"><img src="/assets/icons/help.png" alt=""></a>
+            <a href="help.html"><img src="/assets/icons/help.png" alt="" /></a>
 
             <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
-                <button id="user-name" onclick="toggleUserMenu()">G</button>
-
-                <div id="user-dropdown" class="dropdown-menu hidden">
-                    <a href="privacy_policy.html">Privacy Policy</a>
-                    <a href="legal_notice.html">Legal Notice</a>
-                    <a href="#" onclick="logout()">Log Out</a>
-                </div>
+              <button id="user-name" onclick="toggleUserMenu()">G</button>
+              <div id="user-dropdown" class="dropdown-menu hidden">
+                <a href="privacy_policy.html">Privacy Policy</a>
+                <a href="legal_notice.html">Legal Notice</a>
+                <a href="#" onclick="logout()">Log Out</a>
+              </div>
             </div>
-            
           </div>
         </div>
 
@@ -67,7 +75,11 @@
               <input type="text" id="title" placeholder="Enter a title" />
 
               <label for="description">Description</label>
-              <textarea id="description" placeholder="Enter a Description" rows="5"></textarea>
+              <textarea
+                id="description"
+                placeholder="Enter a Description"
+                rows="5"
+              ></textarea>
 
               <label for="due">Due date<span class="required">*</span></label>
               <input type="date" id="due" />
@@ -80,16 +92,31 @@
             <div class="detailed-infos">
               <label>Priority</label>
               <div class="priority-buttons">
-                <button class="urgent">Urgent <img src="/assets/img/arrows-up.svg" alt=""></button>
-                <button class="medium">Medium <img class="equals" src="/assets/img/equals.svg" alt=""></button>
-                <button class="low">Low <img src="/assets/img/arrows-down.svg" alt=""></button>
+                <button class="urgent">
+                  Urgent <img src="/assets/img/arrows-up.svg" alt="" />
+                </button>
+                <button class="medium">
+                  Medium
+                  <img class="equals" src="/assets/img/equals.svg" alt="" />
+                </button>
+                <button class="low">
+                  Low <img src="/assets/img/arrows-down.svg" alt="" />
+                </button>
               </div>
 
               <label for="assigned">Assigned to</label>
-              <input type="text" id="assigned" placeholder="Select contacts to assign" />
+              <select id="assigned">
+                <option disabled selected>Select contacts to assign</option>
+              </select>
 
-              <label for="category">Category<span class="required">*</span></label>
-              <input type="text" id="category" placeholder="Select task category" />
+              <label for="category"
+                >Category<span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="category"
+                placeholder="Select task category"
+              />
 
               <label for="subtasks">Subtasks</label>
               <input type="text" id="subtasks" placeholder="Add new tasks" />
@@ -100,13 +127,39 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
 
-</body>
+    <script>
+      const BASE_URL =
+        "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app";
 
-<script src="/scripts/board.js"></script>
+      function populateAssignedDropdown() {
+        fetch(`${BASE_URL}/contacts.json`)
+          .then((res) => res.json())
+          .then((data) => {
+            const select = document.getElementById("assigned");
+            if (!select) return;
+            select.innerHTML =
+              "<option disabled selected>Select contacts to assign</option>";
 
+            for (let id in data) {
+              const contact = data[id];
+              const option = document.createElement("option");
+              option.value = id;
+              option.textContent = contact.name;
+              select.appendChild(option);
+            }
+          })
+          .catch((err) =>
+            console.error("Fehler beim Laden der Kontakte:", err)
+          );
+      }
+
+      document.addEventListener("DOMContentLoaded", populateAssignedDropdown);
+    </script>
+
+    <script src="/scripts/board.js"></script>
+  </body>
 </html>
