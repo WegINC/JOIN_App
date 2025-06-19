@@ -4,11 +4,10 @@
  */
 function onloadFunc(){
         console.log("test");
-        signupContacts("",{"anton@gmail.com": "password"});
 }
 
 let users = [];
-const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app/:";
+const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app/";
 
 
 
