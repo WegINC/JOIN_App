@@ -5,58 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contacts</title>
 
-    <link rel="stylesheet" href="/styles/contacts.css" />
-    <link rel="stylesheet" href="/assets/fonts/font.css" />
-  </head>
-  <body onclick="closeUserMenu(event)">
-    <div class="contacts-main">
-      <div class="side-navbar">
-        <div class="sidebar-img">
-          <img src="/assets/img/Capa 1.png" alt="" />
-        </div>
-        <div class="sidebar-menu">
-          <a href="summary.html">
-            <img src="/assets/icons/summary_icon.png" alt="" />Summary
-          </a>
-          <a href="add_task.html">
-            <img src="/assets/icons/add_task_icon.png" alt="" />Add Task
-          </a>
-          <a href="board.html">
-            <img src="/assets/icons/board_icon.png" alt="" />Board
-          </a>
-          <a href="contacts.html">
-            <img src="/assets/icons/contacts_icon.png" alt="" />Contacts
-          </a>
-        </div>
-        <div class="sidebar-bottom">
-          <a href="privacy_policy.html"> <img src="" alt="" />Privacy Policy</a>
-          <a href="legal_notice.html"> <img src="" alt="" />Legal notice</a>
-        </div>
+    <link rel="stylesheet" href="/styles/standard.css">
+    <link rel="stylesheet" href="/styles/contacts.css">
+    <link rel="stylesheet" href="/assets/fonts/font.css">
+</head>
+<body onclick="closeUserMenu(event)">
+  <div class="wrapper">
+    <div class="side-navbar">
+      <div class="sidebar-img">
+        <img src="/assets/img/Capa 1.png" alt="">
       </div>
+      <div class="sidebar-menu">
+        <a href="summary.html">
+          <img src="/assets/icons/summary_icon.png" alt="">Summary
+        </a>
+        <a href="add_task.html">
+          <img src="/assets/icons/add_task_icon.png" alt="">Add Task
+        </a>
+        <a href="board.html">
+          <img src="/assets/icons/board_icon.png" alt="">Board
+        </a>
+        <a href="contacts.html">
+          <img src="/assets/icons/contacts_icon.png" alt="">Contacts
+        </a>
+      </div>
+      <div class="sidebar-bottom">
+          <a href="privacy_policy.html">Privacy Policy</a>
+          <a href="legal_notice.html">Legal notice</a>
+      </div>
+    </div>
 
-      <main class="contacts-container">
-        <header class="top-navbar">
-          <span>Kanban Project Management Tool</span>
-          <div class="user-name">
-            <a href="./help.html" title="Help">
-              <img src="/assets/icons/help.png" alt="Help Icon" />
-            </a>
-            <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
+    <div class="content-area">
+      <div class="top-navbar">
+        <span>Kanban Projekt Management Tool</span>
+        <div class="user-name">
+          <a href="help.html"><img src="/assets/icons/help.png" alt=""></a>
+
+          <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
               <button id="user-name" onclick="toggleUserMenu()">G</button>
 
               <div id="user-dropdown" class="dropdown-menu hidden">
-                <a href="privacy_policy.html">Privacy Policy</a>
-                <a href="legal_notice.html">Legal Notice</a>
-                <a href="index.html">Log Out</a>
+                  <a href="privacy_policy.html">Privacy Policy</a>
+                  <a href="legal_notice.html">Legal Notice</a>
+                  <a href="#" onclick="logout()">Log Out</a>
               </div>
-            </div>
           </div>
-        </header>
+          
+        </div>
+      </div>
 
         <section class="contacts-content">
           <div class="contact-bar">
             <div class="contact-list-content">
-              <button class="new-contact-button" type="button">
+              <button onclick="openAddContactOverlay()" class="new-contact-button" type="button">
                 Add new contact
                 <img
                   class="add-person-icon"
@@ -215,15 +216,24 @@
             </div>
           </div>
 
-          <div class="contacts-headline">
-            <h1>Contacts</h1>
-            <div class="seperator"></div>
-            <span class="text-headline">Better with a team</span>
+          <div id="contact-details-container" class="contact-details">
+            
+            <div class="contact-header">
+              <h1>Contacts</h1>
+              <div class="seperator"></div>
+              <span class="text-headline">Better with a team</span>
+            </div>
+          
+            
+            <div id="contact-details-content"></div>
           </div>
+          <div id="edit-contact-overlay"></div>
+          <div id="add-contact-overlay" class="overlay-content hidden"></div>
         </section>
       </main>
     </div>
   </body>
-
+ 
   <script src="/scripts/board.js"></script>
+  <script src="/scripts/contacts.js" defer></script>
 </html>

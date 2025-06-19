@@ -6,12 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kanban Board</title>
 
+    <link rel="stylesheet" href="/styles/standard.css">
     <link rel="stylesheet" href="/styles/board.css">
+    <link rel="stylesheet" href="/styles/floating_add_task.css">
     <link rel="stylesheet" href="/assets/fonts/font.css">
 </head>
 
-<body onclick="closeUserMenu(event)">
-    <div class="board-main">
+<body onload="onloadBoard()" onclick="closeUserMenu(event)">
+    <div class="wrapper">
         <div class="side-navbar">
             <div class="sidebar-img">
                 <img src="/assets/img/Capa 1.png" alt="">
@@ -31,14 +33,12 @@
                 </a>
             </div>
             <div class="sidebar-bottom">
-                <a href="privacy_policy.html">
-                    <img src="" alt="">Privacy Policy</a>
-                <a href="legal_notice.html">
-                    <img src="" alt="">Legal notice</a>
+                <a href="privacy_policy.html">Privacy Policy</a>
+                <a href="legal_notice.html">Legal notice</a>
             </div>
         </div>
 
-        <div class="board-container">
+        <div class="content-area">
             <div class="top-navbar">
                 <span>Kanban Projekt Management Tool</span>
                 <div class="user-name">
@@ -50,7 +50,7 @@
                         <div id="user-dropdown" class="dropdown-menu hidden">
                             <a href="privacy_policy.html">Privacy Policy</a>
                             <a href="legal_notice.html">Legal Notice</a>
-                            <a href="index.html">Log Out</a>
+                            <a href="#" onclick="logout()">Log Out</a>
                         </div>
                     </div>
 
@@ -91,25 +91,17 @@
             </div>
 
             <div class="board-columns">
-                <div class="baord-column" id="toDo">
-
-                </div>
-                <div class="baord-column" id="inProgress">
-
-                </div>
-                <div class="baord-column" id="awaitFeedback">
-
-                </div>
-                <div class="baord-column" id="done">
-
-                </div>
+            <div class="board-column" id="toDo"></div>
+            <div class="board-column" id="inProgress"></div>
+            <div class="board-column" id="awaitFeedback"></div>
+            <div class="board-column" id="done"></div>
             </div>
 
-        </div>
-    </div>
 
+        </div>
+        <div id="popup-container" style="display: none;"></div>
+        <script src="/scripts/board.js"></script>
 </body>
 
-<script src="/scripts/board.js"></script>
 
 </html>

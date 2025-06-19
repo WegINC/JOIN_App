@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Summary</title>
 
+    <link rel="stylesheet" href="/styles/standard.css">
     <link rel="stylesheet" href="/styles/summary.css">
     <link rel="stylesheet" href="/assets/fonts/font.css">
 </head>
 
 <body onclick="closeUserMenu(event)">
-    <div class="summary-main">
+    <div class="wrapper">
         <div class="side-navbar">
             <div class="sidebar-img">
                 <img src="/assets/img/Capa 1.png" alt="">
@@ -31,14 +32,12 @@
                 </a>
             </div>
             <div class="sidebar-bottom">
-                <a href="privacy_policy.html">
-                    <img src="" alt="">Privacy Policy</a>
-                <a href="legal_notice.html">
-                    <img src="" alt="">Legal notice</a>
+                <a href="privacy_policy.html">Privacy Policy</a>
+                <a href="legal_notice.html">Legal notice</a>
             </div>
         </div>
 
-        <div class="summary-container">
+        <div class="content-area">
             <div class="top-navbar">
                 <span>Kanban Projekt Management Tool</span>
                 <div class="user-name">
@@ -50,10 +49,10 @@
                         <div id="user-dropdown" class="dropdown-menu hidden">
                             <a href="privacy_policy.html">Privacy Policy</a>
                             <a href="legal_notice.html">Legal Notice</a>
-                            <a href="index.html">Log Out</a>
+                            <a href="#" onclick="logout()">Log Out</a>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -67,18 +66,75 @@
                 <div class="summary-main-content">
                     <div class="summary-buttons">
                         <div class="top-buttons">
-                            <a class="summary-taskInfo" href="board.html"></a>
-                            <a class="summary-taskInfo" href="board.html"></a>
+                            <a class="summary-taskInfo" href="board.html">
+                                <div class="summary-task-inner">
+                                    <img class="icon-default" src="/assets/icons/to-do-icon.svg" alt="">
+                                    <img class="icon-hover" src="/assets/icons/to-do-icon-hover.svg" alt="">
+                                    <div class="task-info-text">
+                                        <span class="task-count" id="task_count">0</span>
+                                        <span class="task-label">To-Do</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a class="summary-taskInfo" href="board.html">
+                                <div class="summary-task-inner">
+                                    <img class="icon-default" src="/assets/icons/done-icon.svg" alt="">
+                                    <img class="icon-hover" src="/assets/icons/done-icon-hover.svg" alt="">
+                                    <div class="task-info-text">
+                                        <span class="task-count" id="task_count">0</span>
+                                        <span class="task-label">Done</span>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
 
+
                         <div class="middle-button">
-                            <a class="summary-taskDate" href="board.html"></a>
+                            <a class="summary-taskDate" href="board.html">
+                                <div class="summary-task-inner">
+                                    <img src="/assets/icons/urgent-icon.svg" alt="">
+                                    <div class="task-info-text">
+                                        <span class="task-count">0</span>
+                                        <span class="task-label">Urgent</span>
+                                    </div>
+                                    <div class="urgent-separator"></div>
+                                    <div class="task-info-text">
+                                        <span id="summary_urgent_date"></span>
+                                        <span class="task-label">Upcoming Deadline</span>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
 
                         <div class="bottom-buttons">
-                            <a class="summary-taskInfo" href="board.html"></a>
-                            <a class="summary-taskInfo" href="board.html"></a>
-                            <a class="summary-taskInfo" href="board.html"></a>
+                            <a class="summary-taskInfo" href="board.html">
+                                <div class="summary-task-inner">
+                                    <div class="task-info-text">
+                                        <span class="task-count">0</span>
+                                        <span class="task-label">Tasks in Board</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a class="summary-taskInfo" href="board.html">
+                                <div class="summary-task-inner">
+                                    <div class="task-info-text">
+                                        <span class="task-count">0</span>
+                                        <span class="task-label">Tasks in Board</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a class="summary-taskInfo" href="board.html">
+                                <div class="summary-task-inner">
+                                    <div class="task-info-text">
+                                        <span class="task-count">0</span>
+                                        <span class="task-label">Tasks in Board</span>
+                                    </div>
+                                </div>
+                            </a>
+
                         </div>
                     </div>
 
