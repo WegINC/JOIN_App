@@ -7,6 +7,13 @@ import {
 } from './contacts-template.js';
 
 
+document.addEventListener('DOMContentLoaded', () => {
+  loadContactsFromDatabase();
+  window.openAddContactOverlay = openAddContactOverlay;
+  window.closeAddContactOverlay = closeAddContactOverlay;
+  window.createNewContact = createNewContact;
+});
+
 async function loadContactsFromDatabase() {
   const contactList = document.getElementById("contact-list");
   contactList.innerHTML = "";
@@ -16,115 +23,114 @@ async function loadContactsFromDatabase() {
     const users = await response.json();
 
     for (let uid in users) {
-      const user = users[uid];
-      const name = user.name || '';
-      const email = user.email || '';
-      const phone = user.phone || '';
-      const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-      const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-
-      const item = document.createElement("div");
-      item.className = "contact-item";
-      item.innerHTML = getContactListItemTemplate({ initials, name, email, avatarColor: color });
-
-      contactList.appendChild(item);
-
-      const contact = { uid, initials, name, email, phone, avatarColor: color, element: item };
-
-      item.addEventListener("click", () => {
-        document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
-        item.classList.add('active');
-        renderContactDetails(contact);
-      });
+      const contact = buildContactObject(uid, users[uid]);
+      renderContactListItem(contact);
     }
   } catch (err) {
     console.error("Fehler beim Laden:", err);
   }
 }
 
+function buildContactObject(uid, user) {
+  const name = user.name || '';
+  const email = user.email || '';
+  const phone = user.phone || '';
+  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+  const avatarColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+  return { uid, name, email, phone, initials, avatarColor };
+}
+
+function renderContactListItem(contact) {
+  const contactList = document.getElementById("contact-list");
+  const item = document.createElement("div");
+  item.className = "contact-item";
+  item.innerHTML = getContactListItemTemplate(contact);
+  contact.element = item;
+
+  item.addEventListener("click", () => selectContact(item, contact));
+  contactList.appendChild(item);
+}
+
+function selectContact(item, contact) {
+  document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
+  item.classList.add('active');
+  renderContactDetails(contact);
+}
+
 function renderContactDetails(contact) {
-  const { uid, initials, name, email, phone, avatarColor, element } = contact;
-  const contactDetailsContent = document.getElementById('contact-details-content');
+  const content = document.getElementById('contact-details-content');
+  content.innerHTML = getContactDetailsTemplate(contact);
 
-  contactDetailsContent.innerHTML = getContactDetailsTemplate({ initials, name, email, phone, avatarColor });
+  content.querySelector('.edit-btn').addEventListener('click', () => openEditOverlay(contact));
+  content.querySelector('.delete-btn').addEventListener('click', () => deleteContact(contact));
+}
 
-  contactDetailsContent.querySelector('.edit-btn').addEventListener('click', () => {
-    openEditOverlay(contact);
-  });
+async function deleteContact(contact) {
+  if (!confirm(`Möchtest du ${contact.name} wirklich löschen?`)) return;
 
-  contactDetailsContent.querySelector('.delete-btn').addEventListener('click', async () => {
-    if (confirm(`Möchtest du ${name} wirklich löschen?`)) {
-      await fetch(`${BASE_URL}/users/${uid}.json`, { method: 'DELETE' });
-      element.remove();
-      contactDetailsContent.innerHTML = '';
-    }
-  });
+  try {
+    await fetch(`${BASE_URL}/users/${contact.uid}.json`, { method: 'DELETE' });
+    contact.element.remove();
+    document.getElementById('contact-details-content').innerHTML = '';
+    closeEditOverlay();
+  } catch (err) {
+    alert("Fehler beim Löschen.");
+  }
 }
 
 function openEditOverlay(contact) {
-  const { uid, initials, name, email, phone, avatarColor, element } = contact;
-  const overlayContainer = document.getElementById('edit-contact-overlay');
+  const overlay = document.getElementById('edit-contact-overlay');
+  overlay.style.display = 'flex';
+  overlay.innerHTML = getEditOverlayTemplate(contact);
 
-  overlayContainer.style.display = 'flex';
-  overlayContainer.innerHTML = getEditOverlayTemplate({ initials, name, email, phone, avatarColor });
+  overlay.addEventListener('click', e => e.target === overlay && closeEditOverlay());
+  overlay.querySelector('.edit-close-btn').addEventListener('click', closeEditOverlay);
+  overlay.querySelector('.delete-btn').addEventListener('click', () => deleteContact(contact));
+  overlay.querySelector('.save-btn').addEventListener('click', () => saveContactChanges(contact));
+}
 
-  overlayContainer.addEventListener('click', event => {
-    if (event.target === overlayContainer) {
-      overlayContainer.innerHTML = '';
-      overlayContainer.style.display = 'none';
-    }
+function closeEditOverlay() {
+  const overlay = document.getElementById('edit-contact-overlay');
+  overlay.innerHTML = '';
+  overlay.style.display = 'none';
+}
+
+async function saveContactChanges(contact) {
+  const newName = document.getElementById('edit-name').value.trim();
+  const newEmail = document.getElementById('edit-email').value.trim();
+  const newPhone = document.getElementById('edit-phone').value.trim();
+
+  if (!newName || !newEmail || !newPhone) return alert('Bitte fülle alle Felder aus!');
+
+  try {
+    await updateContactInDB(contact.uid, { name: newName, email: newEmail, phone: newPhone });
+    updateContactData(contact, newName, newEmail, newPhone);
+    renderContactDetails(contact);
+    closeEditOverlay();
+  } catch (err) {
+    alert("Fehler beim Speichern der Änderungen.");
+  }
+}
+
+async function updateContactInDB(uid, data) {
+  await fetch(`${BASE_URL}/users/${uid}.json`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
   });
+}
 
-  overlayContainer.querySelector('.edit-close-btn').addEventListener('click', () => {
-    overlayContainer.innerHTML = '';
-    overlayContainer.style.display = 'none';
-  });
+function updateContactData(contact, name, email, phone) {
+  contact.name = name;
+  contact.email = email;
+  contact.phone = phone;
+  contact.initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-  overlayContainer.querySelector('.delete-btn').addEventListener('click', async () => {
-    if (confirm(`Möchtest du ${name} wirklich löschen?`)) {
-      await fetch(`${BASE_URL}/users/${uid}.json`, { method: 'DELETE' });
-      element.remove();
-      overlayContainer.innerHTML = '';
-      overlayContainer.style.display = 'none';
-      document.getElementById('contact-details-content').innerHTML = '';
-    }
-  });
-
-  overlayContainer.querySelector('.save-btn').addEventListener('click', async () => {
-    const newName = document.getElementById('edit-name').value.trim();
-    const newEmail = document.getElementById('edit-email').value.trim();
-    const newPhone = document.getElementById('edit-phone').value.trim();
-
-    if (!newName || !newEmail || !newPhone) {
-      alert('Bitte fülle alle Felder aus!');
-      return;
-    }
-
-    try {
-      await fetch(`${BASE_URL}/users/${uid}.json`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newName, email: newEmail, phone: newPhone })
-      });
-
-      contact.name = newName;
-      contact.email = newEmail;
-      contact.phone = newPhone;
-      contact.initials = newName.split(' ').map(n => n[0]).join('').toUpperCase();
-
-      contact.element.querySelector('.contact-avatar').textContent = contact.initials;
-      contact.element.querySelector('.contact-info').innerHTML = `
-        <strong>${newName}</strong><br>
-        <a href="mailto:${newEmail}">${newEmail}</a>
-      `;
-      overlayContainer.innerHTML = '';
-      overlayContainer.style.display = 'none';
-      renderContactDetails(contact);
-    } catch (err) {
-      console.error("Fehler beim Speichern:", err);
-      alert("Fehler beim Speichern der Änderungen.");
-    }
-  });
+  contact.element.querySelector('.contact-avatar').textContent = contact.initials;
+  contact.element.querySelector('.contact-info').innerHTML = `
+    <strong>${name}</strong><br>
+    <a href="mailto:${email}">${email}</a>
+  `;
 }
 
 function openAddContactOverlay() {
@@ -133,12 +139,7 @@ function openAddContactOverlay() {
   overlay.style.display = 'flex';
   overlay.innerHTML = getAddContactOverlayTemplate();
 
-  overlay.addEventListener('click', event => {
-    if (event.target === overlay) {
-      overlay.innerHTML = '';
-      overlay.style.display = 'none';
-    }
-  });
+  overlay.addEventListener('click', event => event.target === overlay && closeAddContactOverlay());
 }
 
 function closeAddContactOverlay() {
@@ -153,48 +154,21 @@ async function createNewContact() {
   const email = document.getElementById('new-email').value.trim();
   const phone = document.getElementById('new-phone').value.trim();
 
-  if (!name || !email || !phone) {
-    alert('Bitte fülle alle Felder aus!');
-    return;
-  }
+  if (!name || !email || !phone) return alert('Bitte fülle alle Felder aus!');
 
-  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-  const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+  const contact = buildContactObject('', { name, email, phone });
 
   try {
-    const response = await fetch(`${BASE_URL}/users.json`, {
+    const res = await fetch(`${BASE_URL}/users.json`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, phone })
     });
-    const data = await response.json();
-    const uid = data.name;
-
-    const contact = { uid, name, email, phone, initials, avatarColor: color };
-
-    const contactList = document.getElementById('contact-list');
-    const item = document.createElement('div');
-    item.className = 'contact-item';
-    item.innerHTML = getContactListItemTemplate({ initials, name, email, avatarColor: color });
-    contact.element = item;
-    contactList.appendChild(item);
-
-    item.addEventListener('click', () => {
-      document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
-      item.classList.add('active');
-      renderContactDetails(contact);
-    });
-
+    const data = await res.json();
+    contact.uid = data.name;
+    renderContactListItem(contact);
     closeAddContactOverlay();
   } catch (err) {
-    console.error("Fehler beim Erstellen:", err);
     alert("Fehler beim Erstellen des Kontakts.");
   }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  loadContactsFromDatabase();
-  window.openAddContactOverlay = openAddContactOverlay;
-  window.closeAddContactOverlay = closeAddContactOverlay;
-  window.createNewContact = createNewContact;
-});
