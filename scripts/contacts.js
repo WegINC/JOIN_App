@@ -1,4 +1,11 @@
 
+import {
+  getContactListItemTemplate,
+  getContactDetailsTemplate,
+  getEditOverlayTemplate,
+  getAddContactOverlayTemplate
+} from './contacts-template.js';
+
 
 async function loadContactsFromDatabase() {
   const contactList = document.getElementById("contact-list");
@@ -18,20 +25,16 @@ async function loadContactsFromDatabase() {
 
       const item = document.createElement("div");
       item.className = "contact-item";
-      item.innerHTML = `
-        <div class="contact-avatar" style="background-color:${color}">${initials}</div>
-        <div class="contact-info">
-          <strong>${name}</strong><br>
-          <a href="mailto:${email}">${email}</a>
-        </div>
-      `;
+      item.innerHTML = getContactListItemTemplate({ initials, name, email, avatarColor: color });
 
       contactList.appendChild(item);
+
+      const contact = { uid, initials, name, email, phone, avatarColor: color, element: item };
 
       item.addEventListener("click", () => {
         document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
         item.classList.add('active');
-        renderContactDetails({ initials, name, email, avatarColor: color, element: item });
+        renderContactDetails(contact);
       });
     }
   } catch (err) {
@@ -40,40 +43,18 @@ async function loadContactsFromDatabase() {
 }
 
 function renderContactDetails(contact) {
-  const { initials, name, email, avatarColor, element } = contact;
-
+  const { uid, initials, name, email, phone, avatarColor, element } = contact;
   const contactDetailsContent = document.getElementById('contact-details-content');
 
-  contactDetailsContent.innerHTML = `
-    <div class="contact-details-header">
-      <div class="contact-initial" style="background:${avatarColor}">
-        ${initials}
-      </div>
-      <div class="contact-name-actions">
-        <h2>${name}</h2>
-        <div class="contact-actions">
-          <button class="edit-btn" title="Edit">
-            <img src="/assets/icons/edit-button.png" alt="Edit">Edit
-          </button>
-          <button class="delete-btn" title="Delete">
-            <img src="/assets/icons/delete-button.png" alt="Delete">Delete
-          </button>
-        </div>
-      </div>
-    </div>
-    <span class="contact-text">Contact Information</span>
-    <div class="contact-info-container">
-      <p><strong>Email:</strong><br><a href="mailto:${email}">${email}</a></p>
-      <p><strong>Phone:</strong><br>+49 1111 111 11 11</p>
-    </div>
-  `;
+  contactDetailsContent.innerHTML = getContactDetailsTemplate({ initials, name, email, phone, avatarColor });
 
   contactDetailsContent.querySelector('.edit-btn').addEventListener('click', () => {
     openEditOverlay(contact);
   });
 
-  contactDetailsContent.querySelector('.delete-btn').addEventListener('click', () => {
+  contactDetailsContent.querySelector('.delete-btn').addEventListener('click', async () => {
     if (confirm(`Möchtest du ${name} wirklich löschen?`)) {
+      await fetch(`${BASE_URL}/users/${uid}.json`, { method: 'DELETE' });
       element.remove();
       contactDetailsContent.innerHTML = '';
     }
@@ -81,64 +62,13 @@ function renderContactDetails(contact) {
 }
 
 function openEditOverlay(contact) {
-  const { initials, name, email, avatarColor, element } = contact;
+  const { uid, initials, name, email, phone, avatarColor, element } = contact;
   const overlayContainer = document.getElementById('edit-contact-overlay');
 
   overlayContainer.style.display = 'flex';
+  overlayContainer.innerHTML = getEditOverlayTemplate({ initials, name, email, phone, avatarColor });
 
-  overlayContainer.innerHTML = `
-    <div class="contact-edit-overlay">
-      <div class="edit-overlay-left">
-        <img src="/assets/img/Capa 1.png" alt="Logo" class="edit-logo">
-        <h1>Edit contact</h1>
-        <div class="edit-underline"></div>
-      </div>
-
-      <div class="edit-overlay-right">
-        <button class="edit-close-btn" title="Close">
-          <img src="/assets/icons/close.png" alt="Close">
-        </button>
-
-        <div class="edit-avatar" style="background-color: ${avatarColor}">
-          ${initials}
-        </div>
-
-        <div class="edit-form">
-          <div class="input-group">
-            <input type="text" id="edit-name" value="${name}" placeholder="Name"
-              style="background-image: url('/assets/icons/person.png');
-                     background-repeat: no-repeat;
-                     background-position: right 10px center;
-                     background-size: 20px;">
-          </div>
-
-          <div class="input-group">
-            <input type="email" id="edit-email" value="${email}" placeholder="Email"
-              style="background-image: url('/assets/icons/mail.png');
-                     background-repeat: no-repeat;
-                     background-position: right 10px center;
-                     background-size: 20px;">
-          </div>
-
-          <div class="input-group">
-            <input type="tel" id="edit-phone" value="+49 1111 11 111 1" placeholder="Phone"
-              style="background-image: url('/assets/icons/call.png');
-                     background-repeat: no-repeat;
-                     background-position: right 10px center;
-                     background-size: 20px;">
-          </div>
-
-          <div class="edit-actions">
-            <button class="delete-btn">Delete</button>
-            <button class="save-btn">
-              Save <img src="/assets/icons/check.png" alt="Save Icon">
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-  overlayContainer.addEventListener('click', function (event) {
+  overlayContainer.addEventListener('click', event => {
     if (event.target === overlayContainer) {
       overlayContainer.innerHTML = '';
       overlayContainer.style.display = 'none';
@@ -150,23 +80,50 @@ function openEditOverlay(contact) {
     overlayContainer.style.display = 'none';
   });
 
-  overlayContainer.querySelector('.delete-btn').addEventListener('click', () => {
+  overlayContainer.querySelector('.delete-btn').addEventListener('click', async () => {
     if (confirm(`Möchtest du ${name} wirklich löschen?`)) {
+      await fetch(`${BASE_URL}/users/${uid}.json`, { method: 'DELETE' });
       element.remove();
       overlayContainer.innerHTML = '';
       overlayContainer.style.display = 'none';
-      const contactDetailsContent = document.getElementById('contact-details-content');
-      contactDetailsContent.innerHTML = '';
+      document.getElementById('contact-details-content').innerHTML = '';
     }
   });
 
-  overlayContainer.querySelector('.save-btn').addEventListener('click', () => {
-    const newName = document.getElementById('edit-name').value;
-    const newEmail = document.getElementById('edit-email').value;
-    const newPhone = document.getElementById('edit-phone').value;
-    console.log("Geändert:", newName, newEmail, newPhone);
-    overlayContainer.innerHTML = '';
-    overlayContainer.style.display = 'none';
+  overlayContainer.querySelector('.save-btn').addEventListener('click', async () => {
+    const newName = document.getElementById('edit-name').value.trim();
+    const newEmail = document.getElementById('edit-email').value.trim();
+    const newPhone = document.getElementById('edit-phone').value.trim();
+
+    if (!newName || !newEmail || !newPhone) {
+      alert('Bitte fülle alle Felder aus!');
+      return;
+    }
+
+    try {
+      await fetch(`${BASE_URL}/users/${uid}.json`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName, email: newEmail, phone: newPhone })
+      });
+
+      contact.name = newName;
+      contact.email = newEmail;
+      contact.phone = newPhone;
+      contact.initials = newName.split(' ').map(n => n[0]).join('').toUpperCase();
+
+      contact.element.querySelector('.contact-avatar').textContent = contact.initials;
+      contact.element.querySelector('.contact-info').innerHTML = `
+        <strong>${newName}</strong><br>
+        <a href="mailto:${newEmail}">${newEmail}</a>
+      `;
+      overlayContainer.innerHTML = '';
+      overlayContainer.style.display = 'none';
+      renderContactDetails(contact);
+    } catch (err) {
+      console.error("Fehler beim Speichern:", err);
+      alert("Fehler beim Speichern der Änderungen.");
+    }
   });
 }
 
@@ -174,58 +131,12 @@ function openAddContactOverlay() {
   const overlay = document.getElementById('add-contact-overlay');
   overlay.classList.remove('hidden');
   overlay.style.display = 'flex';
-  overlay.innerHTML = `
-    <div class="contact-add-overlay">
-      <div class="add-overlay-left">
-        <img src="../assets/icons/Capa 1.png" alt="Logo" class="add-logo">
-        <h1>Add contact</h1>
-        <p>Tasks are better with a team!</p>
-        <div class="add-underline"></div>
-      </div>
-      <div class="add-overlay-right">
-        <button class="add-close-btn" onclick="closeAddContactOverlay()">
-          <img src="../assets/icons/close.png" alt="Close">
-        </button>
-        <div class="add-avatar">
-          <img src="../assets/icons/person-add-profile.png" alt="User">
-        </div>
-        <form class="add-form">
-          <div class="input-group">
-            <input type="text" id="new-name" placeholder="Name" required
-              style="background-image: url('../assets/icons/person.png');
-                     background-repeat: no-repeat;
-                     background-position: right 10px center;
-                     background-size: 20px;">
-          </div>
-          <div class="input-group">
-            <input type="email" id="new-email" placeholder="Email" required
-              style="background-image: url('../assets/icons/mail.png');
-                     background-repeat: no-repeat;
-                     background-position: right 10px center;
-                     background-size: 20px;">
-          </div>
-          <div class="input-group">
-            <input type="tel" id="new-phone" placeholder="Phone" required
-              style="background-image: url('../assets/icons/call.png');
-                     background-repeat: no-repeat;
-                     background-position: right 10px center;
-                     background-size: 20px;">
-          </div>
-          <div class="add-actions">
-            <button type="button" class="cancel-btn delete-btn" onclick="closeAddContactOverlay()">
-              Cancel <img src="../assets/icons/close.png">
-            </button>
-            <button type="button" class="create-btn" onclick="createNewContact()">
-              Create contact <img src="../assets/icons/check.png">
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  `
-  overlay.addEventListener('click', function (event) {
+  overlay.innerHTML = getAddContactOverlayTemplate();
+
+  overlay.addEventListener('click', event => {
     if (event.target === overlay) {
-      closeAddContactOverlay();
+      overlay.innerHTML = '';
+      overlay.style.display = 'none';
     }
   });
 }
@@ -237,59 +148,53 @@ function closeAddContactOverlay() {
   overlay.style.display = 'none';
 }
 
-function createNewContact() {
-  const name = document.getElementById('new-name').value;
-  const email = document.getElementById('new-email').value;
-  const phone = document.getElementById('new-phone').value;
+async function createNewContact() {
+  const name = document.getElementById('new-name').value.trim();
+  const email = document.getElementById('new-email').value.trim();
+  const phone = document.getElementById('new-phone').value.trim();
 
   if (!name || !email || !phone) {
     alert('Bitte fülle alle Felder aus!');
     return;
   }
 
-  const contactList = document.getElementById('contact-list');
-  if (contactList) {
+  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+  const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+
+  try {
+    const response = await fetch(`${BASE_URL}/users.json`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone })
+    });
+    const data = await response.json();
+    const uid = data.name;
+
+    const contact = { uid, name, email, phone, initials, avatarColor: color };
+
+    const contactList = document.getElementById('contact-list');
     const item = document.createElement('div');
     item.className = 'contact-item';
-    const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-
-    item.innerHTML = `
-      <div class="contact-avatar" style="background-color: ${color}">
-        ${initials}
-      </div>
-      <div class="contact-info">
-        <strong>${name}</strong><br>
-        <a href="mailto:${email}">${email}</a>
-      </div>
-    `;
-
+    item.innerHTML = getContactListItemTemplate({ initials, name, email, avatarColor: color });
+    contact.element = item;
     contactList.appendChild(item);
 
     item.addEventListener('click', () => {
       document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
       item.classList.add('active');
-
-      const contact = {
-        initials: initials,
-        name: name,
-        email: email,
-        avatarColor: color,
-        element: item
-      };
-
       renderContactDetails(contact);
     });
+
+    closeAddContactOverlay();
+  } catch (err) {
+    console.error("Fehler beim Erstellen:", err);
+    alert("Fehler beim Erstellen des Kontakts.");
   }
-
-  closeAddContactOverlay();
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
   loadContactsFromDatabase();
+  window.openAddContactOverlay = openAddContactOverlay;
+  window.closeAddContactOverlay = closeAddContactOverlay;
+  window.createNewContact = createNewContact;
 });
-
-window.openAddContactOverlay = openAddContactOverlay;
-window.closeAddContactOverlay = closeAddContactOverlay;
-window.createNewContact = createNewContact;
