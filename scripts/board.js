@@ -43,23 +43,41 @@ async function fetchUsers() {
   try {
     const res = await fetch(`${BASE_URL}/users.json`);
     const data = await res.json();
-    const initialsMap = {};
+    const userDataMap = {};
 
     for (const uid in data) {
-      const fullName = data[uid].name || "";
+      const user = data[uid];
+      const fullName = user.name || "";
       const nameParts = fullName.trim().split(" ");
       const initials = nameParts.length >= 2
         ? nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase()
         : nameParts[0][0].toUpperCase();
 
-      initialsMap[uid] = initials;
+      let themeColor = user.themeColor;
+
+      // Wenn kein themeColor vorhanden, generiere einen und speichere ihn in Firebase
+      if (!themeColor) {
+        themeColor = getRandomColor();
+        await fetch(`${BASE_URL}/users/${uid}.json`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ themeColor })
+        });
+      }
+
+      userDataMap[uid] = { initials, themeColor };
     }
 
-    return initialsMap;
+    return userDataMap;
   } catch (err) {
     console.error("Fehler beim Laden der Benutzer:", err);
     return {};
   }
+}
+
+function getRandomColor() {
+  const colors = ["#FF5733", "#009688", "#3F51B5", "#795548", "#FF9800"];
+  return colors[Math.floor(Math.random() * colors.length)];
 }
 
 function openFloatingAddTaskPopup() {
@@ -92,13 +110,15 @@ function createTask() {
     return;
   }
 
+  const currentUid = localStorage.getItem("userId") || "uid_1";
+
   const taskData = {
     title,
     description,
     dueDate,
     category,
     priority: selectedPriority || "low",
-    assignedTo: { uid_1: true },
+    assignedTo: { [currentUid]: true },
     status: "toDo",
     userInitials: userInitial
   };
@@ -143,8 +163,11 @@ async function loadTasks() {
 
           const assignedUIDs = Object.keys(task.assignedTo || {});
           const userBadges = assignedUIDs.map(uid => {
-            const initials = userInitialsMap[uid] || "??";
-            return `<div class="task-user-initials">${initials}</div>`;
+            const user = userInitialsMap[uid];
+            const initials = user?.initials || "G";
+            const themeColor = user?.themeColor || "#0038FF";
+
+            return `<div class="task-user-initials" style="background-color: ${themeColor};">${initials}</div>`;
           }).join("");
 
           card.innerHTML = `
@@ -257,5 +280,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
 function logout() {
   localStorage.removeItem("userInitial");
+  localStorage.removeItem("userId");
   window.location.href = "/index.html";
 }

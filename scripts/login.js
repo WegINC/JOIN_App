@@ -18,9 +18,11 @@ async function onloadFunc() {
 
     for (const [uid, user] of Object.entries(users)) {
       if (user.email === emailInput && user.password === passwordInput) {
+        const initials = user.name.split(" ").map(n => n[0]).join("").toUpperCase();
+        localStorage.setItem("userInitial", initials);
+        localStorage.setItem("userId", uid);
         console.log("Login erfolgreich für:", user.name);
         matchFound = true;
-        localStorage.setItem("userInitial", user.name.charAt(0).toUpperCase());
         window.location.href = "/pages/summary.html";
         break;
       }
