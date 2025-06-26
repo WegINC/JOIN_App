@@ -121,7 +121,8 @@ body {
 
 .task-label {
   color: #2A3647;
-  font-size: 16px;
+  font-size: 20px;
+  text-align: center;
 }
 
 .summary-taskInfo:hover .task-info-text .task-count,
@@ -173,4 +174,132 @@ body {
   font-weight: 500;
   margin-bottom: 8px;
   color: #2A3647;
+}
+
+
+@media (max-width: 1124px) {
+  .summary-content-headline {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 38px;
+  }
+
+  .headline-text-1 {
+    order: 1;
+  }
+
+  .headline-text-2 {
+    order: 2;
+  }
+
+  .separator {
+    order: 3;
+    width: 90px;
+    height: 2px;
+    background-color: #29abe2;
+  }
+
+  .summary-main-content {
+    flex-direction: column;
+  }
+
+  .summary-greeting {
+    display: none;
+  }
+}
+
+@media (max-width: 798px) {
+  .wrapper {
+    flex-direction: column;
+  }
+
+  .headline-text-1 {
+    font-size: 47px;
+  }
+
+  .headline-text-2 {
+    font-size: 20px;
+  }
+
+  .side-navbar {
+    flex-direction: row;
+    width: 100%;
+    height: 80px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 16px 0 16px;
+  }
+
+  .sidebar-img,
+  .sidebar-bottom {
+    display: none;
+  }
+
+  .sidebar-menu {
+    flex-direction: row;
+  }
+
+  .sidebar-menu a {
+    flex-direction: column;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .sidebar-menu img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .top-buttons a {
+    width: 186px;
+    height: 110px;
+  }
+
+  .middle-button a {
+    width: 396px;
+    height: 110px;
+  }
+
+  .bottom-buttons {
+    gap: 24px;
+  }
+
+  .bottom-buttons a {
+    width: 116px;
+    height: 116px;
+  }
+
+  .task-label {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 500px) {
+  .top-navbar span {
+    display: none;
+  }
+
+  .help-link {
+    display: none;
+  }
+
+  .top-navbar {
+    padding-left: 40px;
+  }
+
+  .navbar-logo {
+    display: inline-block;
+    width: 32px;
+    height: 40px;
+  }
+
+  .summary-content-headline {
+    align-items: flex-start;
+  }
 }

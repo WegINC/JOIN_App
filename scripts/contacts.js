@@ -36,8 +36,13 @@ function buildContactObject(uid, user) {
   const email = user.email || '';
   const phone = user.phone || '';
   const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-  const avatarColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-  return { uid, name, email, phone, initials, avatarColor };
+  const color = user.themeColor || generateRandomColor();
+  return { uid, name, email, phone, initials, color };
+}
+
+function generateRandomColor() {
+  const colors = ['#29ABE2', '#FF7A00', '#6E52FF', '#FC71FF', '#1FD7C1', '#FFBB2B'];
+  return colors[Math.floor(Math.random() * colors.length)];
 }
 
 function renderContactListItem(contact) {
@@ -159,10 +164,12 @@ async function createNewContact() {
   const contact = buildContactObject('', { name, email, phone });
 
   try {
+    const color = generateRandomColor();
+    const contact = buildContactObject('', { name, email, phone, themeColor: color });
     const res = await fetch(`${BASE_URL}/users.json`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, phone })
+      body: JSON.stringify({ name, email, phone, color})
     });
     const data = await res.json();
     contact.uid = data.name;

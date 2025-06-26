@@ -1,6 +1,6 @@
-export function getContactListItemTemplate({ initials, name, email, avatarColor }) {
+export function getContactListItemTemplate({ initials, name, email, color }) {
     return `
-      <div class="contact-avatar" style="background-color:${avatarColor}">${initials}</div>
+      <div class="contact-avatar" style="background-color:${color}">${initials}</div>
       <div class="contact-info">
         <strong>${name}</strong><br>
         <a href="mailto:${email}">${email}</a>
@@ -8,10 +8,10 @@ export function getContactListItemTemplate({ initials, name, email, avatarColor 
     `;
   }
   
-  export function getContactDetailsTemplate({ initials, name, email, phone, avatarColor }) {
+  export function getContactDetailsTemplate({ initials, name, email, phone, color }) {
     return `
       <div class="contact-details-header">
-        <div class="contact-initial" style="background:${avatarColor}">${initials}</div>
+        <div class="contact-initial" style="background:${color}">${initials}</div>
         <div class="contact-name-actions">
           <h2>${name}</h2>
           <div class="contact-actions">
@@ -32,7 +32,7 @@ export function getContactListItemTemplate({ initials, name, email, avatarColor 
     `;
   }
   
-  export function getEditOverlayTemplate({ initials, name, email, phone, avatarColor }) {
+  export function getEditOverlayTemplate({ initials, name, email, phone, color }) {
     return `
       <div class="contact-edit-overlay">
         <div class="edit-overlay-left">
@@ -44,7 +44,7 @@ export function getContactListItemTemplate({ initials, name, email, avatarColor 
           <button class="edit-close-btn" title="Close">
             <img src="/assets/icons/close.png" alt="Close">
           </button>
-          <div class="edit-avatar" style="background-color: ${avatarColor}">${initials}</div>
+          <div class="edit-avatar" style="background-color: ${color}">${initials}</div>
           <div class="edit-form">
             <div class="input-group">
               <input type="text" id="edit-name" value="${name}" placeholder="Name" style="background-image: url('/assets/icons/person.png'); background-repeat: no-repeat; background-position: right 10px center; background-size: 20px;">
