@@ -12,6 +12,11 @@
 </head>
 
 <body onclick="closeUserMenu(event)">
+
+    <div id="splash-greeting" class="splash-greeting">
+        <span class="greeting-text-splash">Good morning</span>
+    </div>
+
     <div class="wrapper">
         <div class="side-navbar">
             <div class="sidebar-img">
@@ -48,6 +53,7 @@
                         <button id="user-name" onclick="toggleUserMenu()">G</button>
 
                         <div id="user-dropdown" class="dropdown-menu hidden">
+                            <a class="help-link-madia" href="help.html">Help</a>
                             <a href="privacy_policy.html">Privacy Policy</a>
                             <a href="legal_notice.html">Legal Notice</a>
                             <a href="#" onclick="logout()">Log Out</a>
@@ -152,5 +158,24 @@
 </body>
 
 <script src="/scripts/board.js"></script>
+
+<script>
+    const splash = document.getElementById('splash-greeting');
+    const wrapper = document.querySelector('.wrapper');
+    const smallScreen = window.innerWidth <= 1124;
+
+    if (smallScreen) {
+        splash.classList.remove('hidden');
+        wrapper.classList.add('hidden');
+
+        setTimeout(() => {
+            splash.classList.add('hidden');
+            wrapper.classList.remove('hidden');
+        }, 2000);
+    } else {
+        splash.classList.add('hidden');
+        wrapper.classList.remove('hidden');
+    }
+</script>
 
 </html>

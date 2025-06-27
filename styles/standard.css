@@ -91,6 +91,10 @@
     flex-shrink: 0;
 }
 
+.help-link-madia {
+    display: none;
+  }
+
 .user-name {
     display: flex;
     align-items: center;

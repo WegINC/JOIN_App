@@ -6,6 +6,29 @@ body {
   overflow: hidden;
 }
 
+.splash-greeting {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f6f7f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#splash-greeting.hidden {
+  display: none;
+}
+
+.greeting-text-splash {
+  font-size: 36px;
+  font-weight: 400;
+  color: #2A3647;
+}
+
 .summary-content {
   flex-grow: 1;
   overflow-y: auto;
@@ -289,6 +312,10 @@ body {
     display: none;
   }
 
+  .help-link-madia {
+    display: inline-flex;
+  }
+
   .top-navbar {
     padding-left: 40px;
   }
@@ -301,5 +328,49 @@ body {
 
   .summary-content-headline {
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 416px) {
+
+  .headline-text-1 {
+    font-size: 36px;
+  }
+
+  .headline-text-2 {
+    font-size: 16px;
+  }
+
+  .top-buttons a {
+    width: 128px;
+    height: 96px;
+  }
+
+  .middle-button a {
+    width: 268px;
+    height: 96px;
+    padding: 4px;
+  }
+
+  .bottom-buttons {
+    gap: 16px;
+  }
+
+  .bottom-buttons a {
+    width: 82px;
+    height: 82px;
+  }
+
+  .task-label {
+    font-size: 10px;
+  }
+
+  .side-navbar {
+    padding: 0;
+  }
+
+  .sidebar-menu a {
+    font-size: 10px;
+    padding: 8px;
   }
 }
