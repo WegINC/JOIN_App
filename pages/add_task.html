@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/styles/standard.css" />
     <link rel="stylesheet" href="/styles/add_task.css" />
     <link rel="stylesheet" href="/assets/fonts/font.css" />
+
     <style>
       select {
         padding: 12px;
@@ -23,6 +24,7 @@
 
   <body onclick="closeUserMenu(event)">
     <div class="wrapper">
+      <!-- Sidebar -->
       <div class="side-navbar">
         <div class="sidebar-img">
           <img src="/assets/img/Capa 1.png" alt="" />
@@ -47,15 +49,24 @@
         </div>
       </div>
 
+      <!-- Content -->
       <div class="content-area">
+        <!-- Responsive Top Navbar -->
         <div class="top-navbar">
           <span>Kanban Projekt Management Tool</span>
+          <img
+            class="navbar-logo hidden"
+            src="/assets/img/Capa 2.png"
+            alt="join-logo"
+          />
           <div class="user-name">
-            <a href="help.html"><img src="/assets/icons/help.png" alt="" /></a>
-
+            <a class="help-link" href="help.html"
+              ><img src="/assets/icons/help.png" alt="Help"
+            /></a>
             <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
               <button id="user-name" onclick="toggleUserMenu()">G</button>
               <div id="user-dropdown" class="dropdown-menu hidden">
+                <a class="help-link-madia" href="help.html">Help</a>
                 <a href="privacy_policy.html">Privacy Policy</a>
                 <a href="legal_notice.html">Legal Notice</a>
                 <a href="#" onclick="logout()">Log Out</a>
@@ -64,6 +75,7 @@
           </div>
         </div>
 
+        <!-- Add Task Form -->
         <div class="add-task-content">
           <div class="add-task-content-headline">
             <span class="headline-text">Add Task</span>
@@ -131,10 +143,8 @@
       </div>
     </div>
 
+    <!-- Firebase: fetch contacts -->
     <script>
-      const BASE_URL =
-        "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app";
-
       function populateAssignedDropdown() {
         fetch(`${BASE_URL}/contacts.json`)
           .then((res) => res.json())
