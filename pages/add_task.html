@@ -8,23 +8,10 @@
     <link rel="stylesheet" href="/styles/standard.css" />
     <link rel="stylesheet" href="/styles/add_task.css" />
     <link rel="stylesheet" href="/assets/fonts/font.css" />
-
-    <style>
-      select {
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #d1d1d1;
-        font-size: 16px;
-        width: 100%;
-        box-sizing: border-box;
-        cursor: pointer;
-      }
-    </style>
   </head>
 
   <body onclick="closeUserMenu(event)">
     <div class="wrapper">
-      <!-- Sidebar -->
       <div class="side-navbar">
         <div class="sidebar-img">
           <img src="/assets/img/Capa 1.png" alt="" />
@@ -49,9 +36,7 @@
         </div>
       </div>
 
-      <!-- Content -->
       <div class="content-area">
-        <!-- Responsive Top Navbar -->
         <div class="top-navbar">
           <span>Kanban Projekt Management Tool</span>
           <img
@@ -75,7 +60,6 @@
           </div>
         </div>
 
-        <!-- Add Task Form -->
         <div class="add-task-content">
           <div class="add-task-content-headline">
             <span class="headline-text">Add Task</span>
@@ -143,7 +127,6 @@
       </div>
     </div>
 
-    <!-- Firebase: fetch contacts -->
     <script>
       function populateAssignedDropdown() {
         fetch(`${BASE_URL}/contacts.json`)

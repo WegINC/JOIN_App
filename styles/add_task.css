@@ -213,6 +213,16 @@ textarea {
   color: #2a3647;
 }
 
+select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d1d1;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
 .navbar-logo {
   display: none;
 }
