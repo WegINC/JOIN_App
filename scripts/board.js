@@ -21,7 +21,7 @@ function closeUserMenu(event) {
 }
 
 function setupButtons() {
-  document.querySelectorAll(".column-titles button").forEach(btn =>
+  document.querySelectorAll(".column-title button").forEach(btn =>
     btn.addEventListener("click", openFloatingAddTaskPopup)
   );
   const addBtn = document.querySelector(".add-task-button");
@@ -283,3 +283,7 @@ function logout() {
   localStorage.removeItem("userId");
   window.location.href = "/index.html";
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  onloadBoard();
+});
