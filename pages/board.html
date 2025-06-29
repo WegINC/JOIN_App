@@ -40,6 +40,7 @@
 
         <div class="content-area">
             <div class="top-navbar">
+                <img class="navbar-logo" src="/assets/img/Capa 2.png" alt="Logo">
                 <span>Kanban Projekt Management Tool</span>
                 <div class="user-name">
                     <a href="help.html"><img src="/assets/icons/help.png" alt=""></a>
@@ -77,37 +78,38 @@
 
                     </div>
                 </div>
-
             <div class="columns">
-                <div class="column-titles">
+                <div class="column">
                     <div class="column-title">
-                        <span>To do</span>
-                        <button>+</button>
+                    <span>To do</span>
+                    <button>+</button>
                     </div>
-                    <div class="column-title">
-                        <span>In progress</span>
-                        <button>+</button>
-                    </div>
-                    <div class="column-title">
-                        <span>Await feedback</span>
-                        <button>+</button>
-                    </div>
-                    <div class="column-title">
-                        <span>Done</span>
-                    </div>
+                    <div class="board-column" id="toDo"></div>
                 </div>
 
-                <div class="board-columns">
-                    <div class="board-column" id="toDo"></div>
+                <div class="column">
+                    <div class="column-title">
+                    <span>In progress</span>
+                    <button>+</button>
+                    </div>
                     <div class="board-column" id="inProgress"></div>
+                </div>
+
+                <div class="column">
+                    <div class="column-title">
+                    <span>Await feedback</span>
+                    <button>+</button>
+                    </div>
                     <div class="board-column" id="awaitFeedback"></div>
+                </div>
+
+                <div class="column">
+                    <div class="column-title">
+                    <span>Done</span>
+                    </div>
                     <div class="board-column" id="done"></div>
                 </div>
             </div>
-
-        </div>
-
-
         <div id="popup-container" style="display: none;"></div>
         <script src="/scripts/board.js"></script>
 </body>
