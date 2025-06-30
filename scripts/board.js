@@ -102,37 +102,55 @@ function createTask() {
   const description = document.getElementById("description").value;
   const dueDate = document.getElementById("due").value;
   const category = document.getElementById("category").value;
+  const priority = selectedPriority || "low";
 
   const userInitial = localStorage.getItem("userInitial") || "G";
+  const currentUid = localStorage.getItem("userId") || "uid_1";
 
   if (!title || !dueDate || category === "Select task category") {
     alert("Bitte alle Pflichtfelder ausfüllen.");
     return;
   }
 
-  const currentUid = localStorage.getItem("userId") || "uid_1";
-
   const taskData = {
     title,
     description,
     dueDate,
     category,
-    priority: selectedPriority || "low",
+    priority,
     assignedTo: { [currentUid]: true },
     status: "toDo",
     userInitials: userInitial
   };
 
-  fetch(`${BASE_URL}/tasks.json`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(taskData)
-  })
-    .then(() => {
-      closePopup();
-      loadTasks();
+  const editingId = window.editingTaskId;
+
+  if (editingId) {
+    fetch(`${BASE_URL}/tasks/${editingId}.json`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(taskData)
     })
-    .catch(err => console.error("Fehler beim Speichern:", err));
+      .then(() => {
+        window.editingTaskId = null;
+        closePopup();
+        loadTasks();
+        closeTaskOverlay();
+      })
+      .catch(err => console.error("Fehler beim Aktualisieren:", err));
+  } else {
+
+    fetch(`${BASE_URL}/tasks.json`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(taskData)
+    })
+      .then(() => {
+        closePopup();
+        loadTasks();
+      })
+      .catch(err => console.error("Fehler beim Erstellen:", err));
+  }
 }
 
 let draggedCard = null;
@@ -151,46 +169,49 @@ async function loadTasks() {
 
       for (let id in tasks) {
         const task = tasks[id];
-        const column = document.getElementById(task["status"]);
+        task.id = id;
 
-        if (column) {
-          const card = document.createElement("div");
-          card.classList.add("task-card");
-          card.setAttribute("data-id", id);
-          card.setAttribute("draggable", "true");
-          card.addEventListener("dragstart", handleDragStart);
-          card.addEventListener("dragend", handleDragEnd);
+        const column = document.getElementById(task.status);
+        if (!column) continue;
 
-          const assignedUIDs = Object.keys(task.assignedTo || {});
-          const userBadges = assignedUIDs.map(uid => {
-            const user = userInitialsMap[uid];
-            const initials = user?.initials || "G";
-            const themeColor = user?.themeColor || "#0038FF";
+        const card = document.createElement("div");
+        card.classList.add("task-card");
+        card.setAttribute("data-id", id);
+        card.setAttribute("draggable", "true");
 
-            return `<div class="task-user-initials" style="background-color: ${themeColor};">${initials}</div>`;
-          }).join("");
+        card.addEventListener("dragstart", handleDragStart);
+        card.addEventListener("dragend", handleDragEnd);
 
-          card.innerHTML = `
-            <div class="task-category">${task["category"]}</div>
-            <div class="task-title"><strong>${task["title"]}</strong></div>
-            <div class="task-description">${task["description"]}</div>
+        card.addEventListener("click", () => openTaskDetailOverlay(task, id));
 
-            ${task.subtasks && task.subtasks.length ? `
+        const assignedUIDs = Object.keys(task.assignedTo || {});
+        const userBadges = assignedUIDs.map(uid => {
+          const user = userInitialsMap[uid];
+          const initials = user?.initials || "G";
+          const themeColor = user?.themeColor || "#0038FF";
+
+          return `<div class="task-user-initials" style="background-color: ${themeColor};">${initials}</div>`;
+        }).join("");
+
+        card.innerHTML = `
+          <div class="task-category">${task.category}</div>
+          <div class="task-title"><strong>${task.title}</strong></div>
+          <div class="task-description">${task.description}</div>
+
+          ${task.subtasks && task.subtasks.length ? `
             <div class="myProgress">
               <div class="myBar" style="width: ${getSubtaskProgress(task)}%; background-color: ${getSubtaskProgress(task) === 100 ? '#4caf50' : '#ffa800'};"></div>
             </div>
             <div class="task-subtask-label">${countCompletedSubtasks(task)} von ${task.subtasks.length} Subtasks erledigt</div>
-            ` : ""}
-            
-            <div class="task-footer">
-              <div class="task-user">
-                ${userBadges}
-              </div>
-            </div>
-          `;
+          ` : ""}
 
-          column.appendChild(card);
-        }
+          <div class="task-footer">
+            <div class="task-user">
+              ${userBadges}
+            </div>
+          </div>
+        `;
+        column.appendChild(card);
       }
     })
     .catch((error) => {
@@ -287,3 +308,26 @@ function logout() {
 document.addEventListener("DOMContentLoaded", () => {
   onloadBoard();
 });
+
+function openTaskDetailOverlay(task, taskId) {
+  fetch("/pages/task_detail_overlay.html")
+    .then(function(response) {
+      return response.text();
+    })
+    .then(function(html) {
+      var container = document.getElementById("task-detail-container");
+      container.innerHTML = html;
+      container.style.display = "block";
+
+      window.currentTaskId = taskId;
+      window.currentTaskData = task;
+
+      var overlayEvent = new CustomEvent("taskDataReady", {
+        detail: task 
+      });
+      document.dispatchEvent(overlayEvent);
+    })
+    .catch(function(error) {
+      console.error("Fehler beim Laden des Task-Details:", error);
+    });
+}

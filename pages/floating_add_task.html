@@ -1,5 +1,5 @@
 <div class="add_task_container">
-  <h1>Add Task</h1>
+  <h1 id="form-title">Add Task</h1>
 
   <div class="task-form-columns">
     <div class="column">
@@ -7,7 +7,11 @@
       <input type="text" id="title" placeholder="Enter a title" />
 
       <label for="description">Description</label>
-      <textarea id="description" placeholder="Enter a Description" rows="5"></textarea>
+      <textarea
+        id="description"
+        placeholder="Enter a Description"
+        rows="5"
+      ></textarea>
 
       <label for="due">Due date<span class="required">*</span></label>
       <input type="date" id="due" />
@@ -18,26 +22,44 @@
     <div class="column">
       <label>Priority</label>
       <div class="priority-buttons">
-        <button style="background-color: red; color: white" id="priority-urgent" onclick="selectPriority('urgent')">Urgent ↑</button>
-        <button style="background-color: #ff800D; color: white" id="priority-medium" onclick="selectPriority('medium')">Medium =</button>
-        <button style="background-color: lightgreen" id="priority-low" onclick="selectPriority('low')">Low ↓</button>
+        <button
+          style="background-color: red; color: white"
+          id="priority-urgent"
+          onclick="selectPriority('urgent')"
+        >
+          Urgent ↑
+        </button>
+        <button
+          style="background-color: #ff800d; color: white"
+          id="priority-medium"
+          onclick="selectPriority('medium')"
+        >
+          Medium =
+        </button>
+        <button
+          style="background-color: lightgreen"
+          id="priority-low"
+          onclick="selectPriority('low')"
+        >
+          Low ↓
+        </button>
       </div>
 
-      <label for="assigned">Category<span class="required">*</span></label>
-        <select id="assigned">
-          <option>Select contacts to assign</option>
-          <option>Carolin</option>
-          <option>Arvinder</option>
-          <option>Tim</option>
-        </select>
+      <label for="assigned">Assigned to<span class="required">*</span></label>
+      <select id="assigned">
+        <option>Select contacts to assign</option>
+        <option>Carolin</option>
+        <option>Arvinder</option>
+        <option>Tim</option>
+      </select>
 
       <label for="category">Category<span class="required">*</span></label>
-        <select id="category">
-          <option>Select task category</option>
-          <option>Design</option>
-          <option>Development</option>
-          <option>Testing</option>
-        </select>
+      <select id="category">
+        <option>Select task category</option>
+        <option>Design</option>
+        <option>Development</option>
+        <option>Testing</option>
+      </select>
 
       <label for="subtasks">Subtasks</label>
       <div style="display: flex; gap: 10px">
@@ -49,8 +71,19 @@
 
   <div class="actions">
     <button class="cancel" onclick="closePopup()">Cancel ✖</button>
-    <button class="create" onclick="createTask()">Create Task ✔</button>
+    <button class="create" id="create-task-button" onclick="createTask()">
+      Create Task ✔
+    </button>
   </div>
 
   <p style="color: red; margin-top: 20px">*This field is required</p>
 </div>
+
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    if (window.editingTaskId) {
+      document.getElementById("form-title").textContent = "Edit Task";
+      document.getElementById("create-task-button").textContent = "Save Task ✔";
+    }
+  });
+</script>
