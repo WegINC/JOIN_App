@@ -130,6 +130,7 @@ box-shadow: 0px 4px 4px 0px #0000004e;
   text-decoration: underline;
 }
 
+
 h1 {
   font-size: 61px;
   font-weight: 700;
@@ -509,4 +510,29 @@ h1 {
       transform: translateY(0);
       opacity: 1;
   }
+}
+
+.none-button{
+  display: none;
+}
+
+.contact-separator {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 24px 0 12px;
+  font-weight: 600;
+  font-size: 18px;
+  color: #2A3647;
+}
+
+.contact-separator span {
+  padding-left: 28px;
+}
+
+.contact-separator .separator-line {
+  flex-grow: 1;
+  height: 2px;
+  width: 370px;
+  background-color: #D1D1D1;
 }

@@ -39,7 +39,7 @@
       <div class="top-navbar">
         <span>Kanban Projekt Management Tool</span>
         <div class="user-name">
-          <a href="help.html"><img src="/assets/icons/help.png" alt=""></a>
+          <a class="help-link" href="help.html"><img src="/assets/icons/help.png" alt=""></a>
 
           <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
               <button id="user-name" onclick="toggleUserMenu()">G</button>
@@ -155,7 +155,7 @@
                   <span class="contact-letter">F</span>
                   <div class="contact-separator"></div>
                   <div class="contact-item">
-                    <div class="contact-avatar" style="background-color: teal">
+                    <div class="contact-avatar" style="background-color: #008080">
                       FH
                     </div>
                     <div class="contact-info">
@@ -232,8 +232,11 @@
         </section>
       </main>
     </div>
+    <button class="none-button" id="mobile-add-contact-btn" onclick="openAddContactOverlay()">
+      <img src="/assets/icons/person-add-mobile-contact.png" alt="Add Contact">
+    </button>
   </body>
- 
+  
   <script src="/scripts/board.js"></script>
   <script type="module" src="/scripts/contacts.js" defer></script>
   <script src="/scripts/contacts-template.js"></script>

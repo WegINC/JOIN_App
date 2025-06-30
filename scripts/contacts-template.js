@@ -1,12 +1,23 @@
+
 export function getContactListItemTemplate({ initials, name, email, color }) {
-    return `
-      <div class="contact-avatar" style="background-color:${color}">${initials}</div>
-      <div class="contact-info">
-        <strong>${name}</strong><br>
-        <a href="mailto:${email}">${email}</a>
-      </div>
-    `;
-  }
+  return `
+    <div class="contact-avatar" style="background-color:${color}">${initials}</div>
+    <div class="contact-info">
+      <strong>${name}</strong><br>
+      <a href="mailto:${email}">${email}</a>
+    </div>
+  `;
+}
+
+export function getContactSeparatorTemplate(letter) {
+  return `
+    <div class="contact-separator">
+      <span>${letter}</span>
+      <div class="separator-line"></div>
+    </div>
+  `;
+}
+
   
   export function getContactDetailsTemplate({ initials, name, email, phone, color }) {
     return `
@@ -47,13 +58,13 @@ export function getContactListItemTemplate({ initials, name, email, color }) {
           <div class="edit-avatar" style="background-color: ${color}">${initials}</div>
           <div class="edit-form">
             <div class="input-group">
-              <input type="text" id="edit-name" value="${name}" placeholder="Name" style="background-image: url('/assets/icons/person.png'); background-repeat: no-repeat; background-position: right 10px center; background-size: 20px;">
+              <input type="text" id="edit-name" value="${name}" placeholder="Name">
             </div>
             <div class="input-group">
-              <input type="email" id="edit-email" value="${email}" placeholder="Email" style="background-image: url('/assets/icons/mail.png'); background-repeat: no-repeat; background-position: right 10px center; background-size: 20px;">
+              <input type="email" id="edit-email" value="${email}" placeholder="Email">
             </div>
             <div class="input-group">
-              <input type="tel" id="edit-phone" value="${phone}" placeholder="Phone" style="background-image: url('/assets/icons/call.png'); background-repeat: no-repeat; background-position: right 10px center; background-size: 20px;">
+              <input type="tel" id="edit-phone" value="${phone}" placeholder="Phone">
             </div>
             <div class="edit-actions">
               <button class="delete-btn">Delete</button>
@@ -83,13 +94,13 @@ export function getContactListItemTemplate({ initials, name, email, color }) {
           </div>
           <form class="add-form">
             <div class="input-group">
-              <input type="text" id="new-name" placeholder="Name" required style="background-image: url('../assets/icons/person.png'); background-repeat: no-repeat; background-position: right 10px center; background-size: 20px;">
+              <input type="text" id="new-name" placeholder="Name" required>
             </div>
             <div class="input-group">
-              <input type="email" id="new-email" placeholder="Email" required style="background-image: url('../assets/icons/mail.png'); background-repeat: no-repeat; background-position: right 10px center; background-size: 20px;">
+              <input type="email" id="new-email" placeholder="Email" required>
             </div>
             <div class="input-group">
-              <input type="tel" id="new-phone" placeholder="Phone" required style="background-image: url('../assets/icons/call.png'); background-repeat: no-repeat; background-position: right 10px center; background-size: 20px;">
+              <input type="tel" id="new-phone" placeholder="Phone" required>
             </div>
             <div class="add-actions">
               <button type="button" class="cancel-btn delete-btn" onclick="closeAddContactOverlay()">
@@ -101,5 +112,30 @@ export function getContactListItemTemplate({ initials, name, email, color }) {
             </div>
           </form>
         </div>
-      </div>`;
+      </div>
+    `;
+  }
+  
+  export function getSuccessPopupTemplate() {
+    return `
+      <div style="
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #2A3647;
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        font-size: 14px;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        animation: fadeInOut 3s ease-in-out;
+      ">
+        Contact successfully created
+      </div>
+    `;
   }

@@ -1,11 +1,12 @@
 
 import {
   getContactListItemTemplate,
+  getContactSeparatorTemplate,
   getContactDetailsTemplate,
   getEditOverlayTemplate,
-  getAddContactOverlayTemplate
+  getAddContactOverlayTemplate,
+  getSuccessPopupTemplate
 } from './contacts-template.js';
-
 
 document.addEventListener('DOMContentLoaded', () => {
   loadContactsFromDatabase();
@@ -15,20 +16,44 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loadContactsFromDatabase() {
-  const contactList = document.getElementById("contact-list");
-  contactList.innerHTML = "";
+  const list = document.getElementById("contact-list");
+  list.innerHTML = "";
 
-  try {
-    const response = await fetch(`${BASE_URL}/users.json`);
-    const users = await response.json();
+  const res = await fetch(`${BASE_URL}/users.json`);
+  const data = await res.json();
+  const contacts = Object.entries(data || {}).map(
+    ([uid, u]) => ({ uid, ...buildContactObject(uid, u) })
+  );
 
-    for (let uid in users) {
-      const contact = buildContactObject(uid, users[uid]);
-      renderContactListItem(contact);
-    }
-  } catch (err) {
-    console.error("Fehler beim Laden:", err);
-  }
+  const grouped = contacts.sort((a,b) => a.name.localeCompare(b.name, 'de'))
+    .reduce((acc, c) => {
+      const L = c.name[0].toUpperCase();
+      (acc[L] ||= []).push(c);
+      return acc;
+    }, {});
+
+  renderGroupedContacts(grouped);
+}
+
+function renderGroupedContacts(groups) {
+  const list = document.getElementById("contact-list");
+  list.innerHTML = "";
+
+  Object.keys(groups).sort().forEach(letter => {
+    const sep = document.createElement("div");
+    sep.innerHTML = getContactSeparatorTemplate(letter);
+    sep.className = "contact-separator";
+    list.appendChild(sep);
+
+    groups[letter].forEach(contact => {
+      const item = document.createElement("div");
+      item.className = "contact-item";
+      item.innerHTML = getContactListItemTemplate(contact);
+      contact.element = item;
+      item.addEventListener("click", () => selectContact(item, contact));
+      list.appendChild(item);
+    });
+  });
 }
 
 function buildContactObject(uid, user) {
@@ -161,21 +186,32 @@ async function createNewContact() {
 
   if (!name || !email || !phone) return alert('Bitte fülle alle Felder aus!');
 
-  const contact = buildContactObject('', { name, email, phone });
-
   try {
     const color = generateRandomColor();
     const contact = buildContactObject('', { name, email, phone, themeColor: color });
+
     const res = await fetch(`${BASE_URL}/users.json`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, phone, color})
+      body: JSON.stringify({ name, email, phone, themeColor: color })
     });
+
     const data = await res.json();
     contact.uid = data.name;
     renderContactListItem(contact);
     closeAddContactOverlay();
+    showSuccessPopup();
   } catch (err) {
     alert("Fehler beim Erstellen des Kontakts.");
   }
+}
+
+function showSuccessPopup() {
+  const popup = document.createElement('div');
+  popup.innerHTML = getSuccessPopupTemplate();
+  document.body.appendChild(popup);
+
+  setTimeout(() => {
+    popup.remove();
+  }, 3000);
 }
