@@ -26,7 +26,7 @@ async function fillTaskDetails(task) {
 
   const priority = task.priority || "-";
   document.getElementById("task-priority").textContent = priority.charAt(0).toUpperCase() + priority.slice(1);
-  document.getElementById("task-priority-icon").textContent = getPriorityIcon(priority);
+  document.getElementById("task-priority-icon").innerHTML = getPriorityIcon(priority);
 
   const assignedTo = task.assignedTo || {};
   const users = await fetchUsers();
@@ -57,9 +57,15 @@ async function fillTaskDetails(task) {
 }
 
 function getPriorityIcon(priority) {
-  if (priority === "Urgent" || priority === "urgent") return "⬆️";
-  if (priority === "Medium" || priority === "medium") return "＝";
-  if (priority === "Low" || priority === "low") return "⬇️";
+  if (priority === "Urgent" || priority === "urgent") {
+    return `<img src="/assets/icons/urgent-icon.svg" alt="Urgent Icon" class="priority-icon">`;
+  }
+  if (priority === "Medium" || priority === "medium") {
+    return `<img src="/assets/icons/medium.svg" alt="Medium Icon" class="priority-icon">`;
+  }
+  if (priority === "Low" || priority === "low") {
+    return `<img src="/assets/icons/low.svg" alt="Low Icon" class="priority-icon">`;
+  }
   return "";
 }
 
@@ -72,7 +78,6 @@ function closeTaskOverlay() {
 }
 
 function editTask() {
-  // Titel, Beschreibung etc. editierbar machen
   document.getElementById("task-title").setAttribute("contenteditable", true);
   document.getElementById("task-description").setAttribute("contenteditable", true);
 
