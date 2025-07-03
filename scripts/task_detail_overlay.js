@@ -7,7 +7,7 @@ function openTaskDetailOverlay(task, taskId) {
       container.style.display = "block";
 
       window.currentTaskId = taskId;
-      window.currentTaskData = task;
+      window.currentTaskData = { ...task, id: taskId };
 
       const overlayEvent = new CustomEvent("taskDataReady", { detail: task });
       document.dispatchEvent(overlayEvent);
@@ -48,12 +48,81 @@ async function fillTaskDetails(task) {
   subtaskList.innerHTML = "";
   const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
 
-  subtasks.forEach((sub) => {
-    const subDiv = document.createElement("div");
-    subDiv.className = "subtask-item";
-    subDiv.innerHTML = `<input type="checkbox" ${sub.done ? "checked" : ""} disabled> ${sub.title}`;
-    subtaskList.appendChild(subDiv);
-  });
+subtasks.forEach((sub, idx) => {
+  const subDiv = document.createElement("div");
+  subDiv.className = "subtask-item";
+
+  subDiv.innerHTML = `
+    <span 
+      class="subtask-title ${sub.done ? 'done' : ''}" 
+      contenteditable="true" 
+      onblur="editSubtask(${idx}, this.textContent.trim())"
+    >
+      ${sub.title}
+    </span>
+    <input 
+      type="checkbox" 
+      ${sub.done ? "checked" : ""} 
+      onchange="toggleSubtask(${idx})" 
+      class="subtask-checkbox"
+    />
+  `;
+
+  subtaskList.appendChild(subDiv);
+});
+
+  if (!document.getElementById("new-subtask-input")) {
+    const addNew = document.createElement("div");
+    addNew.style.marginTop = "10px";
+    addNew.innerHTML = `
+      <input id="new-subtask-input" type="text" placeholder="Add new subtask" style="width: 70%;" />
+      <button onclick="addNewSubtask()" style="padding: 5px 10px;">+</button>
+    `;
+    subtaskList.parentElement.appendChild(addNew);
+  }
+}
+
+function toggleSubtask(index) {
+  const task = window.currentTaskData;
+  if (!task.subtasks || !task.subtasks[index]) return;
+
+  task.subtasks[index].done = !task.subtasks[index].done;
+
+  updateSubtasksInFirebase(task.id || window.currentTaskId, task.subtasks);
+}
+
+function editSubtask(index, newText) {
+  const task = window.currentTaskData;
+  if (!task.subtasks || !task.subtasks[index]) return;
+
+  task.subtasks[index].title = newText.trim();
+  updateSubtasksInFirebase(task.id || window.currentTaskId, task.subtasks);
+}
+
+function addNewSubtask() {
+  const input = document.getElementById("new-subtask-input");
+  const text = input.value.trim();
+  if (!text) return;
+
+  const task = window.currentTaskData;
+  task.subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
+  task.subtasks.push({ title: text, done: false });
+
+  input.value = "";
+  updateSubtasksInFirebase(task.id || window.currentTaskId, task.subtasks);
+}
+
+function updateSubtasksInFirebase(taskId, subtasks) {
+  fetch(`${BASE_URL}/tasks/${taskId}.json`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ subtasks }),
+  })
+    .then(() => {
+      fillTaskDetails(window.currentTaskData);
+      loadTasks();
+    })
+    .catch((err) => console.error("Fehler beim Subtask-Update:", err));
 }
 
 function getPriorityIcon(priority) {
@@ -102,7 +171,6 @@ function editTask() {
     </select>`;
   document.getElementById("edit-priority").value = priority;
 
-  // Button in „Save“ verwandeln
   const btn = document.querySelector(".task-actions button:last-child");
   btn.textContent = "Save";
   btn.onclick = saveEditedTask;

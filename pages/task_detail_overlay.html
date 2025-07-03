@@ -26,10 +26,15 @@
       <div id="assigned-users" class="assigned-users"></div>
     </div>
 
-    <div class="subtasks-section">
-      <strong>Subtasks</strong>
-      <div id="subtask-list" class="subtask-list"></div>
-    </div>
+      <div class="subtasks-section">
+        <strong>Subtasks</strong>
+        <div id="subtask-list" class="subtask-list"></div>
+
+        <div style="margin-top: 10px;">
+          <input id="new-subtask-input" type="text" placeholder="Add new subtask" style="width: 70%;" />
+          <button onclick="addNewSubtask()" style="padding: 5px 10px;">+</button>
+        </div>
+      </div>
 
     <div class="task-actions">
       <button onclick="deleteTask()" class="action-btn">

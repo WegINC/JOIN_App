@@ -89,13 +89,33 @@
   gap: 6px;
   margin-top: 8px;
 }
-
-.subtask-list label {
+.subtask-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
 }
+
+.subtask-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.subtask-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.subtask-text {
+  flex-grow: 1;
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
 
 .task-actions {
   display: flex;
@@ -122,4 +142,37 @@
   font-size: 16px;
   width: 100%;
   box-sizing: border-box;
+}
+.subtask-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.subtask-title {
+  flex-grow: 1;
+  font-size: 14px;
+  border: 1px solid transparent;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: border 0.2s;
+  outline: none;
+}
+
+.subtask-title:focus {
+  border: 1px solid #aaa;
+  background-color: #f9f9f9;
+}
+
+.subtask-title.done {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.subtask-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
 }

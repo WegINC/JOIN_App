@@ -216,6 +216,23 @@ body {
 .navbar-logo {
   display: none;
 }
+.subtask-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.subtask-counter progress {
+  width: 100px;
+  height: 8px;
+  appearance: none;
+}
+
+.subtask-counter span {
+  font-size: 12px;
+  color: #555;
+}
 
 @media (max-width: 1000px) {
   .search-container,

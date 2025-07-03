@@ -115,7 +115,12 @@
               />
 
               <label for="subtasks">Subtasks</label>
-              <input type="text" id="subtasks" placeholder="Add new tasks" />
+              <div id="subtask-container">
+                <div style="display: flex; gap: 10px; margin-bottom: 5px;">
+                  <input type="text" class="subtask-input" placeholder="Add new subtask" />
+                  <button type="button" onclick="addSubtaskInput()">+</button>
+                </div>
+              </div>
 
               <div class="form-buttons">
                 <button class="cancel">Clear &#10005;</button>
@@ -126,33 +131,6 @@
         </div>
       </div>
     </div>
-
-    <script>
-      function populateAssignedDropdown() {
-        fetch(`${BASE_URL}/contacts.json`)
-          .then((res) => res.json())
-          .then((data) => {
-            const select = document.getElementById("assigned");
-            if (!select) return;
-            select.innerHTML =
-              "<option disabled selected>Select contacts to assign</option>";
-
-            for (let id in data) {
-              const contact = data[id];
-              const option = document.createElement("option");
-              option.value = id;
-              option.textContent = contact.name;
-              select.appendChild(option);
-            }
-          })
-          .catch((err) =>
-            console.error("Fehler beim Laden der Kontakte:", err)
-          );
-      }
-
-      document.addEventListener("DOMContentLoaded", populateAssignedDropdown);
-    </script>
-
     <script src="/scripts/board.js"></script>
   </body>
 </html>

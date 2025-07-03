@@ -55,7 +55,6 @@ async function fetchUsers() {
 
       let themeColor = user.themeColor;
 
-      // Wenn kein themeColor vorhanden, generiere einen und speichere ihn in Firebase
       if (!themeColor) {
         themeColor = getRandomColor();
         await fetch(`${BASE_URL}/users/${uid}.json`, {
@@ -87,6 +86,8 @@ function openFloatingAddTaskPopup() {
       const container = document.getElementById("popup-container");
       container.innerHTML = html;
       container.style.display = "block";
+
+      populateAssigneeDropdown();
     })
     .catch(err => console.error("Fehler beim Laden des Popups:", err));
 }
@@ -104,6 +105,12 @@ function createTask() {
   const category = document.getElementById("category").value;
   const priority = selectedPriority || "low";
 
+  const subtaskInputs = document.querySelectorAll(".subtask-input");
+  const subtasks = Array.from(subtaskInputs)
+    .map(input => input.value.trim())
+    .filter(text => text !== "")
+    .map(title => ({ title, done: false }));
+
   const userInitial = localStorage.getItem("userInitial") || "G";
   const currentUid = localStorage.getItem("userId") || "uid_1";
 
@@ -120,7 +127,8 @@ function createTask() {
     priority,
     assignedTo: { [currentUid]: true },
     status: "toDo",
-    userInitials: userInitial
+    userInitials: userInitial,
+    subtasks
   };
 
   const editingId = window.editingTaskId;
@@ -139,7 +147,6 @@ function createTask() {
       })
       .catch(err => console.error("Fehler beim Aktualisieren:", err));
   } else {
-
     fetch(`${BASE_URL}/tasks.json`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -198,10 +205,9 @@ async function loadTasks() {
             <div class="task-title"><strong>${task["title"]}</strong></div>
             <div class="task-description">${task["description"]}</div>
 
-            <div class="subtask-counter" id="subtask_counter">
-              <label for="subtasks"></label>
-              <progress id="subtasks" value="" max="100"></progress>
-              <span>subtasks</span>
+            <div class="subtask-counter">
+              <progress value="${getSubtaskProgress(task)}" max="100"></progress>
+              <span>${getSubtaskLabel(task)}</span>
             </div>
 
             <div class="task-footer">
@@ -226,6 +232,27 @@ async function loadTasks() {
     column.addEventListener("drop", handleDrop);
   }
 });
+async function populateAssigneeDropdown() {
+  try {
+    const response = await fetch(`${BASE_URL}/users.json`);
+    const data = await response.json();
+
+    const select = document.getElementById("assigned");
+    if (!select) return;
+
+    select.innerHTML = `<option disabled selected>Select contacts to assign</option>`;
+
+    for (let uid in data) {
+      const user = data[uid];
+      const option = document.createElement("option");
+      option.value = uid;
+      option.textContent = user.name || "Unnamed";
+      select.appendChild(option);
+    }
+  } catch (error) {
+    console.error("Fehler beim Laden der Kontakte für das Dropdown:", error);
+  }
+}
 
 function handleDragStart(e) {
   draggedCard = e.target;
@@ -330,4 +357,18 @@ function openTaskDetailOverlay(task, taskId) {
     .catch(function(error) {
       console.error("Fehler beim Laden des Task-Details:", error);
     });
+};
+
+function getSubtaskProgress(task) {
+  const subtasks = task.subtasks || [];
+  if (!subtasks.length) return 0;
+  const completed = subtasks.filter(st => st.done).length;
+  return Math.round((completed / subtasks.length) * 100);
+}
+
+function getSubtaskLabel(task) {
+  const subtasks = task.subtasks || [];
+  if (!subtasks.length) return "0/0 subtasks";
+  const completed = subtasks.filter(st => st.done).length;
+  return `${completed}/${subtasks.length} subtasks`;
 }
