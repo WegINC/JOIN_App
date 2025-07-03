@@ -78,7 +78,6 @@ body {
 
 .summary-main-content {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding-right: 96px;
   gap: 60px;
