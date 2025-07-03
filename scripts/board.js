@@ -194,23 +194,23 @@ async function loadTasks() {
         }).join("");
 
         card.innerHTML = `
-          <div class="task-category">${task.category}</div>
-          <div class="task-title"><strong>${task.title}</strong></div>
-          <div class="task-description">${task.description}</div>
+            <div class="task-category">${task["category"]}</div>
+            <div class="task-title"><strong>${task["title"]}</strong></div>
+            <div class="task-description">${task["description"]}</div>
 
-          ${task.subtasks && task.subtasks.length ? `
-            <div class="myProgress">
-              <div class="myBar" style="width: ${getSubtaskProgress(task)}%; background-color: ${getSubtaskProgress(task) === 100 ? '#4caf50' : '#ffa800'};"></div>
+            <div class="subtask-counter" id="subtask_counter">
+              <label for="subtasks"></label>
+              <progress id="subtasks" value="" max="100"></progress>
+              <span>subtasks</span>
             </div>
-            <div class="task-subtask-label">${countCompletedSubtasks(task)} von ${task.subtasks.length} Subtasks erledigt</div>
-          ` : ""}
 
-          <div class="task-footer">
-            <div class="task-user">
-              ${userBadges}
+            <div class="task-footer">
+              <div class="task-user">
+                ${userBadges}
+              </div>
             </div>
-          </div>
-        `;
+          `;
+
         column.appendChild(card);
       }
     })
