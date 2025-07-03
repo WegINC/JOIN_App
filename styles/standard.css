@@ -3,6 +3,10 @@
     height: 100vh;
 }
 
+.wrapper.visible {
+  opacity: 1;
+}
+
 .side-navbar {
     width: 232px;
     background-color: #2a3647;

@@ -6,6 +6,11 @@ body {
   overflow: hidden;
 }
 
+.opacity {
+  opacity: 0;
+  transition: 300ms ease-in-out;
+}
+
 .splash-greeting {
   position: fixed;
   top: 0;
@@ -19,8 +24,21 @@ body {
   z-index: 9999;
 }
 
+#splash-greeting {
+  opacity: 1;
+  transition: 300ms ease-in-out;
+  visibility: visible;
+  z-index: 9999;
+}
+
+#splash-greeting.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
 #splash-greeting.hidden {
-  display: none;
+  opacity: 0;
+  visibility: hidden;
 }
 
 .greeting-text-splash {

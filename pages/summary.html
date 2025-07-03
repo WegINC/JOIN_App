@@ -17,7 +17,7 @@
         <span class="greeting-text-splash">Good morning</span>
     </div>
 
-    <div class="wrapper">
+    <div class="wrapper opacity hidden visible">
         <div class="side-navbar">
             <div class="sidebar-img">
                 <img src="/assets/img/Capa 1.png" alt="">
@@ -169,11 +169,12 @@
         wrapper.classList.add('hidden');
 
         setTimeout(() => {
-            splash.classList.add('hidden');
+            splash.classList.add('fade-out');
             wrapper.classList.remove('hidden');
+            wrapper.classList.add('visible');
         }, 2000);
     } else {
-        splash.classList.add('hidden');
+        splash.style.display = 'none';
         wrapper.classList.remove('hidden');
     }
 </script>
