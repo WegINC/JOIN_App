@@ -139,3 +139,54 @@ export function getContactSeparatorTemplate(letter) {
       </div>
     `;
   }
+
+  export function getMobileAddContactTemplate() {
+    return `
+      <div id="mobile-add-contact-overlay" class="mobile-contact-overlay">
+        <div class="contact-add-overlay">
+          <div class="add-overlay-top">
+            <h1>Add contact</h1>
+            <p>Tasks are better with a team!</p>
+            <div class="add-underline"></div>
+          </div>
+          <div class="add-overlay-buttom">
+            <button class="add-close-btn" onclick="closeMobileAddContactOverlay()">
+              <img src="img/close.png" alt="Close">
+            </button>
+            <form class="add-form">
+              <div class="add-avatar">
+                <img src="../assets/icons/person-add-profile.png" alt="Person Icon" width="50">
+              </div>
+  
+              <div class="input-group">
+                <div class="input-wrapper">
+                 style="background-image: url(/assets/icons/person.png)"
+                  <input type="text" placeholder="Name" required>
+                </div>
+              </div>
+  
+              <div class="input-group">
+                <div class="input-wrapper">
+                  style="background-image: url(/assets/icons/mail.png)"
+                  <input type="email" placeholder="Email" required>
+                </div>
+              </div>
+  
+              <div class="input-group">
+                <div class="input-wrapper">
+                  style="background-image: url(/assets/icons/call.png)"
+                  <input type="tel" placeholder="Phone" required>
+                </div>
+              </div>
+  
+              <div class="add-actions">
+                <button type="submit" class="create-btn">
+                  <img src="../assets/icons/check.png"> Create contact
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    `;
+  }

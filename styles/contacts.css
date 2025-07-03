@@ -6,11 +6,17 @@ body {
   overflow: hidden;
 }
 
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;
+}
+
 .contacts-content {
   display: flex;
   flex-direction: row;
   flex-grow: 1;
-  overflow-y: auto;
 }
 
 .contact-bar {
@@ -92,7 +98,6 @@ box-shadow: 0px 4px 4px 0px #0000004e;
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
   padding: 12px;
   border-radius: 8px;
   cursor: pointer;
@@ -516,11 +521,15 @@ h1 {
   display: none;
 }
 
+.mobile-add-contact-btn{
+  display: none;
+}
+
 .contact-separator {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin: 24px 0 12px;
+  margin-top: 16px;
   font-weight: 600;
   font-size: 18px;
   color: #2A3647;
@@ -533,6 +542,208 @@ h1 {
 .contact-separator .separator-line {
   flex-grow: 1;
   height: 2px;
-  width: 370px;
+  width: 100%;
   background-color: #D1D1D1;
+}
+
+.mobile-contact-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: none;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start; /* Start oben */
+  overflow-y: auto;
+  height: 480px;
+  animation-fill-mode: forwards;
+  z-index: 1000;
+}
+
+.mobile-contact-overlay.show {
+  display: flex;
+  flex-direction: column;
+  animation: slideDown 0.4s ease forwards;
+}
+
+.add-overlay-top{
+  background-color: #2a3647;
+  color: white;
+  padding: 48px 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.add-overlay-buttom{
+  background-color: white;
+  padding: 40px;
+  height: 340px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Animation für das Einfliegen von oben */
+@keyframes slideDown {
+  from {
+    top: -100%;
+    opacity: 0;
+  }
+  to {
+    top: 60px;
+    opacity: 1;
+  }
+}
+
+/* Einfache Fading-Animation für den Hintergrund */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Sidebar: wandert nach unten */
+  .side-navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+    padding: 0;
+  }
+
+  .wrapper {
+    flex-direction: column-reverse;
+  }
+
+  .sidebar-img,
+  .sidebar-bottom {
+    display: none; /* Join-Logo und rechtliche Links ausblenden */
+  }
+
+  .sidebar-menu a {
+    flex-direction: column;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .sidebar-img,
+  .sidebar-bottom {
+    display: none;
+  }
+  
+  .sidebar-menu {
+    flex-direction: row;
+  }
+  
+  .sidebar-menu a {
+    flex-direction: column;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  
+  .sidebar-menu img {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Topbar: nur Logo links, Profil rechts */
+  .top-navbar span,
+  .help-link {
+    display: none;
+  }
+
+  .top-navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    height: 64px;
+    box-shadow: 0px 2px 4px 0px #0000004e
+  }
+
+  .top-navbar::before {
+    content: '';
+    display: inline-block;
+    background-image: url('/assets/icons/Capa\ 3.png'); /* Join-Logo */
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Kontaktleiste nimmt den ganzen Viewport ein */
+  .contacts-content {
+    flex-direction: column;
+    
+  }
+
+  .contact-bar {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    padding-top: 6px;
+    padding-bottom: 100px; /* Platz für Sidebar unten */
+  }
+
+  .contact-list-content {
+    position: static;
+    width: 100%;
+    height: auto;
+    box-shadow: none;
+    padding: 16px;
+    padding-top: 0;
+  }
+
+  .new-contact-button {
+    display: none;
+  }
+
+  .contact-scrollbar {
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    margin-top: 0;
+  }
+
+  /* Kontakt-Details: ausgeblendet */
+  #contact-details-container {
+    display: none;
+  }
+
+  #mobile-add-contact-btn {
+    display: flex;
+    position: fixed;
+    bottom: 80px;
+    right: 16px;
+    padding: 0;
+    background-color: transparent;
+    border-color: transparent;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    cursor: pointer;
+  }
+
+  
+  
 }

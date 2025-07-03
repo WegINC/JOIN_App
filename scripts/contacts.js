@@ -5,7 +5,8 @@ import {
   getContactDetailsTemplate,
   getEditOverlayTemplate,
   getAddContactOverlayTemplate,
-  getSuccessPopupTemplate
+  getSuccessPopupTemplate,
+  getMobileAddContactTemplate
 } from './contacts-template.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.openAddContactOverlay = openAddContactOverlay;
   window.closeAddContactOverlay = closeAddContactOverlay;
   window.createNewContact = createNewContact;
+  document.getElementById('mobile-add-contact-btn').addEventListener('click', openMobileAddContactOverlay);
 });
 
 async function loadContactsFromDatabase() {
@@ -214,4 +216,62 @@ function showSuccessPopup() {
   setTimeout(() => {
     popup.remove();
   }, 3000);
+}
+
+function openMobileAddContactOverlay() {
+  const overlayHTML = getMobileAddContactTemplate();
+  const overlayWrapper = document.createElement('div');
+  overlayWrapper.innerHTML = overlayHTML;
+  document.body.appendChild(overlayWrapper);
+
+  const overlay = document.getElementById('mobile-add-contact-overlay');
+  overlay.classList.add('show');
+
+  const form = overlay.querySelector('.add-form');
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault(); // Verhindert automatischen Submit-Reload
+    await createNewContactFromMobileForm(form);
+  });
+
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeMobileAddContactOverlay();
+  });
+}
+
+async function createNewContactFromMobileForm(form) {
+  const name = form.querySelector('input[type="text"]').value.trim();
+  const email = form.querySelector('input[type="email"]').value.trim();
+  const phone = form.querySelector('input[type="tel"]').value.trim();
+
+  if (!name || !email || !phone) return alert('Bitte fülle alle Felder aus!');
+
+  try {
+    const color = generateRandomColor();
+    const contact = buildContactObject('', { name, email, phone, themeColor: color });
+
+    const res = await fetch(`${BASE_URL}/users.json`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone, themeColor: color })
+    });
+
+    const data = await res.json();
+    contact.uid = data.name;
+    renderContactListItem(contact);
+    closeMobileAddContactOverlay();
+    showSuccessPopup();
+  } catch (err) {
+    alert("Fehler beim Erstellen des Kontakts.");
+  }
+}
+
+function closeMobileAddContactOverlay() {
+  const overlay = document.getElementById('mobile-add-contact-overlay');
+  if (overlay) {
+    overlay.classList.remove('show');
+    // Nach Animation das Element entfernen:
+    overlay.addEventListener('animationend', () => {
+      overlay.remove();
+    }, { once: true });
+  }
 }
