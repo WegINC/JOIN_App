@@ -98,11 +98,16 @@ function closePopup() {
   popup.innerHTML = "";
 }
 
+const categoryColors = {
+  "Technical Task": "#1FD7C1",
+  "User Story": "#0038FF"
+};
+
 function createTask() {
   const title = document.getElementById("title").value;
   const description = document.getElementById("description").value;
   const dueDate = document.getElementById("due").value;
-  const category = document.getElementById("category").value;
+  const selectedCategory = document.getElementById("category").value;
   const priority = selectedPriority || "low";
 
   const subtaskInputs = document.querySelectorAll(".subtask-input");
@@ -123,7 +128,7 @@ function createTask() {
     title,
     description,
     dueDate,
-    category,
+    category: selectedCategory,
     priority,
     assignedTo: { [currentUid]: true },
     status: "toDo",
@@ -200,8 +205,12 @@ async function loadTasks() {
           return `<div class="task-user-initials" style="background-color: ${themeColor};">${initials}</div>`;
         }).join("");
 
+        const color = categoryColors[task.category] || "#ccc";
+
         card.innerHTML = `
-            <div class="task-category">${task["category"]}</div>
+            <div class="task-category" style="background-color: ${color};">
+              ${task.category}
+            </div>
             <div class="task-title"><strong>${task["title"]}</strong></div>
             <div class="task-description">${task["description"]}</div>
 
