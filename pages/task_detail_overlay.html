@@ -11,29 +11,24 @@
 
     <div class="task-info">
       <div>
-        <strong>Due date:</strong>
+        <span class="dueDate-span">Due date:</span>
         <span id="task-due-date">--</span>
       </div>
       <div>
-        <strong>Priority:</strong>
+        <span class="priority-span">Priority:</span>
         <span id="task-priority">--</span>
         <span id="task-priority-icon">⎯</span>
       </div>
     </div>
 
     <div class="assigned-section">
-      <strong>Assigned To:</strong>
+      <span>Assigned To:</span>
       <div id="assigned-users" class="assigned-users"></div>
     </div>
 
       <div class="subtasks-section">
-        <strong>Subtasks</strong>
+        <span>Subtasks</span>
         <div id="subtask-list" class="subtask-list"></div>
-
-        <div style="margin-top: 10px;">
-          <input id="new-subtask-input" type="text" placeholder="Add new subtask" style="width: 70%;" />
-          <button onclick="addNewSubtask()" style="padding: 5px 10px;">+</button>
-        </div>
       </div>
 
     <div class="task-actions">

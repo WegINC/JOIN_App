@@ -42,7 +42,7 @@
 }
 
 .task-title {
-  font-size: 24px;
+  font-size: 36px;
   font-weight: 700;
   margin: 0;
 }
@@ -52,9 +52,28 @@
   color: #444;
 }
 
+.task-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.task-info img {
+  height: 20px;
+  width: 20px;
+}
+
 .task-info div {
   margin: 4px 0;
-  font-size: 15px;
+  font-size: 16px;
+}
+
+.dueDate-span {
+  padding-right: 8px;
+}
+
+.priority-span {
+  padding-right: 24px;
 }
 
 .assigned-users {
@@ -140,7 +159,6 @@
   border: 1px solid #d1d1d1;
   border-radius: 8px;
   font-size: 16px;
-  width: 100%;
   box-sizing: border-box;
 }
 .subtask-item {

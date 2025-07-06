@@ -48,38 +48,28 @@ async function fillTaskDetails(task) {
   subtaskList.innerHTML = "";
   const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
 
-subtasks.forEach((sub, idx) => {
-  const subDiv = document.createElement("div");
-  subDiv.className = "subtask-item";
+  subtasks.forEach((sub, idx) => {
+    const subDiv = document.createElement("div");
+    subDiv.className = "subtask-item";
 
-  subDiv.innerHTML = `
-    <span 
-      class="subtask-title ${sub.done ? 'done' : ''}" 
-      contenteditable="true" 
-      onblur="editSubtask(${idx}, this.textContent.trim())"
-    >
-      ${sub.title}
-    </span>
+    subDiv.innerHTML = `
     <input 
       type="checkbox" 
       ${sub.done ? "checked" : ""} 
       onchange="toggleSubtask(${idx})" 
       class="subtask-checkbox"
     />
+    <span 
+      class="subtask-title ${sub.done ? 'done' : ''}" 
+      onblur="editSubtask(${idx}, this.textContent.trim())"
+    >
+      ${sub.title}
+    </span>
   `;
 
-  subtaskList.appendChild(subDiv);
-});
+    subtaskList.appendChild(subDiv);
+  });
 
-  if (!document.getElementById("new-subtask-input")) {
-    const addNew = document.createElement("div");
-    addNew.style.marginTop = "10px";
-    addNew.innerHTML = `
-      <input id="new-subtask-input" type="text" placeholder="Add new subtask" style="width: 70%;" />
-      <button onclick="addNewSubtask()" style="padding: 5px 10px;">+</button>
-    `;
-    subtaskList.parentElement.appendChild(addNew);
-  }
 }
 
 function toggleSubtask(index) {
@@ -127,7 +117,7 @@ function updateSubtasksInFirebase(taskId, subtasks) {
 
 function getPriorityIcon(priority) {
   if (priority === "Urgent" || priority === "urgent") {
-    return `<img src="/assets/icons/urgent-icon.svg" alt="Urgent Icon" class="priority-icon">`;
+    return `<img src="/assets/icons/urgent.svg" alt="Urgent Icon" class="priority-icon">`;
   }
   if (priority === "Medium" || priority === "medium") {
     return `<img src="/assets/icons/medium.svg" alt="Medium Icon" class="priority-icon">`;
@@ -152,15 +142,6 @@ function editTask() {
 
   const dueDate = window.currentTaskData.dueDate || "";
   document.getElementById("task-due-date").innerHTML = `<input type="date" id="edit-due-date" value="${dueDate}">`;
-
-  const category = window.currentTaskData.category || "";
-  document.getElementById("task-category").innerHTML = `
-    <select id="edit-category">
-      <option>Design</option>
-      <option>Development</option>
-      <option>Testing</option>
-    </select>`;
-  document.getElementById("edit-category").value = category;
 
   const priority = window.currentTaskData.priority || "";
   document.getElementById("task-priority").innerHTML = `
