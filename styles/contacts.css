@@ -517,12 +517,16 @@ h1 {
   }
 }
 
-.none-button{
+#mobile-add-contact-btn,
+#contact-options-btn {
   display: none;
-}
-
-.mobile-add-contact-btn{
-  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  z-index: 1000;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .contact-separator {
@@ -546,45 +550,10 @@ h1 {
   background-color: #D1D1D1;
 }
 
-.mobile-contact-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+.hidden {
   display: none;
-  justify-content: center;
-  flex-direction: column;
-  align-items: flex-start; /* Start oben */
-  overflow-y: auto;
-  height: 480px;
-  animation-fill-mode: forwards;
-  z-index: 1000;
 }
 
-.mobile-contact-overlay.show {
-  display: flex;
-  flex-direction: column;
-  animation: slideDown 0.4s ease forwards;
-}
-
-.add-overlay-top{
-  background-color: #2a3647;
-  color: white;
-  padding: 48px 40px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.add-overlay-buttom{
-  background-color: white;
-  padding: 40px;
-  height: 340px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
 
 
 @keyframes slideDown {
@@ -597,30 +566,11 @@ h1 {
     transform: translateY(0);
   }
 }
-/* Animation für das Einfliegen von oben */
-@keyframes slideDown {
-  from {
-    top: -100%;
-    opacity: 0;
-  }
-  to {
-    top: 60px;
-    opacity: 1;
-  }
-}
 
-/* Einfache Fading-Animation für den Hintergrund */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
-@media (max-width: 768px) {
-  /* Sidebar: wandert nach unten */
+
+@media (max-width: 1024px) {
+  
   .side-navbar {
     display: flex;
     flex-direction: row;
@@ -637,7 +587,7 @@ h1 {
 
   .sidebar-img,
   .sidebar-bottom {
-    display: none; /* Join-Logo und rechtliche Links ausblenden */
+    display: none; 
   }
 
   .sidebar-menu a {
@@ -666,7 +616,7 @@ h1 {
     height: 20px;
   }
 
-  /* Topbar: nur Logo links, Profil rechts */
+  
   .top-navbar span,
   .help-link {
     display: none;
@@ -683,17 +633,20 @@ h1 {
   .top-navbar::before {
     content: '';
     display: inline-block;
-    background-image: url('/assets/icons/Capa\ 3.png'); /* Join-Logo */
+    background-image: url('/assets/icons/Capa\ 3.png'); 
     background-size: contain;
     background-repeat: no-repeat;
     width: 40px;
     height: 40px;
   }
 
-  /* Kontaktleiste nimmt den ganzen Viewport ein */
   .contacts-content {
     flex-direction: column;
-    
+  }
+
+  #contact-details-content{
+  top: 0;
+  left: 0;
   }
 
   .contact-bar {
@@ -702,18 +655,50 @@ h1 {
     left: 0;
     width: 100%;
     height: auto;
-    padding-top: 6px;
-    padding-bottom: 100px; /* Platz für Sidebar unten */
+    padding-top: 6px; 
   }
 
   .contact-list-content {
     position: static;
     width: 100%;
-    height: auto;
+    height: calc(100vh - 96px); /* Beispiel: Subtrahiere Headerhöhe */
     box-shadow: none;
-    padding: 16px;
-    padding-top: 0;
+    padding: 24px 16px;
+    overflow-y: auto;
   }
+
+  .contact-details {
+    display: none;
+  }
+
+  /* Detailansicht in voller Breite bei mobiler Ansicht */
+.show-contact-details-mobile .contact-list-content {
+  display: none;
+}
+
+.show-contact-details-mobile .contact-details {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  height: calc(100vh - 96px);
+  overflow-y: auto;
+}
+
+/* Header-Anpassung für mobile Ansicht */
+.contact-header {
+  position: static;
+  width: 100%;
+  padding: 16px;
+  gap: 16px;
+}
+
+.contact-actions{
+  display: none;
+}
+
+.contact-text{
+  margin-top: 10px;
+}
 
   .new-contact-button {
     display: none;
@@ -724,26 +709,74 @@ h1 {
     overflow-y: auto;
     margin-top: 0;
   }
+  
+  .mobile-back-arrow {
+    display: inline-block;
+    cursor: pointer;
+  }
 
-  /* Kontakt-Details: ausgeblendet */
+  .back-arrow.hidden {
+    display: none;
+  }
+ 
   #contact-details-container {
     display: none;
   }
 
-  #mobile-add-contact-btn {
-    display: flex;
-    position: fixed;
-    bottom: 80px;
-    right: 16px;
-    padding: 0;
-    background-color: transparent;
-    border-color: transparent;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    cursor: pointer;
+  #mobile-add-contact-btn,
+  #contact-options-overlay {
+    display: block;
   }
 
+  body.show-contact-details-mobile .contact-list-content {
+    display: none;
+  }
+
+  body.show-contact-details-mobile #contact-details-container {
+    display: block;
+  }
+
+  body.show-contact-details-mobile .back-arrow {
+    display: block;
+  }
+}
+
+
+@media (min-width: 1025px) {
+  .mobile-back-arrow {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+
+  .seperator{
+    display: none;
+  }
+
+  .contact-header{
+    flex-direction: column;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
   
-  
+.text-headline{
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  font-size: 16px;
+}
+
+.seperator-mobile{
+  border-radius: 3px;
+  width: 80px;
+  border: 1px solid #29ABE2;
+}
+
+.back-arrow{
+  position: absolute;
+  top: 142px;
+  right: 20px;
+}
 }
