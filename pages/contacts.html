@@ -222,6 +222,8 @@
               <h1>Contacts</h1>
               <div class="seperator"></div>
               <span class="text-headline">Better with a team</span>
+              <div class="seperator-mobile"></div>
+              <img src="/assets/icons/arrow-left-line-blue-mobile.png" class="back-arrow" onclick="returnToContactList()" alt="Back">
             </div>
           
             
@@ -232,12 +234,14 @@
         </section>
       </main>
     </div>
-    <button class="none-button" id="mobile-add-contact-btn">
+    <button class="mobile-add-contact-btn hidden" id="mobile-add-contact-btn">
       <img src="/assets/icons/person-add-mobile-contact.png" alt="Add Contact">
+    </button>
+    <button class="contact-options-btn hidden" id="contact-options-btn">
+      <img src="/assets/icons/menu-contact-options.png" alt="Contact Options">
     </button>
   </body>
   
   <script src="/scripts/board.js"></script>
   <script type="module" src="/scripts/contacts.js" defer></script>
-  <script src="/scripts/contacts-template.js"></script>
 </html>

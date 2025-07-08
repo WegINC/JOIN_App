@@ -1,4 +1,5 @@
 
+
 import {
   getContactListItemTemplate,
   getContactSeparatorTemplate,
@@ -6,7 +7,6 @@ import {
   getEditOverlayTemplate,
   getAddContactOverlayTemplate,
   getSuccessPopupTemplate,
-  getMobileAddContactTemplate
 } from './contacts-template.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
   window.closeAddContactOverlay = closeAddContactOverlay;
   window.createNewContact = createNewContact;
   document.getElementById('mobile-add-contact-btn').addEventListener('click', openMobileAddContactOverlay);
+  document.querySelector('.back-arrow').addEventListener('click', () => {
+    returnToContactList();
+  });
 });
 
 async function loadContactsFromDatabase() {
@@ -81,12 +84,6 @@ function renderContactListItem(contact) {
 
   item.addEventListener("click", () => selectContact(item, contact));
   contactList.appendChild(item);
-}
-
-function selectContact(item, contact) {
-  document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
-  item.classList.add('active');
-  renderContactDetails(contact);
 }
 
 function renderContactDetails(contact) {
@@ -218,60 +215,64 @@ function showSuccessPopup() {
   }, 3000);
 }
 
-function openMobileAddContactOverlay() {
-  const overlayHTML = getMobileAddContactTemplate();
-  const overlayWrapper = document.createElement('div');
-  overlayWrapper.innerHTML = overlayHTML;
-  document.body.appendChild(overlayWrapper);
-
-  const overlay = document.getElementById('mobile-add-contact-overlay');
-  overlay.classList.add('show');
-
-  const form = overlay.querySelector('.add-form');
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Verhindert automatischen Submit-Reload
-    await createNewContactFromMobileForm(form);
-  });
-
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) closeMobileAddContactOverlay();
-  });
+function toggleUserMenu() {
+  const menu = document.getElementById('user-dropdown');
+  menu.classList.toggle('hidden');
 }
 
-async function createNewContactFromMobileForm(form) {
-  const name = form.querySelector('input[type="text"]').value.trim();
-  const email = form.querySelector('input[type="email"]').value.trim();
-  const phone = form.querySelector('input[type="tel"]').value.trim();
+function closeUserMenu(event) {
+  const menu = document.getElementById('user-dropdown');
+  const button = document.getElementById('user-name');
 
-  if (!name || !email || !phone) return alert('Bitte fülle alle Felder aus!');
-
-  try {
-    const color = generateRandomColor();
-    const contact = buildContactObject('', { name, email, phone, themeColor: color });
-
-    const res = await fetch(`${BASE_URL}/users.json`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, phone, themeColor: color })
-    });
-
-    const data = await res.json();
-    contact.uid = data.name;
-    renderContactListItem(contact);
-    closeMobileAddContactOverlay();
-    showSuccessPopup();
-  } catch (err) {
-    alert("Fehler beim Erstellen des Kontakts.");
+  if (!menu.contains(event.target) && event.target !== button) {
+    menu.classList.add('hidden');
   }
 }
 
-function closeMobileAddContactOverlay() {
-  const overlay = document.getElementById('mobile-add-contact-overlay');
-  if (overlay) {
-    overlay.classList.remove('show');
-    // Nach Animation das Element entfernen:
-    overlay.addEventListener('animationend', () => {
-      overlay.remove();
-    }, { once: true });
+function selectContact(item, contact) {
+  document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
+  item.classList.add('active');
+  renderContactDetails(contact);
+  showContactDetailsMobile(); 
+}
+
+function showContactDetailsMobile() {
+  document.body.classList.add('show-contact-details-mobile');
+}
+
+function returnToContactList() {
+  document.body.classList.remove('show-contact-details-mobile');
+}
+
+function showContactList() {
+  document.getElementById('contact-list-container').classList.remove('d-none');
+  document.getElementById('contact-details-container').classList.add('d-none');
+
+  if (window.innerWidth <= 1024) {
+  document.getElementById('mobile-add-contact-btn').classList.remove('hidden');
+  document.getElementById('contact-options-btn').classList.add('hidden');
+}
+}
+
+function showContactDetails() {
+  document.getElementById('contact-list-container').classList.add('d-none');
+  document.getElementById('contact-details-container').classList.remove('d-none');
+
+  if (window.innerWidth <= 1024) {
+    document.getElementById('mobile-add-contact-btn').classList.add('hidden');
+    document.getElementById('contact-options-btn').classList.remove('hidden');
   }
 }
+
+// Beim Klick auf Kontakt
+function handleContactClick(contactId) {
+  // Detaildaten laden...
+  showContactDetails();
+}
+
+// Beim Klick auf Zurück-Pfeil in Detailansicht
+function handleBackToList() {
+  showContactList();
+}
+
+window.returnToContactList = returnToContactList;
