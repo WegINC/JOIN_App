@@ -176,7 +176,9 @@ async function loadTasks() {
       const columns = ["toDo", "inProgress", "awaitFeedback", "done"];
       columns.forEach(id => {
         const column = document.getElementById(id);
-        column.innerHTML = "";
+        if (column) {
+          column.innerHTML = "";
+        }
       });
 
       for (let id in tasks) {

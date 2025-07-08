@@ -230,6 +230,24 @@ select {
 .help-link-madia {
   display: none;
 }
+.suggestions-box {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 100;
+  }
+.suggestion-item {
+  padding: 8px;
+  cursor: pointer;
+}
+.suggestion-item:hover {
+background-color: #f0f0f0;
+}
+.hidden {
+display: none;
+}
 
 @media (max-width: 798px) {
   .wrapper {
