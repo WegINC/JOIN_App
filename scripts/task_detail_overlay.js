@@ -19,7 +19,18 @@ document.addEventListener("taskDataReady", function (e) {
 });
 
 async function fillTaskDetails(task) {
-  document.getElementById("task-category").textContent = task.category || "-";
+  const categoryColors = {
+    "Technical Task": "#1FD7C1",
+    "User Story": "#0038FF"
+  };
+
+  const categoryEl = document.getElementById("task-category");
+  const category = task.category || "-";
+  const color = categoryColors[category] || "#ccc";
+
+  categoryEl.textContent = category;
+  categoryEl.style.backgroundColor = color;
+
   document.getElementById("task-title").textContent = task.title || "";
   document.getElementById("task-description").textContent = task.description || "";
   document.getElementById("task-due-date").textContent = task.dueDate || "-";
@@ -137,8 +148,22 @@ function closeTaskOverlay() {
 }
 
 function editTask() {
-  document.getElementById("task-title").setAttribute("contenteditable", true);
-  document.getElementById("task-description").setAttribute("contenteditable", true);
+  const categoryEl = document.getElementById("task-category");
+  if (categoryEl) {
+    categoryEl.style.visibility = "hidden";
+  }
+
+  const titleEl = document.getElementById("task-title");
+  const descEl = document.getElementById("task-description");
+
+  titleEl.setAttribute("contenteditable", true);
+  descEl.setAttribute("contenteditable", true);
+
+  titleEl.classList.add("editable-field");
+  descEl.classList.add("editable-field");
+
+  document.getElementById("title-span").style.display = "block";
+  document.getElementById("description-span").style.display = "block";
 
   const dueDate = window.currentTaskData.dueDate || "";
   document.getElementById("task-due-date").innerHTML = `<input type="date" id="edit-due-date" value="${dueDate}">`;
@@ -168,7 +193,6 @@ function saveEditedTask() {
     title: document.getElementById("task-title").textContent.trim(),
     description: document.getElementById("task-description").textContent.trim(),
     dueDate: document.getElementById("edit-due-date").value,
-    category: document.getElementById("edit-category").value,
     priority: document.getElementById("edit-priority").value,
   };
 
@@ -178,9 +202,12 @@ function saveEditedTask() {
     body: JSON.stringify(updatedTask),
   })
     .then(() => {
-      console.log("Task aktualisiert");
-      closeTaskOverlay();
-      loadTasks();
+      // Update local task data
+      window.currentTaskData = {
+        ...window.currentTaskData,
+        ...updatedTask
+      };
+      openTaskDetailOverlay(window.currentTaskData, window.currentTaskId);
     })
     .catch((err) => console.error("Fehler beim Speichern:", err));
 }

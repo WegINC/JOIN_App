@@ -12,7 +12,7 @@
   background: white;
   border-radius: 16px;
   padding: 32px;
-  width: 400px;
+  width: 300px;
   box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
   font-family: "Inter", sans-serif;
   display: flex;
@@ -27,7 +27,6 @@
 }
 
 .task-category {
-  background-color: #0050ff;
   color: white;
   padding: 4px 12px;
   border-radius: 8px;
@@ -64,8 +63,12 @@
 }
 
 .task-info div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   margin: 4px 0;
   font-size: 16px;
+  gap: 4px;
 }
 
 .dueDate-span {
@@ -74,6 +77,17 @@
 
 .priority-span {
   padding-right: 24px;
+}
+
+.editable-field {
+  padding: 12px 21px 12px 21px;
+  font-size: 20px;
+  font-weight: 400;
+  color: black;
+  border: 1px solid;
+  border-radius: 10px;
+  border-color: #D1D1D1;
+  margin-top: 0;
 }
 
 .assigned-users {
@@ -92,7 +106,6 @@
 .initials-circle {
   width: 32px;
   height: 32px;
-  background-color: #007bff;
   color: white;
   border-radius: 50%;
   font-size: 14px;
