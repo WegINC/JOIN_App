@@ -15,8 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
   window.closeAddContactOverlay = closeAddContactOverlay;
   window.createNewContact = createNewContact;
   document.getElementById('mobile-add-contact-btn').addEventListener('click', openMobileAddContactOverlay);
+  document.body.addEventListener('click', (event) => {
+    const target = event.target.closest('#contact-options-btn');
+    if (target) {
+      openMobileEditContactOverlay();
+    }});
   document.querySelector('.back-arrow').addEventListener('click', () => {
     returnToContactList();
+    handleMobileButtons();
   });
 });
 
@@ -55,7 +61,10 @@ function renderGroupedContacts(groups) {
       item.className = "contact-item";
       item.innerHTML = getContactListItemTemplate(contact);
       contact.element = item;
-      item.addEventListener("click", () => selectContact(item, contact));
+      item.addEventListener("click", () => {
+        selectContact(item, contact);
+        selectedContactForOptions = contact;  // Hier setzen, nicht außerhalb der Schleife!
+      });
       list.appendChild(item);
     });
   });
@@ -223,17 +232,21 @@ function toggleUserMenu() {
 function closeUserMenu(event) {
   const menu = document.getElementById('user-dropdown');
   const button = document.getElementById('user-name');
+  const overlay = document.getElementById('contact-options-overlay');
+
 
   if (!menu.contains(event.target) && event.target !== button) {
     menu.classList.add('hidden');
   }
 }
 
+
 function selectContact(item, contact) {
   document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
   item.classList.add('active');
   renderContactDetails(contact);
   showContactDetailsMobile(); 
+  handleMobileButtons(); // <-- Button-Umschaltung nach Kontaktwahl
 }
 
 function showContactDetailsMobile() {
@@ -242,37 +255,85 @@ function showContactDetailsMobile() {
 
 function returnToContactList() {
   document.body.classList.remove('show-contact-details-mobile');
+  handleMobileButtons(); // <-- Buttons zurücksetzen bei "Zurück"
 }
 
 function showContactList() {
-  document.getElementById('contact-list-container').classList.remove('d-none');
+  document.getElementById('contact-list-content').classList.remove('d-none');
   document.getElementById('contact-details-container').classList.add('d-none');
-
-  if (window.innerWidth <= 1024) {
-  document.getElementById('mobile-add-contact-btn').classList.remove('hidden');
-  document.getElementById('contact-options-btn').classList.add('hidden');
-}
+  handleMobileButtons(); // <-- Buttons aktualisieren
 }
 
 function showContactDetails() {
-  document.getElementById('contact-list-container').classList.add('d-none');
+  document.getElementById('contact-list-content').classList.add('d-none');
   document.getElementById('contact-details-container').classList.remove('d-none');
+  handleMobileButtons(); // <-- Buttons aktualisieren
+}
 
-  if (window.innerWidth <= 1024) {
-    document.getElementById('mobile-add-contact-btn').classList.add('hidden');
-    document.getElementById('contact-options-btn').classList.remove('hidden');
+function handleMobileButtons() {
+  const addBtn = document.getElementById('mobile-add-contact-btn');
+  const optionsBtn = document.getElementById('contact-options-btn');
+  const isMobile = window.innerWidth <= 1024;
+  const isDetailVisible = document.body.classList.contains('show-contact-details-mobile');
+
+  if (isMobile && optionsBtn && !optionsBtn.dataset.listenerAttached) {
+    optionsBtn.addEventListener('click', () => {
+      openMobileEditContactOverlay();
+    });
+    optionsBtn.dataset.listenerAttached = 'true';
+  }
+
+  if (!addBtn || !optionsBtn) return;
+
+  if (isMobile) {
+    if (isDetailVisible) {
+      addBtn.classList.add('hidden');
+      optionsBtn.classList.remove('hidden');
+    } else {
+      addBtn.classList.remove('hidden');
+      optionsBtn.classList.add('hidden');
+    }
+  } else {
+    addBtn.classList.add('hidden');
+    optionsBtn.classList.add('hidden');
   }
 }
 
-// Beim Klick auf Kontakt
-function handleContactClick(contactId) {
-  // Detaildaten laden...
-  showContactDetails();
+let selectedContactForOptions = null;
+
+function openMobileEditContactOverlay() {
+  const overlay = document.getElementById('contact-options-overlay');
+  if (!selectedContactForOptions) return;
+
+  overlay.innerHTML = `
+    <button onclick="editContactOptions()"><img class="edit-button-overlay" src="/assets/icons/edit-button.png">Edit</button>
+    <button onclick="deleteContactOptions()"><img class="delete-button-overlay" src="/assets/icons/delete-button.png">Delete</button>
+  `;
+  overlay.classList.remove('hidden');
 }
 
-// Beim Klick auf Zurück-Pfeil in Detailansicht
-function handleBackToList() {
-  showContactList();
+function closeContactOptionsOverlay() {
+  const overlay = document.getElementById('contact-options-overlay');
+  overlay.classList.add('hidden');
 }
 
+function editContactOptions() {
+  if (selectedContactForOptions) {
+    openEditOverlay(selectedContactForOptions);
+    closeContactOptionsOverlay();
+  }
+}
+
+function deleteContactOptions() {
+  if (selectedContactForOptions) {
+    deleteContact(selectedContactForOptions);
+    closeContactOptionsOverlay();
+  }
+}
+
+// Event Listener für Fenstergröße (z. B. bei Drehen des Geräts)
+window.addEventListener('resize', handleMobileButtons);
+
+// Exporte für HTML-Nutzung
 window.returnToContactList = returnToContactList;
+window.selectContact = selectContact;
