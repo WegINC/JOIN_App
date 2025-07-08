@@ -196,16 +196,7 @@ textarea {
   box-shadow: 0px 4px 4px 0px #0000004e;
 }
 
-.top-navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px 96px;
-  background-color: white;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
+
 
 .top-navbar span {
   font-size: 21px;
