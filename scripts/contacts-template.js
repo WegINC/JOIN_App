@@ -75,7 +75,49 @@ export function getContactSeparatorTemplate(letter) {
       </div>
     `;
   }
+
+  export function getEditContactMobileOverlayTemplate({ name = '', email = '', phone = '', uid, initials, color }) {
+    return `
+      <div class="overlay-bg">
+        <div class="edit-contact-overlay">
+          <div class="edit-overlay-top">
+            <div class="edit-overlay-header">
+              <h1>Edit contact</h1>
+              <img src="/assets/icons/close.png" class="close-icon">
+            </div>
+            <div class="edit-underline"></div>
+            <button class="edit-close-btn" title="Close">
+              <img src="/assets/icons/close1.png" alt="Close">
+            </button>
+            <div class="edit-avatar-circle" style="background-color: ${color}">${initials}</div>
+          </div>
   
+          <div class="edit-form">
+            <div class="input-group">
+              <input type="text" id="edit-name" value="${name}" placeholder="Name">
+              <img src="/assets/icons/person.png" alt="Person icon" />
+            </div>
+            <div class="input-group">
+              <input type="email" id="edit-email" value="${email}" placeholder="Email">
+              <img src="/assets/icons/mail.png" alt="Mail icon" />
+            </div>
+            <div class="input-group">
+              <input type="tel" id="edit-phone" value="${phone}" placeholder="Phone">
+              <img src="/assets/icons/call.png" alt="Call icon" />
+            </div>
+  
+            <div class="edit-actions">
+              <button class="delete-btn" onclick="deleteContactOptions('${uid}')">Delete</button>
+              <button class="save-btn" onclick="editContactOptions('${uid}')">
+                Save <img src="/assets/icons/check.png" alt="Check icon">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   export function getAddContactOverlayTemplate() {
     return `
       <div class="contact-add-overlay">
@@ -115,6 +157,7 @@ export function getContactSeparatorTemplate(letter) {
       </div>
     `;
   }
+
   
   export function getSuccessPopupTemplate() {
     return `

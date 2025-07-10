@@ -5,6 +5,7 @@ import {
   getContactSeparatorTemplate,
   getContactDetailsTemplate,
   getEditOverlayTemplate,
+  getEditContactMobileOverlayTemplate,
   getAddContactOverlayTemplate,
   getSuccessPopupTemplate,
 } from './contacts-template.js';
@@ -246,7 +247,7 @@ function selectContact(item, contact) {
   item.classList.add('active');
   renderContactDetails(contact);
   showContactDetailsMobile(); 
-  handleMobileButtons(); // <-- Button-Umschaltung nach Kontaktwahl
+  handleMobileButtons(); 
 }
 
 function showContactDetailsMobile() {
@@ -255,19 +256,19 @@ function showContactDetailsMobile() {
 
 function returnToContactList() {
   document.body.classList.remove('show-contact-details-mobile');
-  handleMobileButtons(); // <-- Buttons zurücksetzen bei "Zurück"
+  handleMobileButtons(); 
 }
 
 function showContactList() {
   document.getElementById('contact-list-content').classList.remove('d-none');
   document.getElementById('contact-details-container').classList.add('d-none');
-  handleMobileButtons(); // <-- Buttons aktualisieren
+  handleMobileButtons(); 
 }
 
 function showContactDetails() {
   document.getElementById('contact-list-content').classList.add('d-none');
   document.getElementById('contact-details-container').classList.remove('d-none');
-  handleMobileButtons(); // <-- Buttons aktualisieren
+  handleMobileButtons(); 
 }
 
 function handleMobileButtons() {
@@ -318,22 +319,75 @@ function closeContactOptionsOverlay() {
 }
 
 function editContactOptions() {
-  if (selectedContactForOptions) {
+  if (!selectedContactForOptions) return;
+
+  closeContactOptionsOverlay();
+
+  const isMobile = window.innerWidth <= 1024;
+
+  if (isMobile) {
+    openEditContactMobileOverlay(selectedContactForOptions);
+  } else {
     openEditOverlay(selectedContactForOptions);
-    closeContactOptionsOverlay();
+  }
+}
+window.editContactOptions = editContactOptions;
+
+function openEditContactMobileOverlay(contact) {
+  const overlay = document.getElementById('edit-contact-overlay');
+  overlay.innerHTML = getEditContactMobileOverlayTemplate(contact);
+  overlay.style.display = 'flex';
+}
+
+async function saveEditedContacts(uid) {
+  const name = document.getElementById('edit-name').value.trim();
+  const email = document.getElementById('edit-email').value.trim();
+  const phone = document.getElementById('edit-phone').value.trim();
+
+  if (!name || !email || !phone) return alert('Bitte fülle alle Felder aus!');
+
+  const contact = findContactByUid(uid);
+  if (!contact) return alert('Kontakt nicht gefunden');
+
+  try {
+    await updateContactInDB(uid, { name, email, phone });
+
+    updateContactData(contact, name, email, phone);
+    renderContactDetails(contact); // Desktop-Details aktualisieren
+    closeMobileEditContactOverlay(); // Funktion definieren siehe unten
+  } catch (err) {
+    alert('Fehler beim Speichern');
   }
 }
 
-function deleteContactOptions() {
-  if (selectedContactForOptions) {
-    deleteContact(selectedContactForOptions);
+window.saveEditedContacts = saveEditedContacts;
+
+
+
+async function deleteContactOptions() {
+  if (!selectedContactForOptions) return;
+  if (!confirm(`Möchtest du ${selectedContactForOptions.name} wirklich löschen?`)) return;
+
+  try {
+    await fetch(`${BASE_URL}/users/${selectedContactForOptions.uid}.json`, {
+      method: 'DELETE',
+    });
+
+    selectedContactForOptions.element.remove();
+    document.getElementById('contact-details-content').innerHTML = '';
+    closeMobileEditContactOverlay();
     closeContactOptionsOverlay();
+  } catch (err) {
+    alert("Fehler beim Löschen.");
   }
 }
 
-// Event Listener für Fenstergröße (z. B. bei Drehen des Geräts)
+function closeMobileEditContactOverlay() {
+  const overlay = document.querySelector('.overlay-bg');
+  if (overlay) overlay.remove();
+}
+
+window.deleteContactOptions = deleteContactOptions;
 window.addEventListener('resize', handleMobileButtons);
-
-// Exporte für HTML-Nutzung
 window.returnToContactList = returnToContactList;
 window.selectContact = selectContact;

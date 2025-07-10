@@ -606,95 +606,7 @@ height: 18px;
     transform: translateY(0);
   }
 }
-@media (max-width: 1600px) {
-  #add-contact-overlay {
-    display: flex !important;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 2000;
-  }
 
-  .contact-add-overlay {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 90%;
-    max-width: 500px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    background-color: white;
-  }
-
-  .add-overlay-left {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 160px;
-    z-index: 2;
-    background-color: #2a3647;
-    color: white;
-    padding: 24px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 400px;
-  }
-
-  .add-overlay-right {
-    margin-top: 400px;
-    padding: 24px;
-    z-index: 1;
-    position: relative;
-  }
-
-.add-avatar {
-  position: absolute;
-  top: -70px;
-  left: 40%;
-  z-index: 5;
-  width: 120px;
-  height: 120px;
-  background-color: #2A3647;
-  border: 6px solid #FFFFFF;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 36px;
-  font-weight: bold;
-  box-shadow: 0 0 0 6px white, 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-  .add-close-btn {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-    z-index: 10;
-  }
-
-  .add-close-btn:hover {
-    color: #29ABE2;
-  }
-
-  .cancel-btn {
-    display: none;
-  }
-}
 
 @media (max-width: 1024px) {
   
@@ -864,7 +776,154 @@ height: 18px;
   body.show-contact-details-mobile .back-arrow {
     display: block;
   }
-}
+
+  .overlay-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .edit-contact-overlay {
+    width: 400px;
+    background-color: white;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideInFromTop 0.3s ease-out;
+  }
+  
+  .edit-overlay-top {
+    background-color: #2A3647;
+    height: 120px;
+    color: white;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .edit-overlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 50px;
+  }
+  
+  .edit-overlay-header h1 {
+    font-size: 24px;
+    margin: 0;
+  }
+  
+  .close-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+  }
+  
+  .edit-underline {
+    width: 50px;
+    height: 3px;
+    background-color: #29ABE2;
+    border-radius: 2px;
+  }
+  
+  .edit-avatar-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #FF7A00;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute; 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+  
+  .edit-form {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 70px;
+  }
+  
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 12px 40px 12px 12px;
+    border: 1px solid #D1D1D1;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+  
+  .input-group img {
+    position: absolute;
+    right: 12px;
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+  }
+  
+  .edit-actions {
+    display: flex;
+    margin-top: 24px;
+  }
+  
+  .delete-btn {
+    background-color: white;
+    border: 1px solid #2A3647;
+    color: #2A3647;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .save-btn {
+    background-color: #2A3647;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .save-btn img {
+    width: 16px;
+    height: 16px;
+  }
+  
+  @keyframes slideInFromTop {
+    from {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 
 
 @media (min-width: 1025px) {
@@ -904,6 +963,53 @@ height: 18px;
   top: 142px;
   right: 20px;
 }
+}
+
+@media (max-width: 768px) {
+  .edit-contact-overlay {
+    width: 90%;
+    height: auto;
+    max-height: 90%;
+  }
+
+  .edit-form {
+    padding-top: 70px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+  }
+
+  .edit-avatar-circle {
+    width: 80px;
+    height: 80px;
+    font-size: 24px;
+    position: absolute;
+    top: 130px;
+  }
+
+  .edit-actions {
+    flex-direction: row;
+    gap: 12px;
+  }
+}
+
+  @keyframes slideInFromTop {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .close-btn {
+    top: 16px;
+    right: 16px;
+  }
+}
+
+@media (max-width: 420px){
+  .edit-avatar-circle{
+    width: 80px;
+    height: 80px;
+  }
+
 }
 
 @media (max-width: 380px) {
