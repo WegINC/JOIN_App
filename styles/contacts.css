@@ -303,7 +303,7 @@ h1 {
 .contact-add-overlay {
   display: flex;
   background-color: white;
-  width: 800px;
+  width: 840px;
   max-width: 90%;
   border-radius: 20px;
   box-shadow: 0 8px 16px rgba(0,0,0,0.25);
@@ -419,21 +419,30 @@ h1 {
 .add-form .input-group {
   display: flex;
   align-items: center;
+  position: relative;
   margin-bottom: 20px;
   gap: 12px;
 }
 
 .edit-form .input-group img,
 .add-form .input-group img {
-  width: 24px;
-  height: 24px;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  opacity: 0.6;
 }
 
 .input-group input {
-  width: 280px;
-  border: none;
-  outline: none;
-  flex: 1;
+  width: 100%;
+  padding: 12px 40px 12px 12px; /* Platz rechts für das Icon */
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
 }
 
 .edit-form input,
@@ -533,6 +542,7 @@ h1 {
 }
 
 
+
 .contact-separator {
   display: flex;
   flex-direction: column;
@@ -576,6 +586,11 @@ h1 {
   gap: 10px;
 }
 
+.contact-options-overlay:hover{
+  color: #29ABE2;
+  font-weight: 700;
+}
+
 .contact-options-overlay button {
   background: none;
   border: none;
@@ -585,15 +600,15 @@ h1 {
   color: black;
 }
 
-.contact-options-overlay button:hover {
-  text-decoration: none;
-}
-
 .edit-button-overlay,
 .delete-button-overlay {
 padding-right: 10px;
 width: 18px;
 height: 18px;
+}
+
+.edit-button-overlay:hover{
+  background-image: url("../assets/icons/edit-blue-btn.png");
 }
 
 @keyframes slideDown {
@@ -790,7 +805,8 @@ height: 18px;
     z-index: 999;
   }
   
-  .edit-contact-overlay {
+  .edit-contact-overlay,
+  .add-contact-overlay{
     width: 400px;
     background-color: white;
     border-radius: 24px;
@@ -799,8 +815,10 @@ height: 18px;
     overflow: hidden;
     animation: slideInFromTop 0.3s ease-out;
   }
+ 
   
-  .edit-overlay-top {
+  .edit-overlay-top,
+  .add-overlay-top {
     background-color: #2A3647;
     height: 120px;
     color: white;
@@ -808,15 +826,38 @@ height: 18px;
     text-align: center;
     position: relative;
   }
-  
+
+  .add-overlay-top{
+    height: 150px;
+  }
+
   .edit-overlay-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-top: 50px;
   }
+
+  .add-overlay-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+    padding-top: 20px;
+    padding-bottom: 10px;
+  }
+
+  .add-overlay-header p{
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
   
   .edit-overlay-header h1 {
+    font-size: 24px;
+    margin: 0;
+  }
+
+  .add-overlay-header h1{
     font-size: 24px;
     margin: 0;
   }
@@ -827,17 +868,26 @@ height: 18px;
     cursor: pointer;
   }
   
-  .edit-underline {
+  .edit-underline,
+  .add-underline {
     width: 50px;
     height: 3px;
     background-color: #29ABE2;
     border-radius: 2px;
   }
+
+  .add-underline{
+    margin-top: 0;
+  }
+
+  .add-overlay-header{
+    margin-top: 0;
+  }
   
-  .edit-avatar-circle {
+  .edit-avatar-circle,
+  .add-avatar {
     width: 80px;
     height: 80px;
-    background-color: #FF7A00;
     color: white;
     font-size: 28px;
     font-weight: bold;
@@ -850,8 +900,13 @@ height: 18px;
     transform: translateX(-50%);
     z-index: 2;
   }
+
+  .add-avatar{
+   margin-top: 0px;
+  }
   
-  .edit-form {
+  .edit-form,
+  .add-form {
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -972,11 +1027,28 @@ height: 18px;
     max-height: 90%;
   }
 
+  .add-contact-overlay{
+    width: 90%;
+    height: 70%;
+    max-height: 90%;
+  }
+
   .edit-form {
     padding-top: 70px;
     padding-left: 16px;
     padding-right: 16px;
     padding-bottom: 16px;
+  }
+
+  .add-form {
+    position: relative;
+    top: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .edit-avatar-circle {
@@ -987,7 +1059,13 @@ height: 18px;
     top: 130px;
   }
 
-  .edit-actions {
+  .add-avatar{
+    position: absolute;
+    top: 160px; 
+  }
+
+  .edit-actions,
+  .add-actions {
     flex-direction: row;
     gap: 12px;
   }

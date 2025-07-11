@@ -59,12 +59,15 @@ export function getContactSeparatorTemplate(letter) {
           <div class="edit-form">
             <div class="input-group">
               <input type="text" id="edit-name" value="${name}" placeholder="Name">
+              <img src="/assets/icons/person.png" alt="Person icon" />
             </div>
             <div class="input-group">
               <input type="email" id="edit-email" value="${email}" placeholder="Email">
+              <img src="/assets/icons/mail.png" alt="Mail icon" />
             </div>
             <div class="input-group">
               <input type="tel" id="edit-phone" value="${phone}" placeholder="Phone">
+              <img src="/assets/icons/call.png" alt="Call icon" />
             </div>
             <div class="edit-actions">
               <button class="delete-btn">Delete</button>
@@ -83,7 +86,6 @@ export function getContactSeparatorTemplate(letter) {
           <div class="edit-overlay-top">
             <div class="edit-overlay-header">
               <h1>Edit contact</h1>
-              <img src="/assets/icons/close.png" class="close-icon">
             </div>
             <div class="edit-underline"></div>
             <button class="edit-close-btn" title="Close">
@@ -118,7 +120,7 @@ export function getContactSeparatorTemplate(letter) {
     `;
   }
 
-  export function getAddContactOverlayTemplate() {
+  export function getAddContactOverlayTemplate({ name = '', email = '', phone = '' } = {}) {
     return `
       <div class="contact-add-overlay">
         <div class="add-overlay-left">
@@ -136,18 +138,61 @@ export function getContactSeparatorTemplate(letter) {
           </div>
           <form class="add-form">
             <div class="input-group">
-              <input type="text" id="new-name" placeholder="Name" required>
+              <input type="text" id="edit-name" value="${name}" placeholder="Name">
+              <img src="/assets/icons/person.png" alt="Person icon" />
             </div>
             <div class="input-group">
-              <input type="email" id="new-email" placeholder="Email" required>
+              <input type="email" id="edit-email" value="${email}" placeholder="Email">
+              <img src="/assets/icons/mail.png" alt="Mail icon" />
             </div>
             <div class="input-group">
-              <input type="tel" id="new-phone" placeholder="Phone" required>
+              <input type="tel" id="edit-phone" value="${phone}" placeholder="Phone">
+              <img src="/assets/icons/call.png" alt="Call icon" />
             </div>
             <div class="add-actions">
               <button type="button" class="cancel-btn delete-btn" onclick="closeAddContactOverlay()">
                 Cancel <img src="../assets/icons/close.png">
               </button>
+              <button type="button" class="create-btn" onclick="createNewContact()">
+                Create contact <img src="../assets/icons/check.png">
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+  }
+
+  export function getAddContactMobileOverlayTemplate({ name = '', email = '', phone = '',}) {
+    return `
+    <div class="overlay-bg">
+      <div class="add-contact-overlay">
+        <div class="add-overlay-top">
+          <div class="add-overlay-header">
+            <h1>Add contact</h1>
+          <p>Tasks are better with a team!</p>
+          <div class="add-underline"></div>
+          </div>
+          <button class="add-close-btn" onclick="closeAddContactOverlay()">
+            <img src="../assets/icons/close1.png" alt="Close">
+          </button>
+          <div class="add-avatar">
+            <img src="../assets/icons/person-add-profile.png" alt="User">
+          </div>
+        <form class="add-form">
+            <div class="input-group">
+              <input type="text" id="new-name" value="${name}" placeholder="Name">
+              <img src="/assets/icons/person.png" alt="Person icon" />
+            </div>
+            <div class="input-group">
+              <input type="email" id="new-email" value="${email}" placeholder="Email">
+              <img src="/assets/icons/mail.png" alt="Mail icon" />
+            </div>
+            <div class="input-group">
+              <input type="tel" id="new-phone" value="${phone}" placeholder="Phone">
+              <img src="/assets/icons/call.png" alt="Call icon" />
+            </div>
+            <div class="add-actions">
               <button type="button" class="create-btn" onclick="createNewContact()">
                 Create contact <img src="../assets/icons/check.png">
               </button>

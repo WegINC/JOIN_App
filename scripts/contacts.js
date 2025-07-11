@@ -7,6 +7,7 @@ import {
   getEditOverlayTemplate,
   getEditContactMobileOverlayTemplate,
   getAddContactOverlayTemplate,
+  getAddContactMobileOverlayTemplate,
   getSuccessPopupTemplate,
 } from './contacts-template.js';
 
@@ -15,7 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
   window.openAddContactOverlay = openAddContactOverlay;
   window.closeAddContactOverlay = closeAddContactOverlay;
   window.createNewContact = createNewContact;
-  document.getElementById('mobile-add-contact-btn').addEventListener('click', openMobileAddContactOverlay);
+  const mobileAddBtn = document.getElementById('mobile-add-contact-btn');
+  if (mobileAddBtn) {
+    mobileAddBtn.addEventListener('click', openAddContactMobileOverlay);}
   document.body.addEventListener('click', (event) => {
     const target = event.target.closest('#contact-options-btn');
     if (target) {
@@ -386,6 +389,21 @@ function closeMobileEditContactOverlay() {
   const overlay = document.querySelector('.overlay-bg');
   if (overlay) overlay.remove();
 }
+
+function openAddContactMobileOverlay() {
+  const overlay = document.getElementById('add-contact-overlay');
+  overlay.classList.remove('hidden');
+  overlay.style.display = 'flex';
+  overlay.innerHTML = getAddContactMobileOverlayTemplate({});
+
+  overlay.addEventListener('click', event => {
+    if (event.target.classList.contains('overlay-bg')) {
+      closeAddContactOverlay();
+    }
+  });
+}
+
+
 
 window.deleteContactOptions = deleteContactOptions;
 window.addEventListener('resize', handleMobileButtons);
