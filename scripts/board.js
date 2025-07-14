@@ -243,6 +243,7 @@ async function loadTasks() {
     column.addEventListener("drop", handleDrop);
   }
 });
+
 async function populateAssigneeDropdown() {
   try {
     const response = await fetch(`${BASE_URL}/users.json`);

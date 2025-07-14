@@ -50,13 +50,14 @@ async function fillTaskDetails(task) {
       const badge = document.createElement("div");
       badge.className = "task-user-initials";
       badge.style.backgroundColor = user.themeColor || "#0038ff";
-      badge.textContent = user.initials || "U";
+      badge.textContent = user.initials || "G";
       container.appendChild(badge);
     }
   }
 
   const subtaskList = document.getElementById("subtask-list");
   subtaskList.innerHTML = "";
+
   const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
 
   subtasks.forEach((sub, idx) => {
@@ -64,23 +65,21 @@ async function fillTaskDetails(task) {
     subDiv.className = "subtask-item";
 
     subDiv.innerHTML = `
-    <input 
-      type="checkbox" 
-      ${sub.done ? "checked" : ""} 
-      onchange="toggleSubtask(${idx})" 
-      class="subtask-checkbox"
-    />
-    <span 
-      class="subtask-title ${sub.done ? 'done' : ''}" 
-      onblur="editSubtask(${idx}, this.textContent.trim())"
-    >
-      ${sub.title}
-    </span>
-  `;
+      <input 
+        type="checkbox" 
+        ${sub.done ? "checked" : ""} 
+        onchange="toggleSubtask(${idx})" 
+        class="subtask-checkbox"
+      />
+      <span 
+        class="subtask-title ${sub.done ? 'done' : ''}"
+      >
+        ${sub.title}
+      </span>
+    `;
 
     subtaskList.appendChild(subDiv);
   });
-
 }
 
 function toggleSubtask(index) {
@@ -153,6 +152,9 @@ function editTask() {
     categoryEl.style.visibility = "hidden";
   }
 
+  const iconEl = document.getElementById("task-priority-icon");
+  if (iconEl) iconEl.innerHTML = "";
+
   const titleEl = document.getElementById("task-title");
   const descEl = document.getElementById("task-description");
 
@@ -170,12 +172,22 @@ function editTask() {
 
   const priority = window.currentTaskData.priority || "";
   document.getElementById("task-priority").innerHTML = `
-    <select id="edit-priority">
-      <option value="urgent">Urgent</option>
-      <option value="medium">Medium</option>
-      <option value="low">Low</option>
-    </select>`;
+    <div class="edit-priority" id="edit-priority">
+      <a href="#" class="edit-priority-urgent" value="urgent">Urgent<img src="/assets/icons/urgent.svg" alt=""></a>
+      <a href="#" class="edit-priority-medium" value="medium"><img src="/assets/icons/medium-white.svg" alt=""></a>
+      <a href="#" class="edit-priority-low" value="low">Low<img src="/assets/icons/low.svg" alt=""></a>
+    </div>`;
   document.getElementById("edit-priority").value = priority;
+
+  const subtaskList = document.getElementById("subtask-list");
+  if (subtaskList) {
+    subtaskList.innerHTML = `
+      <div class="subtask-add-row">
+        <input id="new-subtask-input" type="text" placeholder="Neue Subtask hinzufügen" />
+        <button onclick="addNewSubtask()">+</button>
+      </div>
+    `;
+  }
 
   const btn = document.querySelector(".task-actions button:last-child");
   btn.textContent = "Save";
@@ -202,7 +214,6 @@ function saveEditedTask() {
     body: JSON.stringify(updatedTask),
   })
     .then(() => {
-      // Update local task data
       window.currentTaskData = {
         ...window.currentTaskData,
         ...updatedTask

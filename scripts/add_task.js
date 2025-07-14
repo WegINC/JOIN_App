@@ -16,6 +16,13 @@ function initUserInitial() {
   if (nameBtn) nameBtn.textContent = initial;
 }
 
+function getUserInitials(name) {
+  const nameParts = name.trim().split(" ");
+  return nameParts.length >= 2
+    ? nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase()
+    : nameParts[0][0].toUpperCase();
+}
+
 function setupPriorityButtons() {
   const buttons = {
     urgent: document.getElementById("priority-urgent"),
@@ -87,19 +94,19 @@ async function populateAssigneeDropdown() {
   }
 }
 
-function populateCategoryDropdown() {
-  const categorySelect = document.getElementById("category");
-  if (!categorySelect) return;
+function populateAssigneeDropdown(userData) {
+  const select = document.getElementById("assigned");
+  if (!select) return;
 
-  const options = ["Technical Task", "User Story"];
-  categorySelect.innerHTML = `<option disabled selected>Select task category</option>`;
+  select.innerHTML = `<option disabled selected>Select contacts to assign</option>`;
 
-  options.forEach(opt => {
+  for (let uid in userData) {
+    const user = userData[uid];
     const option = document.createElement("option");
-    option.value = opt;
-    option.textContent = opt;
-    categorySelect.appendChild(option);
-  });
+    option.value = uid;
+    option.textContent = user.name || "Unnamed";
+    select.appendChild(option);
+  }
 }
 
 function addSubtaskInput() {
@@ -119,14 +126,33 @@ function addSubtaskInput() {
   container.appendChild(inputDiv);
 }
 
-function createTask() {
+async function loadAssigneeSuggestions() {
+  try {
+    const res = await fetch(`${BASE_URL}/users.json`);
+    const data = await res.json();
+    assigneeMap = {}; // global!
+
+    for (const uid in data) {
+      assigneeMap[uid] = {
+        name: data[uid].name || "Unnamed",
+        initials: data[uid].initials || "U",
+        themeColor: data[uid].themeColor || "#cccccc"
+      };
+    }
+
+    populateAssigneeDropdown(data); // Daten gleich für Dropdown nutzen
+  } catch (err) {
+    console.error("Fehler beim Laden der Kontakte:", err);
+  }
+}
+
+async function createTask() {
   const title = document.getElementById("title").value;
   const description = document.getElementById("description").value;
   const dueDate = document.getElementById("due").value;
   const category = document.getElementById("category").value;
   const priority = selectedPriority || "low";
-
-const assignedUid = document.getElementById("assigned")?.value;
+  const assignedUid = document.getElementById("assigned")?.value;
 
   if (!title || !dueDate || !assignedUid || category === "Select task category") {
     alert("Bitte alle Pflichtfelder ausfüllen.");
@@ -141,13 +167,36 @@ const assignedUid = document.getElementById("assigned")?.value;
 
   const userInitial = localStorage.getItem("userInitial") || "G";
 
+  let assignedUserData = {};
+  try {
+    const res = await fetch(`${BASE_URL}/users/${assignedUid}.json`);
+    const user = await res.json();
+
+    const initials = getUserInitials(user.name || "U");
+    let themeColor = user.themeColor;
+
+    if (!themeColor) {
+      themeColor = getRandomColor();
+      await fetch(`${BASE_URL}/users/${assignedUid}.json`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ themeColor }),
+      });
+    }
+
+    assignedUserData = { initials, themeColor };
+
+  } catch (err) {
+    console.error("Fehler beim Abrufen des Benutzers:", err);
+  }
+
   const taskData = {
     title,
     description,
     dueDate,
     category,
     priority,
-    assignedTo: { [assignedUid]: true },
+    assignedTo: { [assignedUid]: assignedUserData },
     status: "toDo",
     userInitials: userInitial,
     subtasks,
