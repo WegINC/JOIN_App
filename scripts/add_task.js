@@ -147,14 +147,18 @@ async function loadAssigneeSuggestions() {
 }
 
 async function createTask() {
-  const title = document.getElementById("title").value;
-  const description = document.getElementById("description").value;
+  const title = document.getElementById("title").value.trim();
+  const description = document.getElementById("description").value.trim();
   const dueDate = document.getElementById("due").value;
   const category = document.getElementById("category").value;
   const priority = selectedPriority || "low";
-  const assignedUid = document.getElementById("assigned")?.value;
 
-  if (!title || !dueDate || !assignedUid || category === "Select task category") {
+  const selectedOptions = document.getElementById("assigned").selectedOptions;
+  const assignedUids = Array.from(selectedOptions)
+    .filter(opt => !opt.disabled)
+    .map(opt => opt.value);
+
+  if (!title || !dueDate || assignedUids.length === 0 || category === "Select task category") {
     alert("Bitte alle Pflichtfelder ausfüllen.");
     return;
   }
@@ -167,27 +171,25 @@ async function createTask() {
 
   const userInitial = localStorage.getItem("userInitial") || "G";
 
-  let assignedUserData = {};
-  try {
-    const res = await fetch(`${BASE_URL}/users/${assignedUid}.json`);
-    const user = await res.json();
+  let assignedTo = {};
+  for (const uid of assignedUids) {
+    const user = assigneeMap[uid];
+    if (user) {
+      if (!user.themeColor) {
+        const newColor = getRandomColor();
+        user.themeColor = newColor;
+        await fetch(`${BASE_URL}/users/${uid}.json`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ themeColor: newColor }),
+        });
+      }
 
-    const initials = getUserInitials(user.name || "U");
-    let themeColor = user.themeColor;
-
-    if (!themeColor) {
-      themeColor = getRandomColor();
-      await fetch(`${BASE_URL}/users/${assignedUid}.json`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ themeColor }),
-      });
+      assignedTo[uid] = {
+        initials: user.initials || getUserInitials(user.name),
+        themeColor: user.themeColor,
+      };
     }
-
-    assignedUserData = { initials, themeColor };
-
-  } catch (err) {
-    console.error("Fehler beim Abrufen des Benutzers:", err);
   }
 
   const taskData = {
@@ -196,22 +198,23 @@ async function createTask() {
     dueDate,
     category,
     priority,
-    assignedTo: { [assignedUid]: assignedUserData },
+    assignedTo,
     status: "toDo",
     userInitials: userInitial,
     subtasks,
   };
 
-  fetch(`${BASE_URL}/tasks.json`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(taskData),
-  })
-    .then(() => {
-      alert("Task erfolgreich erstellt.");
-      window.location.href = "/pages/board.html";
-    })
-    .catch((err) => console.error("Fehler beim Erstellen:", err));
+  try {
+    await fetch(`${BASE_URL}/tasks.json`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(taskData),
+    });
+    alert("Task erfolgreich erstellt.");
+    window.location.href = "/pages/board.html";
+  } catch (err) {
+    console.error("Fehler beim Erstellen des Tasks:", err);
+  }
 }
 
 function closeUserMenu(event) {

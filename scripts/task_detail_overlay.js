@@ -1,16 +1,20 @@
 function openTaskDetailOverlay(task, taskId) {
-  fetch("/pages/task_detail_overlay.html")
-    .then((res) => res.text())
-    .then((html) => {
-      const container = document.getElementById("task-detail-container");
-      container.innerHTML = html;
-      container.style.display = "block";
+  fetch(`${BASE_URL}/tasks/${taskId}.json`)
+    .then((res) => res.json())
+    .then((freshTask) => {
+      return fetch("/pages/task_detail_overlay.html")
+        .then((res) => res.text())
+        .then((html) => {
+          const container = document.getElementById("task-detail-container");
+          container.innerHTML = html;
+          container.style.display = "block";
 
-      window.currentTaskId = taskId;
-      window.currentTaskData = { ...task, id: taskId };
+          window.currentTaskId = taskId;
+          window.currentTaskData = { ...freshTask, id: taskId };
 
-      const overlayEvent = new CustomEvent("taskDataReady", { detail: task });
-      document.dispatchEvent(overlayEvent);
+          const overlayEvent = new CustomEvent("taskDataReady", { detail: freshTask });
+          document.dispatchEvent(overlayEvent);
+        });
     });
 }
 
