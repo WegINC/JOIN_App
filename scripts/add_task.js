@@ -140,7 +140,7 @@ async function loadAssigneeSuggestions() {
       };
     }
 
-    populateAssigneeDropdown(data); // Daten gleich für Dropdown nutzen
+    populateAssigneeDropdown(data);
   } catch (err) {
     console.error("Fehler beim Laden der Kontakte:", err);
   }

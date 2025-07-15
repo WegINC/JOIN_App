@@ -57,6 +57,10 @@
   gap: 16px;
 }
 
+.task-info span {
+  padding: 4px;
+}
+
 .task-info img {
   height: 20px;
   width: 20px;
@@ -110,27 +114,38 @@
   gap: 8px;
 }
 
+.edit-priority a.active.urgent {
+  background-color: #ff3d00;
+  color: #fff;
+}
+.edit-priority a.active.medium {
+  background-color: #ffa800;
+  color: #fff;
+}
+.edit-priority a.active.low {
+  background-color: #7ae229;
+  color: #fff;
+}
+
+.edit-priority a.active img {
+  filter: brightness(0) invert(1);
+}
+
 .edit-priority a:hover {
   box-shadow: 0px 4px 4px 0px #c5c5c5;
 }
 
-.edit-priority-urgent {
+.priority-btn-urgent {
   height: 48px;
   width: 128px;
 }
 
-.edit-priority-medium {
-  border: none !important;
-  background: none !important;
-  box-shadow: none !important;
-}
-
-.edit-priority-medium img {
-  height: 44px;
+.priority-btn-medium {
+  height: 48px;
   width: 128px;
 }
 
-.edit-priority-low {
+.priority-btn-low {
   height: 48px;
   width: 128px;
 }

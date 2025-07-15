@@ -173,11 +173,28 @@ function editTask() {
   const priority = window.currentTaskData.priority || "";
   document.getElementById("task-priority").innerHTML = `
     <div class="edit-priority" id="edit-priority">
-      <a href="#" class="edit-priority-urgent" value="urgent">Urgent<img src="/assets/icons/urgent.svg" alt=""></a>
-      <a href="#" class="edit-priority-medium" value="medium"><img src="/assets/icons/medium-white.svg" alt=""></a>
-      <a href="#" class="edit-priority-low" value="low">Low<img src="/assets/icons/low.svg" alt=""></a>
+      <a href="#" data-value="urgent" class="priority-btn-urgent">Urgent<img src="/assets/icons/urgent.svg" alt=""></a>
+      <a href="#" data-value="medium" class="priority-btn-medium">Medium<img src="/assets/icons/medium.svg" alt=""></a>
+      <a href="#" data-value="low" class="priority-btn-low">Low<img src="/assets/icons/low.svg" alt=""></a>
     </div>`;
-  document.getElementById("edit-priority").value = priority;
+  const priorityButtons = document.querySelectorAll(".edit-priority a");
+  const currentPriority = window.currentTaskData.priority?.toLowerCase() || "low";
+  priorityButtons.forEach(btn => {
+    const value = btn.getAttribute("data-value");
+
+    if (value === currentPriority) {
+      btn.classList.add("active", value);
+    }
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      priorityButtons.forEach(b => {
+        b.classList.remove("active", "urgent", "medium", "low");
+      });
+      btn.classList.add("active", value);
+      btn.closest("#edit-priority").setAttribute("data-selected", value);
+    });
+  });
 
   const subtaskList = document.getElementById("subtask-list");
   if (subtaskList) {
@@ -205,7 +222,7 @@ function saveEditedTask() {
     title: document.getElementById("task-title").textContent.trim(),
     description: document.getElementById("task-description").textContent.trim(),
     dueDate: document.getElementById("edit-due-date").value,
-    priority: document.getElementById("edit-priority").value,
+    priority: document.getElementById("edit-priority").getAttribute("data-selected") || "low",
   };
 
   fetch(`${BASE_URL}/tasks/${taskId}.json`, {
