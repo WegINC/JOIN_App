@@ -130,7 +130,7 @@ async function loadAssigneeSuggestions() {
   try {
     const res = await fetch(`${BASE_URL}/users.json`);
     const data = await res.json();
-    assigneeMap = {}; // global!
+    assigneeMap = {};
 
     for (const uid in data) {
       assigneeMap[uid] = {
@@ -211,7 +211,7 @@ async function createTask() {
       body: JSON.stringify(taskData),
     });
     alert("Task erfolgreich erstellt.");
-    window.location.href = "/pages/board.html";
+    window.location.href = "../pages/board.html";
   } catch (err) {
     console.error("Fehler beim Erstellen des Tasks:", err);
   }

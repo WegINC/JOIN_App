@@ -114,6 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderTasks();
 
   document.querySelector(".add-task").addEventListener("click", () => {
-    window.open("floating_add_task.html", "_blank", "width=800,height=600");
+    window.open("./floating_add_task.html", "_blank", "width=800,height=600");
   });
 });

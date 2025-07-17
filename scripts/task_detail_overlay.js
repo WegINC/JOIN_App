@@ -2,7 +2,7 @@ function openTaskDetailOverlay(task, taskId) {
   fetch(`${BASE_URL}/tasks/${taskId}.json`)
     .then((res) => res.json())
     .then((freshTask) => {
-      return fetch("/pages/task_detail_overlay.html")
+      return fetch("../pages/task_detail_overlay.html")
         .then((res) => res.text())
         .then((html) => {
           const container = document.getElementById("task-detail-container");
@@ -131,13 +131,13 @@ function updateSubtasksInFirebase(taskId, subtasks) {
 
 function getPriorityIcon(priority) {
   if (priority === "Urgent" || priority === "urgent") {
-    return `<img src="/assets/icons/urgent.svg" alt="Urgent Icon" class="priority-icon">`;
+    return `<img src="../assets/icons/urgent.svg" alt="Urgent Icon" class="priority-icon">`;
   }
   if (priority === "Medium" || priority === "medium") {
-    return `<img src="/assets/icons/medium.svg" alt="Medium Icon" class="priority-icon">`;
+    return `<img src="../assets/icons/medium.svg" alt="Medium Icon" class="priority-icon">`;
   }
   if (priority === "Low" || priority === "low") {
-    return `<img src="/assets/icons/low.svg" alt="Low Icon" class="priority-icon">`;
+    return `<img src="../assets/icons/low.svg" alt="Low Icon" class="priority-icon">`;
   }
   return "";
 }
@@ -177,9 +177,9 @@ function editTask() {
   const priority = window.currentTaskData.priority || "";
   document.getElementById("task-priority").innerHTML = `
     <div class="edit-priority" id="edit-priority">
-      <a href="#" data-value="urgent" class="priority-btn-urgent">Urgent<img src="/assets/icons/urgent.svg" alt=""></a>
-      <a href="#" data-value="medium" class="priority-btn-medium">Medium<img src="/assets/icons/medium.svg" alt=""></a>
-      <a href="#" data-value="low" class="priority-btn-low">Low<img src="/assets/icons/low.svg" alt=""></a>
+      <a href="#" data-value="urgent" class="priority-btn-urgent">Urgent<img src="../assets/icons/urgent.svg" alt=""></a>
+      <a href="#" data-value="medium" class="priority-btn-medium">Medium<img src="../assets/icons/medium.svg" alt=""></a>
+      <a href="#" data-value="low" class="priority-btn-low">Low<img src="../assets/icons/low.svg" alt=""></a>
     </div>`;
   const priorityButtons = document.querySelectorAll(".edit-priority a");
   const currentPriority = window.currentTaskData.priority?.toLowerCase() || "low";

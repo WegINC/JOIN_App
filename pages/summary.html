@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Summary</title>
 
-    <link rel="stylesheet" href="/styles/standard.css">
-    <link rel="stylesheet" href="/styles/summary.css">
-    <link rel="stylesheet" href="/assets/fonts/font.css">
+    <link rel="stylesheet" href="../styles/standard.css">
+    <link rel="stylesheet" href="../styles/summary.css">
+    <link rel="stylesheet" href="../assets/fonts/font.css">
 </head>
 
 <body onclick="closeUserMenu(event)">
@@ -20,42 +20,42 @@
     <div class="wrapper opacity hidden visible">
         <div class="side-navbar">
             <div class="sidebar-img">
-                <img src="/assets/img/Capa 1.png" alt="">
+                <img src="../assets/img/Capa 1.png" alt="">
             </div>
             <div class="sidebar-menu">
                 <a href="summary.html">
-                    <img src="/assets/icons/summary_icon.png" alt="">Summary
+                    <img src="../assets/icons/summary_icon.png" alt="">Summary
                 </a>
                 <a href="add_task.html">
-                    <img src="/assets/icons/add_task_icon.png" alt="">Add Task
+                    <img src="../assets/icons/add_task_icon.png" alt="">Add Task
                 </a>
                 <a href="board.html">
-                    <img src="/assets/icons/board_icon.png" alt="">Board
+                    <img src="../assets/icons/board_icon.png" alt="">Board
                 </a>
                 <a href="contacts.html">
-                    <img src="/assets/icons/contacts_icon.png" alt="">Contacts
+                    <img src="../assets/icons/contacts_icon.png" alt="">Contacts
                 </a>
             </div>
             <div class="sidebar-bottom">
-                <a href="privacy_policy.html">Privacy Policy</a>
-                <a href="legal_notice.html">Legal notice</a>
+                <a href="./privacy_policy.html">Privacy Policy</a>
+                <a href="./legal_notice.html">Legal notice</a>
             </div>
         </div>
 
         <div class="content-area">
             <div class="top-navbar">
                 <span>Kanban Projekt Management Tool</span>
-                <img class="navbar-logo hidden" src="/assets/img/Capa 2.png" alt="join-logo">
+                <img class="navbar-logo hidden" src="../assets/img/Capa 2.png" alt="join-logo">
                 <div class="user-name">
-                    <a class="help-link" href="help.html"><img src="/assets/icons/help.png" alt=""></a>
+                    <a class="help-link" href="./help.html"><img src="../assets/icons/help.png" alt=""></a>
 
                     <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
                         <button id="user-name" onclick="toggleUserMenu()">G</button>
 
                         <div id="user-dropdown" class="dropdown-menu hidden">
-                            <a class="help-link-madia" href="help.html">Help</a>
-                            <a href="privacy_policy.html">Privacy Policy</a>
-                            <a href="legal_notice.html">Legal Notice</a>
+                            <a class="help-link-madia" href="./help.html">Help</a>
+                            <a href="./privacy_policy.html">Privacy Policy</a>
+                            <a href="./legal_notice.html">Legal Notice</a>
                             <a href="#" onclick="logout()">Log Out</a>
                         </div>
                     </div>
@@ -73,10 +73,10 @@
                 <div class="summary-main-content">
                     <div class="summary-buttons">
                         <div class="top-buttons">
-                            <a class="summary-taskInfo" href="board.html">
+                            <a class="summary-taskInfo" href="./board.html">
                                 <div class="summary-task-inner">
-                                    <img class="icon-default" src="/assets/icons/to-do-icon.svg" alt="">
-                                    <img class="icon-hover" src="/assets/icons/to-do-icon-hover.svg" alt="">
+                                    <img class="icon-default" src="../assets/icons/to-do-icon.svg" alt="">
+                                    <img class="icon-hover" src="../assets/icons/to-do-icon-hover.svg" alt="">
                                     <div class="task-info-text">
                                         <span class="task-count" id="task_count">0</span>
                                         <span class="task-label">To-Do</span>
@@ -84,10 +84,10 @@
                                 </div>
                             </a>
 
-                            <a class="summary-taskInfo" href="board.html">
+                            <a class="summary-taskInfo" href="./board.html">
                                 <div class="summary-task-inner">
-                                    <img class="icon-default" src="/assets/icons/done-icon.svg" alt="">
-                                    <img class="icon-hover" src="/assets/icons/done-icon-hover.svg" alt="">
+                                    <img class="icon-default" src="../assets/icons/done-icon.svg" alt="">
+                                    <img class="icon-hover" src="../assets/icons/done-icon-hover.svg" alt="">
                                     <div class="task-info-text">
                                         <span class="task-count" id="task_count">0</span>
                                         <span class="task-label">Done</span>
@@ -98,9 +98,9 @@
 
 
                         <div class="middle-button">
-                            <a class="summary-taskDate" href="board.html">
+                            <a class="summary-taskDate" href="./board.html">
                                 <div class="summary-task-inner">
-                                    <img src="/assets/icons/urgent-icon.svg" alt="">
+                                    <img src="../assets/icons/urgent-icon.svg" alt="">
                                     <div class="task-info-text">
                                         <span class="task-count">0</span>
                                         <span class="task-label">Urgent</span>
@@ -115,7 +115,7 @@
                         </div>
 
                         <div class="bottom-buttons">
-                            <a class="summary-taskInfo" href="board.html">
+                            <a class="summary-taskInfo" href="./board.html">
                                 <div class="summary-task-inner">
                                     <div class="task-info-text">
                                         <span class="task-count">0</span>
@@ -124,7 +124,7 @@
                                 </div>
                             </a>
 
-                            <a class="summary-taskInfo" href="board.html">
+                            <a class="summary-taskInfo" href="./board.html">
                                 <div class="summary-task-inner">
                                     <div class="task-info-text">
                                         <span class="task-count">0</span>
@@ -133,7 +133,7 @@
                                 </div>
                             </a>
 
-                            <a class="summary-taskInfo" href="board.html">
+                            <a class="summary-taskInfo" href="./board.html">
                                 <div class="summary-task-inner">
                                     <div class="task-info-text">
                                         <span class="task-count">0</span>
@@ -157,7 +157,7 @@
 
 </body>
 
-<script src="/scripts/board.js"></script>
+<script src="../scripts/board.js"></script>
 
 <script>
     const splash = document.getElementById('splash-greeting');

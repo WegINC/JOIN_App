@@ -80,7 +80,7 @@ function getRandomColor() {
 }
 
 function openFloatingAddTaskPopup() {
-  fetch("/pages/floating_add_task.html")
+  fetch("../pages/floating_add_task.html")
     .then(res => res.text())
     .then(html => {
       const container = document.getElementById("popup-container");
@@ -341,7 +341,7 @@ window.addEventListener("DOMContentLoaded", () => {
 function logout() {
   localStorage.removeItem("userInitial");
   localStorage.removeItem("userId");
-  window.location.href = "/index.html";
+  window.location.href = "../index.html";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -349,7 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function openTaskDetailOverlay(task, taskId) {
-  fetch("/pages/task_detail_overlay.html")
+  fetch("../pages/task_detail_overlay.html")
     .then(function(response) {
       return response.text();
     })

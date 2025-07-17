@@ -23,7 +23,7 @@ async function onloadFunc() {
         localStorage.setItem("userId", uid);
         console.log("Login erfolgreich für:", user.name);
         matchFound = true;
-        window.location.href = "/pages/summary.html";
+        window.location.href = "../pages/summary.html";
         break;
       }
     }
