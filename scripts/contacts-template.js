@@ -27,10 +27,10 @@ export function getContactSeparatorTemplate(letter) {
           <h2>${name}</h2>
           <div class="contact-actions">
             <button class="edit-btn" title="Edit">
-              <img src="/assets/icons/edit-button.png" alt="Edit">Edit
+              <img src="./assets/icons/edit-button.png" alt="Edit">Edit
             </button>
             <button class="delete-btn" title="Delete">
-              <img src="/assets/icons/delete-button.png" alt="Delete">Delete
+              <img src="./assets/icons/delete-button.png" alt="Delete">Delete
             </button>
           </div>
         </div>
@@ -47,31 +47,31 @@ export function getContactSeparatorTemplate(letter) {
     return `
       <div class="contact-edit-overlay">
         <div class="edit-overlay-left">
-          <img src="/assets/img/Capa 1.png" alt="Logo" class="edit-logo">
+          <img src="./assets/img/Capa 1.png" alt="Logo" class="edit-logo">
           <h1>Edit contact</h1>
           <div class="edit-underline"></div>
         </div>
         <div class="edit-overlay-right">
           <button class="edit-close-btn" title="Close" onclick="closeEditOverlay()">
-            <img src="/assets/icons/close.png" alt="Close">
+            <img src="./assets/icons/close.png" alt="Close">
           </button>
           <div class="edit-avatar" style="background-color: ${color}">${initials}</div>
           <div class="edit-form">
             <div class="input-group">
               <input type="text" id="edit-name" value="${name}" placeholder="Name">
-              <img src="/assets/icons/person.png" alt="Person icon" />
+              <img src="./assets/icons/person.png" alt="Person icon" />
             </div>
             <div class="input-group">
               <input type="email" id="edit-email" value="${email}" placeholder="Email">
-              <img src="/assets/icons/mail.png" alt="Mail icon" />
+              <img src="./assets/icons/mail.png" alt="Mail icon" />
             </div>
             <div class="input-group">
               <input type="tel" id="edit-phone" value="${phone}" placeholder="Phone">
-              <img src="/assets/icons/call.png" alt="Call icon" />
+              <img src="./assets/icons/call.png" alt="Call icon" />
             </div>
             <div class="edit-actions">
               <button class="delete-btn">Delete</button>
-              <button class="save-btn">Save <img src="/assets/icons/check.png" alt="Save Icon"></button>
+              <button class="save-btn">Save <img src="./assets/icons/check.png" alt="Save Icon"></button>
             </div>
           </div>
         </div>
@@ -89,7 +89,7 @@ export function getContactSeparatorTemplate(letter) {
             </div>
             <div class="edit-underline"></div>
             <button class="edit-close-btn" title="Close" onclick="closeEditOverlay()">
-              <img src="/assets/icons/close1.png" alt="Close">
+              <img src="./assets/icons/close1.png" alt="Close">
             </button>
             <div class="edit-avatar-circle" style="background-color: ${color}">${initials}</div>
           </div>
@@ -97,21 +97,21 @@ export function getContactSeparatorTemplate(letter) {
           <div class="edit-form">
             <div class="input-group">
               <input type="text" id="edit-name" value="${name}" placeholder="Name">
-              <img src="/assets/icons/person.png" alt="Person icon" />
+              <img src="./assets/icons/person.png" alt="Person icon" />
             </div>
             <div class="input-group">
               <input type="email" id="edit-email" value="${email}" placeholder="Email">
-              <img src="/assets/icons/mail.png" alt="Mail icon" />
+              <img src="./assets/icons/mail.png" alt="Mail icon" />
             </div>
             <div class="input-group">
               <input type="tel" id="edit-phone" value="${phone}" placeholder="Phone">
-              <img src="/assets/icons/call.png" alt="Call icon" />
+              <img src="./assets/icons/call.png" alt="Call icon" />
             </div>
   
             <div class="edit-actions">
               <button class="delete-btn" onclick="deleteContactOptions('${uid}')">Delete</button>
               <button class="save-btn" onclick="editContactOptions('${uid}')">
-                Save <img src="/assets/icons/check.png" alt="Check icon">
+                Save <img src="./assets/icons/check.png" alt="Check icon">
               </button>
             </div>
           </div>
@@ -124,37 +124,37 @@ export function getContactSeparatorTemplate(letter) {
     return `
       <div class="contact-add-overlay">
         <div class="add-overlay-left">
-          <img src="../assets/icons/Capa 1.png" alt="Logo" class="add-logo">
+          <img src="./assets/icons/Capa 1.png" alt="Logo" class="add-logo">
           <h1>Add contact</h1>
           <p>Tasks are better with a team!</p>
           <div class="add-underline"></div>
         </div>
         <div class="add-overlay-right">
           <button class="add-close-btn" onclick="closeAddContactOverlay()">
-            <img src="../assets/icons/close.png" alt="Close">
+            <img src="./assets/icons/close.png" alt="Close">
           </button>
           <div class="add-avatar">
-            <img src="../assets/icons/person-add-profile.png" alt="User">
+            <img src="./assets/icons/person-add-profile.png" alt="User">
           </div>
           <form class="add-form">
             <div class="input-group">
               <input type="text" id="edit-name" value="${name}" placeholder="Name">
-              <img src="/assets/icons/person.png" alt="Person icon" />
+              <img src="./assets/icons/person.png" alt="Person icon" />
             </div>
             <div class="input-group">
               <input type="email" id="edit-email" value="${email}" placeholder="Email">
-              <img src="/assets/icons/mail.png" alt="Mail icon" />
+              <img src="./assets/icons/mail.png" alt="Mail icon" />
             </div>
             <div class="input-group">
               <input type="tel" id="edit-phone" value="${phone}" placeholder="Phone">
-              <img src="/assets/icons/call.png" alt="Call icon" />
+              <img src="./assets/icons/call.png" alt="Call icon" />
             </div>
             <div class="add-actions">
               <button type="button" class="cancel-btn delete-btn" onclick="closeAddContactOverlay()">
-                Cancel <img src="../assets/icons/close.png">
+                Cancel <img src="./assets/icons/close.png">
               </button>
               <button type="button" class="create-btn" onclick="createNewContact()">
-                Create contact <img src="../assets/icons/check.png">
+                Create contact <img src="./assets/icons/check.png">
               </button>
             </div>
           </form>
@@ -174,27 +174,27 @@ export function getContactSeparatorTemplate(letter) {
           <div class="add-underline"></div>
           </div>
           <button class="add-close-btn" onclick="closeAddContactOverlay()">
-            <img src="../assets/icons/close1.png" alt="Close">
+            <img src="./assets/icons/close1.png" alt="Close">
           </button>
           <div class="add-avatar">
-            <img src="../assets/icons/person-add-profile.png" alt="User">
+            <img src="./assets/icons/person-add-profile.png" alt="User">
           </div>
         <form class="add-form">
             <div class="input-group">
               <input type="text" id="new-name" value="${name}" placeholder="Name">
-              <img src="/assets/icons/person.png" alt="Person icon" />
+              <img src="./assets/icons/person.png" alt="Person icon" />
             </div>
             <div class="input-group">
               <input type="email" id="new-email" value="${email}" placeholder="Email">
-              <img src="/assets/icons/mail.png" alt="Mail icon" />
+              <img src="./assets/icons/mail.png" alt="Mail icon" />
             </div>
             <div class="input-group">
               <input type="tel" id="new-phone" value="${phone}" placeholder="Phone">
-              <img src="/assets/icons/call.png" alt="Call icon" />
+              <img src="./assets/icons/call.png" alt="Call icon" />
             </div>
             <div class="add-actions">
               <button type="button" class="create-btn" onclick="createNewContact()">
-                Create contact <img src="../assets/icons/check.png">
+                Create contact <img src="./assets/icons/check.png">
               </button>
             </div>
           </form>

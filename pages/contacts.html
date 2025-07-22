@@ -5,33 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contacts</title>
 
-    <link rel="stylesheet" href="/styles/standard.css">
-    <link rel="stylesheet" href="/styles/contacts.css">
-    <link rel="stylesheet" href="/assets/fonts/font.css">
+    <link rel="stylesheet" href="../styles/standard.css">
+    <link rel="stylesheet" href="../styles/contacts.css">
+    <link rel="stylesheet" href="../assets/fonts/font.css">
 </head>
 <body onclick="closeUserMenu(event)">
   <div class="wrapper">
     <div class="side-navbar">
       <div class="sidebar-img">
-        <img src="/assets/img/Capa 1.png" alt="">
+        <img src="../assets/img/Capa 1.png" alt="">
       </div>
       <div class="sidebar-menu">
-        <a href="summary.html">
-          <img src="/assets/icons/summary_icon.png" alt="">Summary
+        <a href="./summary.html">
+          <img src="../assets/icons/summary_icon.png" alt="">Summary
         </a>
-        <a href="add_task.html">
-          <img src="/assets/icons/add_task_icon.png" alt="">Add Task
+        <a href="./add_task.html">
+          <img src="../assets/icons/add_task_icon.png" alt="">Add Task
         </a>
-        <a href="board.html">
-          <img src="/assets/icons/board_icon.png" alt="">Board
+        <a href="./board.html">
+          <img src="../assets/icons/board_icon.png" alt="">Board
         </a>
-        <a href="contacts.html">
-          <img src="/assets/icons/contacts_icon.png" alt="">Contacts
+        <a href="./contacts.html">
+          <img src="../assets/icons/contacts_icon.png" alt="">Contacts
         </a>
       </div>
       <div class="sidebar-bottom">
-          <a href="privacy_policy.html">Privacy Policy</a>
-          <a href="legal_notice.html">Legal notice</a>
+          <a href="./privacy_policy.html">Privacy Policy</a>
+          <a href="./legal_notice.html">Legal notice</a>
       </div>
     </div>
 
@@ -39,14 +39,14 @@
       <div class="top-navbar">
         <span>Kanban Projekt Management Tool</span>
         <div class="user-name">
-          <a class="help-link" href="help.html"><img src="/assets/icons/help.png" alt=""></a>
+          <a class="help-link" href="./help.html"><img src="../assets/icons/help.png" alt=""></a>
 
           <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
               <button id="user-name" onclick="toggleUserMenu()">G</button>
 
               <div id="user-dropdown" class="dropdown-menu hidden">
-                  <a href="privacy_policy.html">Privacy Policy</a>
-                  <a href="legal_notice.html">Legal Notice</a>
+                  <a href="./privacy_policy.html">Privacy Policy</a>
+                  <a href="./legal_notice.html">Legal Notice</a>
                   <a href="#" onclick="logout()">Log Out</a>
               </div>
           </div>
@@ -61,7 +61,7 @@
                 Add new contact
                 <img
                   class="add-person-icon"
-                  src="/assets/icons/person_add.png"
+                  src="../assets/icons/person_add.png"
                   alt="Add Person Icon"
                 />
               </button>
@@ -223,7 +223,7 @@
               <div class="seperator"></div>
               <span class="text-headline">Better with a team</span>
               <div class="seperator-mobile"></div>
-              <img src="/assets/icons/arrow-left-line-blue-mobile.png" class="back-arrow" onclick="returnToContactList()" alt="Back">
+              <img src="../assets/icons/arrow-left-line-blue-mobile.png" class="back-arrow" onclick="returnToContactList()" alt="Back">
             </div>
           
             
@@ -236,15 +236,15 @@
       </main>
     </div>
     <button id="mobile-add-contact-btn" class="floating-btn hidden">
-      <img src="/assets/icons/person-add-mobile-contact.png" alt="Add Contact">
+      <img src="../assets/icons/person-add-mobile-contact.png" alt="Add Contact">
     </button>
     
     <button id="contact-options-btn" class="floating-btn hidden">
-      <img src="/assets/icons/menu-contact-options.png" alt="Options">
+      <img src="../assets/icons/menu-contact-options.png" alt="Options">
     </button>
     <div id="contact-options-overlay" class="contact-options-overlay hidden"></div>
   </body>
   
-  <script src="/scripts/board.js"></script>
-  <script type="module" src="/scripts/contacts.js" defer></script>
+  <script src="../scripts/board.js"></script>
+  <script type="module" src="../scripts/contacts.js" defer></script>
 </html>

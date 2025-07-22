@@ -314,8 +314,8 @@ function openMobileEditContactOverlay() {
   if (!selectedContactForOptions) return;
 
   overlay.innerHTML = `
-    <button onclick="editContactOptions()"><img class="edit-button-overlay" src="/assets/icons/edit-button.png">Edit</button>
-    <button onclick="deleteContactOptions()"><img class="delete-button-overlay" src="/assets/icons/delete-button.png">Delete</button>
+    <button onclick="editContactOptions()"><img class="edit-button-overlay" src="./assets/icons/edit-button.png">Edit</button>
+    <button onclick="deleteContactOptions()"><img class="delete-button-overlay" src="./assets/icons/delete-button.png">Delete</button>
   `;
   overlay.classList.remove('hidden');
 }

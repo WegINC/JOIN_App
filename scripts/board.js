@@ -117,12 +117,19 @@ function createTask() {
     .map(title => ({ title, done: false }));
 
   const userInitial = localStorage.getItem("userInitial") || "G";
-  const currentUid = localStorage.getItem("userId") || "uid_1";
 
-  if (!title || !dueDate || category === "Select task category") {
+  const checkedBoxes = document.querySelectorAll("#assigned-checkboxes .assigned-checkbox:checked");
+  const assignedUids = Array.from(checkedBoxes).map(cb => cb.value);
+
+  if (!title || !dueDate || assignedUids.length === 0 || selectedCategory === "Select task category") {
     alert("Bitte alle Pflichtfelder ausfüllen.");
     return;
   }
+
+  const assignedTo = {};
+  assignedUids.forEach(uid => {
+    assignedTo[uid] = true;
+  });
 
   const taskData = {
     title,
@@ -130,7 +137,7 @@ function createTask() {
     dueDate,
     category: selectedCategory,
     priority,
-    assignedTo: { [currentUid]: true },
+    assignedTo,
     status: "toDo",
     userInitials: userInitial,
     subtasks
@@ -198,14 +205,7 @@ async function loadTasks() {
 
         card.addEventListener("click", () => openTaskDetailOverlay(task, id));
 
-        const assignedUIDs = Object.keys(task.assignedTo || {});
-        const userBadges = assignedUIDs.map(uid => {
-          const user = userInitialsMap[uid];
-          const initials = user?.initials || "G";
-          const themeColor = user?.themeColor || "#0038FF";
-
-          return `<div class="task-user-initials" style="background-color: ${themeColor};">${initials}</div>`;
-        }).join("");
+        const userBadges = renderAssignedUsers(task.assignedTo, userInitialsMap);
 
         const color = categoryColors[task.category] || "#ccc";
 
@@ -383,4 +383,19 @@ function getSubtaskLabel(task) {
   if (!subtasks.length) return "0/0 subtasks";
   const completed = subtasks.filter(st => st.done).length;
   return `${completed}/${subtasks.length} subtasks`;
+}
+
+function renderAssignedUsers(assignedTo, userInitialsMap) {
+  return Object.keys(assignedTo || {})
+    .map(uid => {
+      const user = userInitialsMap[uid];
+      const initials = user?.initials || "G";
+      const themeColor = user?.themeColor || "#0038FF";
+      return `
+        <div class="task-user-initials" style="background-color: ${themeColor};">
+          ${initials}
+        </div>
+      `;
+    })
+    .join("");
 }

@@ -6,7 +6,7 @@ let assigneeMap = {};
 window.addEventListener("DOMContentLoaded", () => {
   initUserInitial();
   setupPriorityButtons();
-  loadAssigneeSuggestions();
+  loadAssigneeCheckboxes();
   populateCategoryDropdown();
 });
 
@@ -74,23 +74,27 @@ async function loadAssigneeSuggestions() {
 
 async function populateAssigneeDropdown() {
   try {
-    const res = await fetch(`${BASE_URL}/users.json`);
-    const data = await res.json();
+    const response = await fetch(`${BASE_URL}/users.json`);
+    const data = await response.json();
 
-    const select = document.getElementById("assigned");
-    if (!select) return;
+    const container = document.getElementById("assigned-container");
+    container.innerHTML = ""; 
 
-    select.innerHTML = `<option disabled selected>Select contacts to assign</option>`;
-
-    for (let uid in data) {
+    for (const uid in data) {
       const user = data[uid];
-      const option = document.createElement("option");
-      option.value = uid;
-      option.textContent = user.name || "Unnamed";
-      select.appendChild(option);
+      const userDiv = document.createElement("div");
+      userDiv.className = "assignee-option";
+      userDiv.dataset.uid = uid;
+      userDiv.textContent = user.name || "Unnamed";
+
+      userDiv.addEventListener("click", function () {
+        userDiv.classList.toggle("selected");
+      });
+
+      container.appendChild(userDiv);
     }
-  } catch (err) {
-    console.error("Fehler beim Laden der Kontakte:", err);
+  } catch (error) {
+    console.error("Fehler beim Laden der Kontakte:", error);
   }
 }
 
@@ -98,7 +102,7 @@ function populateAssigneeDropdown(userData) {
   const select = document.getElementById("assigned");
   if (!select) return;
 
-  select.innerHTML = `<option disabled selected>Select contacts to assign</option>`;
+  select.innerHTML = `<option disabled hidden>Select contacts to assign</option>`;
 
   for (let uid in userData) {
     const user = userData[uid];
@@ -153,10 +157,8 @@ async function createTask() {
   const category = document.getElementById("category").value;
   const priority = selectedPriority || "low";
 
-  const selectedOptions = document.getElementById("assigned").selectedOptions;
-  const assignedUids = Array.from(selectedOptions)
-    .filter(opt => !opt.disabled)
-    .map(opt => opt.value);
+  const checkedBoxes = document.querySelectorAll("#assigned-checkboxes .assigned-checkbox:checked");
+  const assignedUids = Array.from(checkedBoxes).map(cb => cb.value);
 
   if (!title || !dueDate || assignedUids.length === 0 || category === "Select task category") {
     alert("Bitte alle Pflichtfelder ausfüllen.");
@@ -171,26 +173,10 @@ async function createTask() {
 
   const userInitial = localStorage.getItem("userInitial") || "G";
 
-  let assignedTo = {};
-  for (const uid of assignedUids) {
-    const user = assigneeMap[uid];
-    if (user) {
-      if (!user.themeColor) {
-        const newColor = getRandomColor();
-        user.themeColor = newColor;
-        await fetch(`${BASE_URL}/users/${uid}.json`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ themeColor: newColor }),
-        });
-      }
-
-      assignedTo[uid] = {
-        initials: user.initials || getUserInitials(user.name),
-        themeColor: user.themeColor,
-      };
-    }
-  }
+  const assignedTo = {};
+  assignedUids.forEach(uid => {
+    assignedTo[uid] = true;
+  });
 
   const taskData = {
     title,
@@ -231,3 +217,38 @@ function toggleUserMenu() {
     dropdown.classList.toggle('hidden');
   }
 }
+
+async function loadAssigneeCheckboxes() {
+  try {
+    const res = await fetch(`${BASE_URL}/users.json`);
+    const data = await res.json();
+    const container = document.getElementById("assigned-checkboxes");
+    if (!container) {
+      console.error("assigned-checkboxes-Container NICHT gefunden!");
+      return;
+    }
+    container.innerHTML = "";
+    const userCount = Object.keys(data).length;
+    if (userCount === 0) {
+      console.warn("Keine User gefunden!");
+    }
+    for (const uid in data) {
+      const user = data[uid];
+      const label = document.createElement("label");
+      label.style.display = "block";
+      label.style.cursor = "pointer";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.value = uid;
+      checkbox.className = "assigned-checkbox";
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(" " + (user.name || "Unnamed")));
+      container.appendChild(label);
+    }
+    console.log(`User geladen: ${userCount}`);
+  } catch (err) {
+    console.error("Fehler beim Laden der Kontakte:", err);
+  }
+}
+
+console.log("add_task.js wird ausgeführt!");
