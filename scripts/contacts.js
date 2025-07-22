@@ -1,4 +1,6 @@
 
+let contacts = [];
+let selectedContactForOptions = null;
 
 import {
   getContactListItemTemplate,
@@ -36,11 +38,13 @@ async function loadContactsFromDatabase() {
 
   const res = await fetch(`${BASE_URL}/users.json`);
   const data = await res.json();
-  const contacts = Object.entries(data || {}).map(
+
+  // ⬅️ WICHTIG: Globale contacts-Variable befüllen
+  contacts = Object.entries(data || {}).map(
     ([uid, u]) => ({ uid, ...buildContactObject(uid, u) })
   );
 
-  const grouped = contacts.sort((a,b) => a.name.localeCompare(b.name, 'de'))
+  const grouped = contacts.sort((a, b) => a.name.localeCompare(b.name, 'de'))
     .reduce((acc, c) => {
       const L = c.name[0].toUpperCase();
       (acc[L] ||= []).push(c);
@@ -246,6 +250,8 @@ function closeUserMenu(event) {
 
 
 function selectContact(item, contact) {
+  selectedContactForOptions = contact; 
+
   document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
   item.classList.add('active');
   renderContactDetails(contact);
@@ -303,8 +309,6 @@ function handleMobileButtons() {
   }
 }
 
-let selectedContactForOptions = null;
-
 function openMobileEditContactOverlay() {
   const overlay = document.getElementById('contact-options-overlay');
   if (!selectedContactForOptions) return;
@@ -334,38 +338,6 @@ function editContactOptions() {
     openEditOverlay(selectedContactForOptions);
   }
 }
-window.editContactOptions = editContactOptions;
-
-function openEditContactMobileOverlay(contact) {
-  const overlay = document.getElementById('edit-contact-overlay');
-  overlay.innerHTML = getEditContactMobileOverlayTemplate(contact);
-  overlay.style.display = 'flex';
-}
-
-async function saveEditedContacts(uid) {
-  const name = document.getElementById('edit-name').value.trim();
-  const email = document.getElementById('edit-email').value.trim();
-  const phone = document.getElementById('edit-phone').value.trim();
-
-  if (!name || !email || !phone) return alert('Bitte fülle alle Felder aus!');
-
-  const contact = findContactByUid(uid);
-  if (!contact) return alert('Kontakt nicht gefunden');
-
-  try {
-    await updateContactInDB(uid, { name, email, phone });
-
-    updateContactData(contact, name, email, phone);
-    renderContactDetails(contact); // Desktop-Details aktualisieren
-    closeMobileEditContactOverlay(); // Funktion definieren siehe unten
-  } catch (err) {
-    alert('Fehler beim Speichern');
-  }
-}
-
-window.saveEditedContacts = saveEditedContacts;
-
-
 
 async function deleteContactOptions() {
   if (!selectedContactForOptions) return;
@@ -378,17 +350,88 @@ async function deleteContactOptions() {
 
     selectedContactForOptions.element.remove();
     document.getElementById('contact-details-content').innerHTML = '';
-    closeMobileEditContactOverlay();
     closeContactOptionsOverlay();
   } catch (err) {
     alert("Fehler beim Löschen.");
   }
 }
 
-function closeMobileEditContactOverlay() {
-  const overlay = document.querySelector('.overlay-bg');
-  if (overlay) overlay.remove();
+async function saveEditedContacts(uid) {
+  const nameInput = document.getElementById('edit-name');
+  const emailInput = document.getElementById('edit-email');
+  const phoneInput = document.getElementById('edit-phone');
+
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  const phone = phoneInput.value.trim();
+
+  if (!name || !email || !phone) {
+    alert('Bitte fülle alle Felder aus!');
+    return;
+  }
+
+  try {
+    const url = `https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app/contacts/${uid}.json`;
+
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name, email, phone })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Fehler beim Speichern: ${response.status}`);
+    }
+
+    // 🔁 Kontakte neu laden
+    await loadContactsFromDatabase();
+
+    const grouped = contacts.sort((a, b) => a.name.localeCompare(b.name, 'de'))
+  .reduce((acc, c) => {
+    const L = c.name[0].toUpperCase();
+    (acc[L] ||= []).push(c);
+    return acc;
+  }, {});
+
+ renderGroupedContacts(grouped);
+
+    // 🔄 Aktuellen Kontakt finden
+    const updatedContact = contacts.find(c => c.uid === uid);
+    if (updatedContact) {
+      selectedContactForOptions = updatedContact;
+      renderContactDetails(updatedContact);
+    }
+
+    // ✅ Overlay schließen
+    closeEditOverlay();
+
+  } catch (err) {
+    alert('Fehler beim Speichern');
+    console.error('Fehler beim PATCH:', err);
+  }
 }
+
+function openEditContactMobileOverlay(contact) {
+  if (!contact) return;
+
+  const overlay = document.getElementById('edit-contact-overlay');
+  overlay.classList.remove('hidden');
+  overlay.style.display = 'flex';
+  overlay.innerHTML = getEditContactMobileOverlayTemplate(contact);
+
+  overlay.addEventListener('click', e => {
+    if (e.target.classList.contains('overlay-bg')) {
+      closeEditOverlay();
+    }
+  });
+
+  overlay.querySelector('.edit-close-btn').addEventListener('click', closeEditOverlay);
+  overlay.querySelector('.delete-btn').addEventListener('click', () => deleteContact(contact));
+  overlay.querySelector('.save-btn').addEventListener('click', () => saveEditedContacts(contact.uid));
+  }
+
 
 function openAddContactMobileOverlay() {
   const overlay = document.getElementById('add-contact-overlay');
@@ -409,3 +452,5 @@ window.deleteContactOptions = deleteContactOptions;
 window.addEventListener('resize', handleMobileButtons);
 window.returnToContactList = returnToContactList;
 window.selectContact = selectContact;
+window.editContactOptions = editContactOptions;
+window.closeEditOverlay = closeEditOverlay;

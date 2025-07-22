@@ -52,7 +52,7 @@ export function getContactSeparatorTemplate(letter) {
           <div class="edit-underline"></div>
         </div>
         <div class="edit-overlay-right">
-          <button class="edit-close-btn" title="Close">
+          <button class="edit-close-btn" title="Close" onclick="closeEditOverlay()">
             <img src="/assets/icons/close.png" alt="Close">
           </button>
           <div class="edit-avatar" style="background-color: ${color}">${initials}</div>
@@ -88,7 +88,7 @@ export function getContactSeparatorTemplate(letter) {
               <h1>Edit contact</h1>
             </div>
             <div class="edit-underline"></div>
-            <button class="edit-close-btn" title="Close">
+            <button class="edit-close-btn" title="Close" onclick="closeEditOverlay()">
               <img src="/assets/icons/close1.png" alt="Close">
             </button>
             <div class="edit-avatar-circle" style="background-color: ${color}">${initials}</div>

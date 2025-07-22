@@ -815,6 +815,10 @@ height: 18px;
     overflow: hidden;
     animation: slideInFromTop 0.3s ease-out;
   }
+
+  .add-contact-overlay{
+    height: 50%;
+  }
  
   
   .edit-overlay-top,
@@ -1029,7 +1033,7 @@ height: 18px;
 
   .add-contact-overlay{
     width: 90%;
-    height: 70%;
+    height: 50%;
     max-height: 90%;
   }
 
@@ -1103,6 +1107,10 @@ height: 18px;
 
   .contact-options-overlay button{
     font-size: 14px;
+  }
+
+  .contact-name-actions h2{
+    font-size: 20px;
   }
 
   .edit-button-overlay,
