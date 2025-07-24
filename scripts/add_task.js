@@ -217,38 +217,3 @@ function toggleUserMenu() {
     dropdown.classList.toggle('hidden');
   }
 }
-
-async function loadAssigneeCheckboxes() {
-  try {
-    const res = await fetch(`${BASE_URL}/users.json`);
-    const data = await res.json();
-    const container = document.getElementById("assigned-checkboxes");
-    if (!container) {
-      console.error("assigned-checkboxes-Container NICHT gefunden!");
-      return;
-    }
-    container.innerHTML = "";
-    const userCount = Object.keys(data).length;
-    if (userCount === 0) {
-      console.warn("Keine User gefunden!");
-    }
-    for (const uid in data) {
-      const user = data[uid];
-      const label = document.createElement("label");
-      label.style.display = "block";
-      label.style.cursor = "pointer";
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.value = uid;
-      checkbox.className = "assigned-checkbox";
-      label.appendChild(checkbox);
-      label.appendChild(document.createTextNode(" " + (user.name || "Unnamed")));
-      container.appendChild(label);
-    }
-    console.log(`User geladen: ${userCount}`);
-  } catch (err) {
-    console.error("Fehler beim Laden der Kontakte:", err);
-  }
-}
-
-console.log("add_task.js wird ausgeführt!");

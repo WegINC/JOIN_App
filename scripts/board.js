@@ -103,12 +103,42 @@ const categoryColors = {
   "User Story": "#0038FF"
 };
 
+function getUserInitials(name) {
+  const nameParts = name.trim().split(" ");
+  return nameParts.length >= 2
+    ? nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase()
+    : nameParts[0][0].toUpperCase();
+}
+
+let assigneeMap = {};
+async function loadAssigneeMap() {
+  try {
+    const res = await fetch(`${BASE_URL}/users.json`);
+    const data = await res.json();
+    assigneeMap = {};
+    for (const uid in data) {
+      assigneeMap[uid] = {
+        name: data[uid].name || "Unnamed",
+        initials: data[uid].initials || getUserInitials(data[uid].name || "Unnamed"),
+        themeColor: data[uid].themeColor || "#0038FF"
+      };
+    }
+  } catch (err) {
+    console.error("Fehler beim Laden der Kontakte:", err);
+  }
+}
+
 function createTask() {
   const title = document.getElementById("title").value;
   const description = document.getElementById("description").value;
   const dueDate = document.getElementById("due").value;
   const selectedCategory = document.getElementById("category").value;
   const priority = selectedPriority || "low";
+
+  const select = document.getElementById("assigned");
+  const assignedUids = Array.from(select.selectedOptions)
+    .filter(opt => !opt.disabled)
+    .map(opt => opt.value);
 
   const subtaskInputs = document.querySelectorAll(".subtask-input");
   const subtasks = Array.from(subtaskInputs)
@@ -118,9 +148,6 @@ function createTask() {
 
   const userInitial = localStorage.getItem("userInitial") || "G";
 
-  const checkedBoxes = document.querySelectorAll("#assigned-checkboxes .assigned-checkbox:checked");
-  const assignedUids = Array.from(checkedBoxes).map(cb => cb.value);
-
   if (!title || !dueDate || assignedUids.length === 0 || selectedCategory === "Select task category") {
     alert("Bitte alle Pflichtfelder ausfüllen.");
     return;
@@ -128,7 +155,13 @@ function createTask() {
 
   const assignedTo = {};
   assignedUids.forEach(uid => {
-    assignedTo[uid] = true;
+    const user = assigneeMap[uid];
+    if (user) {
+      assignedTo[uid] = {
+        initials: user.initials || getUserInitials(user.name),
+        themeColor: user.themeColor || "#0038FF"
+      };
+    }
   });
 
   const taskData = {
@@ -172,6 +205,8 @@ function createTask() {
   }
 }
 
+window.addEventListener("DOMContentLoaded", loadAssigneeMap);
+
 let draggedCard = null;
 
 async function loadTasks() {
@@ -205,7 +240,14 @@ async function loadTasks() {
 
         card.addEventListener("click", () => openTaskDetailOverlay(task, id));
 
-        const userBadges = renderAssignedUsers(task.assignedTo, userInitialsMap);
+        const assignedUIDs = Object.keys(task.assignedTo || {});
+        const userBadges = assignedUIDs.map(uid => {
+          const user = userInitialsMap[uid];
+          const initials = user?.initials || "G";
+          const themeColor = user?.themeColor || "#0038FF";
+
+          return `<div class="task-user-initials" style="background-color: ${themeColor};">${initials}</div>`;
+        }).join("");
 
         const color = categoryColors[task.category] || "#ccc";
 
@@ -383,19 +425,4 @@ function getSubtaskLabel(task) {
   if (!subtasks.length) return "0/0 subtasks";
   const completed = subtasks.filter(st => st.done).length;
   return `${completed}/${subtasks.length} subtasks`;
-}
-
-function renderAssignedUsers(assignedTo, userInitialsMap) {
-  return Object.keys(assignedTo || {})
-    .map(uid => {
-      const user = userInitialsMap[uid];
-      const initials = user?.initials || "G";
-      const themeColor = user?.themeColor || "#0038FF";
-      return `
-        <div class="task-user-initials" style="background-color: ${themeColor};">
-          ${initials}
-        </div>
-      `;
-    })
-    .join("");
 }

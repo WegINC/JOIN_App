@@ -45,8 +45,10 @@
         </button>
       </div>
 
-      <label>Assigned to<span class="required">*</span></label>
-      <div id="assigned-checkboxes"></div>
+      <label for="assigned">Assigned to<span class="required">*</span></label>
+      <select id="assigned" multiple>
+        <option disabled selected>Select contacts to assign</option>
+      </select>
 
       <label for="category">Category<span class="required">*</span></label>
       <select id="category">
