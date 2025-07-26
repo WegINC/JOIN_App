@@ -385,7 +385,6 @@ async function saveEditedContacts(uid) {
       throw new Error(`Fehler beim Speichern: ${response.status}`);
     }
 
-    // 🔁 Kontakte neu laden
     await loadContactsFromDatabase();
 
     const grouped = contacts.sort((a, b) => a.name.localeCompare(b.name, 'de'))
@@ -397,14 +396,12 @@ async function saveEditedContacts(uid) {
 
  renderGroupedContacts(grouped);
 
-    // 🔄 Aktuellen Kontakt finden
     const updatedContact = contacts.find(c => c.uid === uid);
     if (updatedContact) {
       selectedContactForOptions = updatedContact;
       renderContactDetails(updatedContact);
     }
 
-    // ✅ Overlay schließen
     closeEditOverlay();
 
   } catch (err) {
