@@ -208,19 +208,21 @@ export function getContactSeparatorTemplate(letter) {
     return `
       <div style="
         position: fixed;
-        bottom: 30px;
+        top: 120px;
         left: 50%;
         transform: translateX(-50%);
         background-color: #2A3647;
         color: white;
-        padding: 16px 24px;
+        padding: 16px;
         border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        font-size: 14px;
+        font-size: 16px;
         z-index: 9999;
         display: flex;
+        justify-content: center;
         align-items: center;
-        gap: 12px;
+        text-align: center;
+        width: 60%;
         animation: fadeInOut 3s ease-in-out;
       ">
         Contact successfully created

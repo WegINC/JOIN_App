@@ -314,11 +314,27 @@ function openMobileEditContactOverlay() {
   if (!selectedContactForOptions) return;
 
   overlay.innerHTML = `
-    <button onclick="editContactOptions()"><img class="edit-button-overlay" src="../assets/icons/edit-button.png">Edit</button>
-    <button onclick="deleteContactOptions()"><img class="delete-button-overlay" src="../assets/icons/delete-button.png">Delete</button>
+    <button class="edit-btn" title="Edit" onclick="editContactOptions()">
+    <img src="../assets/icons/edit-button.png">Edit</button>
+    <button class="delete-btn" title="Delete" onclick="deleteContactOptions()">
+    <img src="../assets/icons/delete-button.png">Delete</button>
   `;
   overlay.classList.remove('hidden');
 }
+
+document.addEventListener('click', function (event) {
+  const overlay = document.getElementById('contact-options-overlay');
+  const isOverlayVisible = !overlay.classList.contains('hidden');
+
+  if (!isOverlayVisible) return;
+
+  const clickedInsideOverlay = overlay.contains(event.target);
+  const clickedOnOptionsBtn = event.target.closest('#contact-options-btn');
+
+  if (!clickedInsideOverlay && !clickedOnOptionsBtn) {
+    closeContactOptionsOverlay();
+  }
+});
 
 function closeContactOptionsOverlay() {
   const overlay = document.getElementById('contact-options-overlay');

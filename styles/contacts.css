@@ -502,6 +502,7 @@ h1 {
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .edit-actions .save-btn:hover,
@@ -539,9 +540,20 @@ h1 {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  cursor: pointer;
 }
 
+.floating-btn .icon-hover{
+  display: none;
+}
 
+.floating-btn:hover .icon-default{
+display: none;
+}
+
+.floating-btn:hover .icon-hover{
+  display: inline;
+}
 
 .contact-separator {
   display: flex;
@@ -579,16 +591,17 @@ h1 {
   background: white;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  padding: 10px;
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
-.contact-options-overlay:hover{
+.contact-options-overlay button:hover{
   color: #29ABE2;
   font-weight: 700;
+}
+.contact-options-overlay button:hover img{
+  filter: brightness(0) saturate(100%) invert(46%) sepia(93%) saturate(405%) hue-rotate(162deg) brightness(98%) contrast(94%);
 }
 
 .contact-options-overlay button {
@@ -607,9 +620,6 @@ width: 18px;
 height: 18px;
 }
 
-.edit-button-overlay:hover{
-  background-image: url("../assets/icons/edit-blue-btn.png");
-}
 
 @keyframes slideDown {
   0% {
@@ -940,6 +950,14 @@ height: 18px;
     display: flex;
     margin-top: 24px;
   }
+
+  .edit-btn{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+  }
   
   .delete-btn {
     background-color: white;
@@ -1031,6 +1049,12 @@ height: 18px;
   max-height: 90%;
 }
 
+.floating-btn img{
+  width: 44px;
+  height: 44px;
+}
+
+
 }
 
 @media (max-width: 768px) {
@@ -1042,6 +1066,10 @@ height: 18px;
     padding-bottom: 16px;
   }
 
+  .floating-btn img{
+    width: 44px;
+    height: 44px;
+  }
 
   .edit-avatar-circle {
     width: 80px;
@@ -1085,11 +1113,12 @@ height: 18px;
   }
 
   .contact-options-overlay{
-    height: 50px;
+    font-size: 14px;
   }
 
-  .contact-options-overlay button{
-    font-size: 14px;
+  .contact-options-overlay img{
+    width: 20px;
+    height: 20px;
   }
 
   .contact-name-actions h2{
