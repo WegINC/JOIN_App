@@ -39,7 +39,6 @@ async function loadContactsFromDatabase() {
   const res = await fetch(`${BASE_URL}/users.json`);
   const data = await res.json();
 
-  // ⬅️ WICHTIG: Globale contacts-Variable befüllen
   contacts = Object.entries(data || {}).map(
     ([uid, u]) => ({ uid, ...buildContactObject(uid, u) })
   );
@@ -71,7 +70,7 @@ function renderGroupedContacts(groups) {
       contact.element = item;
       item.addEventListener("click", () => {
         selectContact(item, contact);
-        selectedContactForOptions = contact;  // Hier setzen, nicht außerhalb der Schleife!
+        selectedContactForOptions = contact;  
       });
       list.appendChild(item);
     });
@@ -247,7 +246,6 @@ function closeUserMenu(event) {
     menu.classList.add('hidden');
   }
 }
-
 
 function selectContact(item, contact) {
   selectedContactForOptions = contact; 
@@ -445,7 +443,6 @@ function openEditContactMobileOverlay(contact) {
   overlay.querySelector('.save-btn').addEventListener('click', () => saveEditedContacts(contact.uid));
   }
 
-
 function openAddContactMobileOverlay() {
   const overlay = document.getElementById('add-contact-overlay');
   overlay.classList.remove('hidden');
@@ -458,8 +455,6 @@ function openAddContactMobileOverlay() {
     }
   });
 }
-
-
 
 window.deleteContactOptions = deleteContactOptions;
 window.addEventListener('resize', handleMobileButtons);
