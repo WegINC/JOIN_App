@@ -1,3 +1,16 @@
+@media (max-width: 1240px) {
+  .contact-header {
+    flex-direction: column;
+    align-items: flex-start;
+    top: 120px;
+    gap: 10px;
+  }
+
+  .seperator {
+    width: 70px;
+  }
+}
+
 @media (max-width: 1024px) {
   
     .side-navbar {
