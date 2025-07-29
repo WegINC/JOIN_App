@@ -154,6 +154,40 @@ textarea {
   margin-left: 96px;
 }
 
+.subtask-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.subtask-input {
+  width: 100%;
+  padding: 12px 40px 12px 12px;
+  border-radius: 8px;
+  border: 0px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.subtask-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  color: #2a3647;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.subtask-button:hover {
+  color: #29abe2;
+}
+
 .form-buttons {
   display: flex;
   gap: 20px;
@@ -239,10 +273,42 @@ background-color: #f0f0f0;
 .hidden {
 display: none;
 }
+.subtask-row {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
+  margin-bottom: 10px;
+}
+
+.subtask-input {
+  flex: 1;
+  border: none !important;
+  padding: 12px;
+  font-size: 16px;
+  outline: none;
+}
+
+.subtask-row button {
+  background-color: transparent;
+  border: none;
+  padding: 0 16px;
+  font-size: 20px;
+  color: #2a3647;
+  cursor: pointer;
+}
+
+.subtask-row button:hover {
+  background-color: #f0f0f0;
+}
+
 
 @media (max-width: 798px) {
   .wrapper {
     flex-direction: column;
+    min-height: 130vh;
   }
 
   .side-navbar {
@@ -328,12 +394,16 @@ display: none;
   }
 
   .form-buttons {
-    flex-direction: column;
+    flex-direction: flex;
     align-items: stretch;
     gap: 12px;
   }
 
   .form-buttons button {
-    width: 100%;
+    width: 50%;
+  }
+  .required-text {
+    display: none;
   }
 }
+

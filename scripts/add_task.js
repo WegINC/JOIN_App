@@ -107,13 +107,11 @@ function addSubtaskInput() {
   if (!container) return;
 
   const inputDiv = document.createElement("div");
-  inputDiv.style.display = "flex";
-  inputDiv.style.gap = "10px";
-  inputDiv.style.marginBottom = "5px";
+  inputDiv.className = "subtask-row";
 
   inputDiv.innerHTML = `
     <input type="text" class="subtask-input" placeholder="Add new subtask" />
-    <button type="button" onclick="this.parentElement.remove()">−</button>
+    <button type="button" class="remove-btn" onclick="this.parentElement.remove()">−</button>
   `;
 
   container.appendChild(inputDiv);
