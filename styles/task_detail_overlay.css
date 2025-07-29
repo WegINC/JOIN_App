@@ -12,7 +12,7 @@
   background: white;
   border-radius: 16px;
   padding: 32px;
-  width: 300px;
+  width: 400px;
   box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
   font-family: "Inter", sans-serif;
   display: flex;
@@ -57,12 +57,16 @@
   gap: 16px;
 }
 
+.task-info span {
+  padding: 4px;
+}
+
 .task-info img {
   height: 20px;
   width: 20px;
 }
 
-.task-info div {
+.due-date {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -90,10 +94,66 @@
   margin-top: 0;
 }
 
+.edit-priority {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.edit-priority a {
+  border: 1px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0px 0px 4px 0px #e3e3e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: black;
+  gap: 8px;
+}
+
+.edit-priority a.active.urgent {
+  background-color: #ff3d00;
+  color: #fff;
+}
+.edit-priority a.active.medium {
+  background-color: #ffa800;
+  color: #fff;
+}
+.edit-priority a.active.low {
+  background-color: #7ae229;
+  color: #fff;
+}
+
+.edit-priority a.active img {
+  filter: brightness(0) invert(1);
+}
+
+.edit-priority a:hover {
+  box-shadow: 0px 4px 4px 0px #c5c5c5;
+}
+
+.priority-btn-urgent {
+  height: 48px;
+  width: 128px;
+}
+
+.priority-btn-medium {
+  height: 48px;
+  width: 128px;
+}
+
+.priority-btn-low {
+  height: 48px;
+  width: 128px;
+}
+
 .assigned-users {
   margin-top: 8px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
 }
 

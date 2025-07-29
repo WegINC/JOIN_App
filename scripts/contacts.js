@@ -1,11 +1,15 @@
 
+let contacts = [];
+let selectedContactForOptions = null;
 
 import {
   getContactListItemTemplate,
   getContactSeparatorTemplate,
   getContactDetailsTemplate,
   getEditOverlayTemplate,
+  getEditContactMobileOverlayTemplate,
   getAddContactOverlayTemplate,
+  getAddContactMobileOverlayTemplate,
   getSuccessPopupTemplate,
 } from './contacts-template.js';
 
@@ -14,7 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
   window.openAddContactOverlay = openAddContactOverlay;
   window.closeAddContactOverlay = closeAddContactOverlay;
   window.createNewContact = createNewContact;
-  document.getElementById('mobile-add-contact-btn').addEventListener('click', openMobileAddContactOverlay);
+  const mobileAddBtn = document.getElementById('mobile-add-contact-btn');
+  if (mobileAddBtn) {
+    mobileAddBtn.addEventListener('click', openAddContactMobileOverlay);}
   document.body.addEventListener('click', (event) => {
     const target = event.target.closest('#contact-options-btn');
     if (target) {
@@ -32,11 +38,12 @@ async function loadContactsFromDatabase() {
 
   const res = await fetch(`${BASE_URL}/users.json`);
   const data = await res.json();
-  const contacts = Object.entries(data || {}).map(
+
+  contacts = Object.entries(data || {}).map(
     ([uid, u]) => ({ uid, ...buildContactObject(uid, u) })
   );
 
-  const grouped = contacts.sort((a,b) => a.name.localeCompare(b.name, 'de'))
+  const grouped = contacts.sort((a, b) => a.name.localeCompare(b.name, 'de'))
     .reduce((acc, c) => {
       const L = c.name[0].toUpperCase();
       (acc[L] ||= []).push(c);
@@ -63,7 +70,7 @@ function renderGroupedContacts(groups) {
       contact.element = item;
       item.addEventListener("click", () => {
         selectContact(item, contact);
-        selectedContactForOptions = contact;  // Hier setzen, nicht außerhalb der Schleife!
+        selectedContactForOptions = contact;  
       });
       list.appendChild(item);
     });
@@ -240,13 +247,14 @@ function closeUserMenu(event) {
   }
 }
 
-
 function selectContact(item, contact) {
+  selectedContactForOptions = contact; 
+
   document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
   item.classList.add('active');
   renderContactDetails(contact);
   showContactDetailsMobile(); 
-  handleMobileButtons(); // <-- Button-Umschaltung nach Kontaktwahl
+  handleMobileButtons(); 
 }
 
 function showContactDetailsMobile() {
@@ -255,19 +263,19 @@ function showContactDetailsMobile() {
 
 function returnToContactList() {
   document.body.classList.remove('show-contact-details-mobile');
-  handleMobileButtons(); // <-- Buttons zurücksetzen bei "Zurück"
+  handleMobileButtons(); 
 }
 
 function showContactList() {
   document.getElementById('contact-list-content').classList.remove('d-none');
   document.getElementById('contact-details-container').classList.add('d-none');
-  handleMobileButtons(); // <-- Buttons aktualisieren
+  handleMobileButtons(); 
 }
 
 function showContactDetails() {
   document.getElementById('contact-list-content').classList.add('d-none');
   document.getElementById('contact-details-container').classList.remove('d-none');
-  handleMobileButtons(); // <-- Buttons aktualisieren
+  handleMobileButtons(); 
 }
 
 function handleMobileButtons() {
@@ -299,18 +307,32 @@ function handleMobileButtons() {
   }
 }
 
-let selectedContactForOptions = null;
-
 function openMobileEditContactOverlay() {
   const overlay = document.getElementById('contact-options-overlay');
   if (!selectedContactForOptions) return;
 
   overlay.innerHTML = `
-    <button onclick="editContactOptions()"><img class="edit-button-overlay" src="/assets/icons/edit-button.png">Edit</button>
-    <button onclick="deleteContactOptions()"><img class="delete-button-overlay" src="/assets/icons/delete-button.png">Delete</button>
+    <button class="edit-btn" title="Edit" onclick="editContactOptions()">
+    <img src="../assets/icons/edit-button.png">Edit</button>
+    <button class="delete-btn" title="Delete" onclick="deleteContactOptions()">
+    <img src="../assets/icons/delete-button.png">Delete</button>
   `;
   overlay.classList.remove('hidden');
 }
+
+document.addEventListener('click', function (event) {
+  const overlay = document.getElementById('contact-options-overlay');
+  const isOverlayVisible = !overlay.classList.contains('hidden');
+
+  if (!isOverlayVisible) return;
+
+  const clickedInsideOverlay = overlay.contains(event.target);
+  const clickedOnOptionsBtn = event.target.closest('#contact-options-btn');
+
+  if (!clickedInsideOverlay && !clickedOnOptionsBtn) {
+    closeContactOptionsOverlay();
+  }
+});
 
 function closeContactOptionsOverlay() {
   const overlay = document.getElementById('contact-options-overlay');
@@ -318,22 +340,125 @@ function closeContactOptionsOverlay() {
 }
 
 function editContactOptions() {
-  if (selectedContactForOptions) {
+  if (!selectedContactForOptions) return;
+
+  closeContactOptionsOverlay();
+
+  const isMobile = window.innerWidth <= 1024;
+
+  if (isMobile) {
+    openEditContactMobileOverlay(selectedContactForOptions);
+  } else {
     openEditOverlay(selectedContactForOptions);
-    closeContactOptionsOverlay();
   }
 }
 
-function deleteContactOptions() {
-  if (selectedContactForOptions) {
-    deleteContact(selectedContactForOptions);
+async function deleteContactOptions() {
+  if (!selectedContactForOptions) return;
+  if (!confirm(`Möchtest du ${selectedContactForOptions.name} wirklich löschen?`)) return;
+
+  try {
+    await fetch(`${BASE_URL}/users/${selectedContactForOptions.uid}.json`, {
+      method: 'DELETE',
+    });
+
+    selectedContactForOptions.element.remove();
+    document.getElementById('contact-details-content').innerHTML = '';
     closeContactOptionsOverlay();
+  } catch (err) {
+    alert("Fehler beim Löschen.");
   }
 }
 
-// Event Listener für Fenstergröße (z. B. bei Drehen des Geräts)
+async function saveEditedContacts(uid) {
+  const nameInput = document.getElementById('edit-name');
+  const emailInput = document.getElementById('edit-email');
+  const phoneInput = document.getElementById('edit-phone');
+
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  const phone = phoneInput.value.trim();
+
+  if (!name || !email || !phone) {
+    alert('Bitte fülle alle Felder aus!');
+    return;
+  }
+
+  try {
+    const url = `https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app/contacts/${uid}.json`;
+
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name, email, phone })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Fehler beim Speichern: ${response.status}`);
+    }
+
+    await loadContactsFromDatabase();
+
+    const grouped = contacts.sort((a, b) => a.name.localeCompare(b.name, 'de'))
+  .reduce((acc, c) => {
+    const L = c.name[0].toUpperCase();
+    (acc[L] ||= []).push(c);
+    return acc;
+  }, {});
+
+ renderGroupedContacts(grouped);
+
+    const updatedContact = contacts.find(c => c.uid === uid);
+    if (updatedContact) {
+      selectedContactForOptions = updatedContact;
+      renderContactDetails(updatedContact);
+    }
+
+    closeEditOverlay();
+
+  } catch (err) {
+    alert('Fehler beim Speichern');
+    console.error('Fehler beim PATCH:', err);
+  }
+}
+
+function openEditContactMobileOverlay(contact) {
+  if (!contact) return;
+
+  const overlay = document.getElementById('edit-contact-overlay');
+  overlay.classList.remove('hidden');
+  overlay.style.display = 'flex';
+  overlay.innerHTML = getEditContactMobileOverlayTemplate(contact);
+
+  overlay.addEventListener('click', e => {
+    if (e.target.classList.contains('overlay-bg')) {
+      closeEditOverlay();
+    }
+  });
+
+  overlay.querySelector('.edit-close-btn').addEventListener('click', closeEditOverlay);
+  overlay.querySelector('.delete-btn').addEventListener('click', () => deleteContact(contact));
+  overlay.querySelector('.save-btn').addEventListener('click', () => saveEditedContacts(contact.uid));
+  }
+
+function openAddContactMobileOverlay() {
+  const overlay = document.getElementById('add-contact-overlay');
+  overlay.classList.remove('hidden');
+  overlay.style.display = 'flex';
+  overlay.innerHTML = getAddContactMobileOverlayTemplate({});
+
+  overlay.addEventListener('click', event => {
+    if (event.target.classList.contains('overlay-bg')) {
+      closeAddContactOverlay();
+    }
+  });
+}
+
+window.deleteContactOptions = deleteContactOptions;
 window.addEventListener('resize', handleMobileButtons);
-
-// Exporte für HTML-Nutzung
 window.returnToContactList = returnToContactList;
 window.selectContact = selectContact;
+window.editContactOptions = editContactOptions;
+window.closeEditOverlay = closeEditOverlay;

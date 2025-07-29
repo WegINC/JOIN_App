@@ -1,7 +1,3 @@
-/**
- * This function is used to add Contacts to the firebase Database
- * 
- */
 function onloadFunc(){
         console.log("test");
 }
@@ -54,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       alert("Registrierung erfolgreich!");
-      window.location.href = "/pages/board.html";
+      window.location.href = "../pages/board.html";
     } catch (error) {
       console.error("Fehler bei der Registrierung:", error);
       alert("Es ist ein Fehler aufgetreten.");

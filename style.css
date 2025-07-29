@@ -183,3 +183,24 @@ h1 {
     transition: 100ms ease-in-out;
     box-shadow: 0px 4px 4px 0px #0000004e;
 }
+
+/* select2 Styling für das Task-Formular */
+.select2-container {
+  width: 100% !important;
+  font-size: 1rem;
+}
+.select2-selection--multiple {
+  min-height: 38px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  background: #fafbfc;
+  padding: 4px 8px;
+}
+.select2-selection__choice {
+  background: #0038ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 2px 8px;
+  margin: 2px 4px 2px 0;
+}

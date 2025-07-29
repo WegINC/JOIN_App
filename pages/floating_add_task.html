@@ -17,7 +17,7 @@
       <input type="date" id="due" />
     </div>
 
-    <img src="/assets/img/Vector 4.svg" />
+    <img src="../assets/img/Vector 4.svg" />
 
     <div class="column">
       <label>Priority</label>
@@ -46,11 +46,8 @@
       </div>
 
       <label for="assigned">Assigned to<span class="required">*</span></label>
-      <select id="assigned">
-        <option>Select contacts to assign</option>
-        <option>Carolin</option>
-        <option>Arvinder</option>
-        <option>Tim</option>
+      <select id="assigned" multiple>
+        <option disabled selected>Select contacts to assign</option>
       </select>
 
       <label for="category">Category<span class="required">*</span></label>
@@ -80,4 +77,4 @@
   <p style="color: red; margin-top: 20px">*This field is required</p>
 </div>
 
-<script src="/scripts/add_task.js"></script>
+<script src="../scripts/add_task.js"></script>

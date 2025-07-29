@@ -6,7 +6,7 @@ let assigneeMap = {};
 window.addEventListener("DOMContentLoaded", () => {
   initUserInitial();
   setupPriorityButtons();
-  loadAssigneeSuggestions();
+  loadAssigneeCheckboxes();
   populateCategoryDropdown();
 });
 
@@ -14,6 +14,13 @@ function initUserInitial() {
   const initial = localStorage.getItem("userInitial") || "G";
   const nameBtn = document.getElementById("user-name");
   if (nameBtn) nameBtn.textContent = initial;
+}
+
+function getUserInitials(name) {
+  const nameParts = name.trim().split(" ");
+  return nameParts.length >= 2
+    ? nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase()
+    : nameParts[0][0].toUpperCase();
 }
 
 function setupPriorityButtons() {
@@ -67,39 +74,43 @@ async function loadAssigneeSuggestions() {
 
 async function populateAssigneeDropdown() {
   try {
-    const res = await fetch(`${BASE_URL}/users.json`);
-    const data = await res.json();
+    const response = await fetch(`${BASE_URL}/users.json`);
+    const data = await response.json();
 
-    const select = document.getElementById("assigned");
-    if (!select) return;
+    const container = document.getElementById("assigned-container");
+    container.innerHTML = ""; 
 
-    select.innerHTML = `<option disabled selected>Select contacts to assign</option>`;
-
-    for (let uid in data) {
+    for (const uid in data) {
       const user = data[uid];
-      const option = document.createElement("option");
-      option.value = uid;
-      option.textContent = user.name || "Unnamed";
-      select.appendChild(option);
+      const userDiv = document.createElement("div");
+      userDiv.className = "assignee-option";
+      userDiv.dataset.uid = uid;
+      userDiv.textContent = user.name || "Unnamed";
+
+      userDiv.addEventListener("click", function () {
+        userDiv.classList.toggle("selected");
+      });
+
+      container.appendChild(userDiv);
     }
-  } catch (err) {
-    console.error("Fehler beim Laden der Kontakte:", err);
+  } catch (error) {
+    console.error("Fehler beim Laden der Kontakte:", error);
   }
 }
 
-function populateCategoryDropdown() {
-  const categorySelect = document.getElementById("category");
-  if (!categorySelect) return;
+function populateAssigneeDropdown(userData) {
+  const select = document.getElementById("assigned");
+  if (!select) return;
 
-  const options = ["Technical Task", "User Story"];
-  categorySelect.innerHTML = `<option disabled selected>Select task category</option>`;
+  select.innerHTML = `<option disabled hidden>Select contacts to assign</option>`;
 
-  options.forEach(opt => {
+  for (let uid in userData) {
+    const user = userData[uid];
     const option = document.createElement("option");
-    option.value = opt;
-    option.textContent = opt;
-    categorySelect.appendChild(option);
-  });
+    option.value = uid;
+    option.textContent = user.name || "Unnamed";
+    select.appendChild(option);
+  }
 }
 
 function addSubtaskInput() {
@@ -117,16 +128,37 @@ function addSubtaskInput() {
   container.appendChild(inputDiv);
 }
 
-function createTask() {
-  const title = document.getElementById("title").value;
-  const description = document.getElementById("description").value;
+async function loadAssigneeSuggestions() {
+  try {
+    const res = await fetch(`${BASE_URL}/users.json`);
+    const data = await res.json();
+    assigneeMap = {};
+
+    for (const uid in data) {
+      assigneeMap[uid] = {
+        name: data[uid].name || "Unnamed",
+        initials: data[uid].initials || "U",
+        themeColor: data[uid].themeColor || "#cccccc"
+      };
+    }
+
+    populateAssigneeDropdown(data);
+  } catch (err) {
+    console.error("Fehler beim Laden der Kontakte:", err);
+  }
+}
+
+async function createTask() {
+  const title = document.getElementById("title").value.trim();
+  const description = document.getElementById("description").value.trim();
   const dueDate = document.getElementById("due").value;
   const category = document.getElementById("category").value;
   const priority = selectedPriority || "low";
 
-const assignedUid = document.getElementById("assigned")?.value;
+  const checkedBoxes = document.querySelectorAll("#assigned-checkboxes .assigned-checkbox:checked");
+  const assignedUids = Array.from(checkedBoxes).map(cb => cb.value);
 
-  if (!title || !dueDate || !assignedUid || category === "Select task category") {
+  if (!title || !dueDate || assignedUids.length === 0 || category === "Select task category") {
     alert("Bitte alle Pflichtfelder ausfüllen.");
     return;
   }
@@ -139,28 +171,34 @@ const assignedUid = document.getElementById("assigned")?.value;
 
   const userInitial = localStorage.getItem("userInitial") || "G";
 
+  const assignedTo = {};
+  assignedUids.forEach(uid => {
+    assignedTo[uid] = true;
+  });
+
   const taskData = {
     title,
     description,
     dueDate,
     category,
     priority,
-    assignedTo: { [assignedUid]: true },
+    assignedTo,
     status: "toDo",
     userInitials: userInitial,
     subtasks,
   };
 
-  fetch(`${BASE_URL}/tasks.json`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(taskData),
-  })
-    .then(() => {
-      alert("Task erfolgreich erstellt.");
-      window.location.href = "/pages/board.html";
-    })
-    .catch((err) => console.error("Fehler beim Erstellen:", err));
+  try {
+    await fetch(`${BASE_URL}/tasks.json`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(taskData),
+    });
+    alert("Task erfolgreich erstellt.");
+    window.location.href = "../pages/board.html";
+  } catch (err) {
+    console.error("Fehler beim Erstellen des Tasks:", err);
+  }
 }
 
 function closeUserMenu(event) {

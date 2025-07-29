@@ -1,16 +1,20 @@
 function openTaskDetailOverlay(task, taskId) {
-  fetch("/pages/task_detail_overlay.html")
-    .then((res) => res.text())
-    .then((html) => {
-      const container = document.getElementById("task-detail-container");
-      container.innerHTML = html;
-      container.style.display = "block";
+  fetch(`${BASE_URL}/tasks/${taskId}.json`)
+    .then((res) => res.json())
+    .then((freshTask) => {
+      return fetch("../pages/task_detail_overlay.html")
+        .then((res) => res.text())
+        .then((html) => {
+          const container = document.getElementById("task-detail-container");
+          container.innerHTML = html;
+          container.style.display = "block";
 
-      window.currentTaskId = taskId;
-      window.currentTaskData = { ...task, id: taskId };
+          window.currentTaskId = taskId;
+          window.currentTaskData = { ...freshTask, id: taskId };
 
-      const overlayEvent = new CustomEvent("taskDataReady", { detail: task });
-      document.dispatchEvent(overlayEvent);
+          const overlayEvent = new CustomEvent("taskDataReady", { detail: freshTask });
+          document.dispatchEvent(overlayEvent);
+        });
     });
 }
 
@@ -50,13 +54,14 @@ async function fillTaskDetails(task) {
       const badge = document.createElement("div");
       badge.className = "task-user-initials";
       badge.style.backgroundColor = user.themeColor || "#0038ff";
-      badge.textContent = user.initials || "U";
+      badge.textContent = user.initials || "G";
       container.appendChild(badge);
     }
   }
 
   const subtaskList = document.getElementById("subtask-list");
   subtaskList.innerHTML = "";
+
   const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
 
   subtasks.forEach((sub, idx) => {
@@ -64,23 +69,21 @@ async function fillTaskDetails(task) {
     subDiv.className = "subtask-item";
 
     subDiv.innerHTML = `
-    <input 
-      type="checkbox" 
-      ${sub.done ? "checked" : ""} 
-      onchange="toggleSubtask(${idx})" 
-      class="subtask-checkbox"
-    />
-    <span 
-      class="subtask-title ${sub.done ? 'done' : ''}" 
-      onblur="editSubtask(${idx}, this.textContent.trim())"
-    >
-      ${sub.title}
-    </span>
-  `;
+      <input 
+        type="checkbox" 
+        ${sub.done ? "checked" : ""} 
+        onchange="toggleSubtask(${idx})" 
+        class="subtask-checkbox"
+      />
+      <span 
+        class="subtask-title ${sub.done ? 'done' : ''}"
+      >
+        ${sub.title}
+      </span>
+    `;
 
     subtaskList.appendChild(subDiv);
   });
-
 }
 
 function toggleSubtask(index) {
@@ -128,13 +131,13 @@ function updateSubtasksInFirebase(taskId, subtasks) {
 
 function getPriorityIcon(priority) {
   if (priority === "Urgent" || priority === "urgent") {
-    return `<img src="/assets/icons/urgent.svg" alt="Urgent Icon" class="priority-icon">`;
+    return `<img src="../assets/icons/urgent.svg" alt="Urgent Icon" class="priority-icon">`;
   }
   if (priority === "Medium" || priority === "medium") {
-    return `<img src="/assets/icons/medium.svg" alt="Medium Icon" class="priority-icon">`;
+    return `<img src="../assets/icons/medium.svg" alt="Medium Icon" class="priority-icon">`;
   }
   if (priority === "Low" || priority === "low") {
-    return `<img src="/assets/icons/low.svg" alt="Low Icon" class="priority-icon">`;
+    return `<img src="../assets/icons/low.svg" alt="Low Icon" class="priority-icon">`;
   }
   return "";
 }
@@ -153,6 +156,9 @@ function editTask() {
     categoryEl.style.visibility = "hidden";
   }
 
+  const iconEl = document.getElementById("task-priority-icon");
+  if (iconEl) iconEl.innerHTML = "";
+
   const titleEl = document.getElementById("task-title");
   const descEl = document.getElementById("task-description");
 
@@ -170,12 +176,39 @@ function editTask() {
 
   const priority = window.currentTaskData.priority || "";
   document.getElementById("task-priority").innerHTML = `
-    <select id="edit-priority">
-      <option value="urgent">Urgent</option>
-      <option value="medium">Medium</option>
-      <option value="low">Low</option>
-    </select>`;
-  document.getElementById("edit-priority").value = priority;
+    <div class="edit-priority" id="edit-priority">
+      <a href="#" data-value="urgent" class="priority-btn-urgent">Urgent<img src="../assets/icons/urgent.svg" alt=""></a>
+      <a href="#" data-value="medium" class="priority-btn-medium">Medium<img src="../assets/icons/medium.svg" alt=""></a>
+      <a href="#" data-value="low" class="priority-btn-low">Low<img src="../assets/icons/low.svg" alt=""></a>
+    </div>`;
+  const priorityButtons = document.querySelectorAll(".edit-priority a");
+  const currentPriority = window.currentTaskData.priority?.toLowerCase() || "low";
+  priorityButtons.forEach(btn => {
+    const value = btn.getAttribute("data-value");
+
+    if (value === currentPriority) {
+      btn.classList.add("active", value);
+    }
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      priorityButtons.forEach(b => {
+        b.classList.remove("active", "urgent", "medium", "low");
+      });
+      btn.classList.add("active", value);
+      btn.closest("#edit-priority").setAttribute("data-selected", value);
+    });
+  });
+
+  const subtaskList = document.getElementById("subtask-list");
+  if (subtaskList) {
+    subtaskList.innerHTML = `
+      <div class="subtask-add-row">
+        <input id="new-subtask-input" type="text" placeholder="Neue Subtask hinzufügen" />
+        <button onclick="addNewSubtask()">+</button>
+      </div>
+    `;
+  }
 
   const btn = document.querySelector(".task-actions button:last-child");
   btn.textContent = "Save";
@@ -193,7 +226,7 @@ function saveEditedTask() {
     title: document.getElementById("task-title").textContent.trim(),
     description: document.getElementById("task-description").textContent.trim(),
     dueDate: document.getElementById("edit-due-date").value,
-    priority: document.getElementById("edit-priority").value,
+    priority: document.getElementById("edit-priority").getAttribute("data-selected") || "low",
   };
 
   fetch(`${BASE_URL}/tasks/${taskId}.json`, {
@@ -202,7 +235,6 @@ function saveEditedTask() {
     body: JSON.stringify(updatedTask),
   })
     .then(() => {
-      // Update local task data
       window.currentTaskData = {
         ...window.currentTaskData,
         ...updatedTask
