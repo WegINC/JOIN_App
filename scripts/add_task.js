@@ -6,7 +6,6 @@ let assigneeMap = {};
 window.addEventListener("DOMContentLoaded", () => {
   initUserInitial();
   setupPriorityButtons();
-  loadAssigneeCheckboxes();
   populateCategoryDropdown();
 });
 
@@ -58,6 +57,19 @@ function selectPriority(level) {
     activeBtn.style.color = level === "low" ? "#000" : "white";
   }
 }
+function populateCategoryDropdown() {
+  const categories = ["Development", "Testing", "Technical Task", "User Story"];
+  const categorySelect = document.getElementById("category");
+
+  categorySelect.innerHTML = `<option disabled selected hidden>Select task category</option>`;
+
+  categories.forEach(cat => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    categorySelect.appendChild(option);
+  });
+}
 
 async function loadAssigneeSuggestions() {
   try {
@@ -72,7 +84,7 @@ async function loadAssigneeSuggestions() {
   }
 }
 
-async function populateAssigneeDropdown() {
+async function AssigneeDropdown() {
   try {
     const response = await fetch(`${BASE_URL}/users.json`);
     const data = await response.json();
@@ -102,7 +114,14 @@ function populateAssigneeDropdown(userData) {
   const select = document.getElementById("assigned");
   if (!select) return;
 
-  select.innerHTML = `<option disabled hidden>Select contacts to assign</option>`;
+  select.innerHTML = "";
+
+  const placeholder = document.createElement("option");
+  placeholder.textContent = "Select contacts to assign";
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  placeholder.hidden = true;
+  select.appendChild(placeholder);
 
   for (let uid in userData) {
     const user = userData[uid];
@@ -118,13 +137,11 @@ function addSubtaskInput() {
   if (!container) return;
 
   const inputDiv = document.createElement("div");
-  inputDiv.style.display = "flex";
-  inputDiv.style.gap = "10px";
-  inputDiv.style.marginBottom = "5px";
+  inputDiv.className = "subtask-row";
 
   inputDiv.innerHTML = `
     <input type="text" class="subtask-input" placeholder="Add new subtask" />
-    <button type="button" onclick="this.parentElement.remove()">−</button>
+    <button type="button" class="remove-btn" onclick="this.parentElement.remove()">−</button>
   `;
 
   container.appendChild(inputDiv);
@@ -157,10 +174,10 @@ async function createTask() {
   const category = document.getElementById("category").value;
   const priority = selectedPriority || "low";
 
-  const checkedBoxes = document.querySelectorAll("#assigned-checkboxes .assigned-checkbox:checked");
-  const assignedUids = Array.from(checkedBoxes).map(cb => cb.value);
+  const assignedSelect = document.getElementById("assigned");
+  const assignedUid = assignedSelect?.value;
 
-  if (!title || !dueDate || assignedUids.length === 0 || category === "Select task category") {
+  if (!title || !dueDate || !assignedUid || !category) {
     alert("Bitte alle Pflichtfelder ausfüllen.");
     return;
   }
@@ -173,10 +190,7 @@ async function createTask() {
 
   const userInitial = localStorage.getItem("userInitial") || "G";
 
-  const assignedTo = {};
-  assignedUids.forEach(uid => {
-    assignedTo[uid] = true;
-  });
+  const assignedTo = { [assignedUid]: true };
 
   const taskData = {
     title,

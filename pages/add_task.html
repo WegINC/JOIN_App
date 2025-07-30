@@ -76,8 +76,8 @@
             </div>
 
             <label for="assigned">Assigned to<span class="required">*</span></label>
-            <select id="assigned" multiple>
-              <option disabled selected>Select contacts to assign</option>
+            <select id="assigned">
+              <option>Select contacts to assign</option>
             </select>
 
 
@@ -86,9 +86,14 @@
 
             <label for="subtasks">Subtasks</label>
             <div id="subtask-container">
-              <div style="display: flex; gap: 10px; margin-bottom: 5px;">
-                <input type="text" id="subtasks" class="subtask-input" placeholder="Add new subtask" />
-                <button type="button" onclick="addSubtaskInput()">+</button>
+              <div class="subtask-wrapper">
+                <input
+                  type="text"
+                  id="subtasks"
+                  class="subtask-input"
+                  placeholder="Add new subtask"
+                />
+                <button type="button" class="subtask-button" onclick="addSubtaskInput()">+</button>
               </div>
             </div>
 
@@ -104,12 +109,12 @@
   
 
 <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      initUserInitial();
-      setupPriorityButtons();
-      populateAssigneeDropdown();
-      populateCategoryDropdown();
-    });
+  window.addEventListener("DOMContentLoaded", async () => {
+    initUserInitial();
+    setupPriorityButtons();
+    await loadAssigneeSuggestions()
+    populateCategoryDropdown();
+  });
 </script>
 <script src="../scripts/add_task.js"></script>
 </body>
