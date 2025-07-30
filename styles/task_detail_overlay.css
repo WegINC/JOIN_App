@@ -12,7 +12,6 @@
   background: white;
   border-radius: 16px;
   padding: 32px;
-  width: 400px;
   box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
   font-family: "Inter", sans-serif;
   display: flex;
@@ -112,6 +111,13 @@
   text-decoration: none;
   color: black;
   gap: 8px;
+  font-size: 12px;
+  padding: 2px 4px 2px 4px;
+}
+
+.edit-priority a img {
+  height: 15px;
+  width: 15px;
 }
 
 .edit-priority a.active.urgent {
@@ -137,17 +143,17 @@
 
 .priority-btn-urgent {
   height: 48px;
-  width: 128px;
+  width: 70px;
 }
 
 .priority-btn-medium {
   height: 48px;
-  width: 128px;
+  width: 70px;
 }
 
 .priority-btn-low {
   height: 48px;
-  width: 128px;
+  width: 70px;
 }
 
 .assigned-users {
@@ -244,7 +250,7 @@
 
 .subtask-title {
   flex-grow: 1;
-  font-size: 14px;
+  font-size: 16px;
   border: 1px solid transparent;
   padding: 6px 8px;
   border-radius: 6px;
@@ -266,4 +272,24 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
+}
+
+@media (max-width: 510px) {
+  .task-detail-card {
+    margin: 16px;
+  }
+
+  .task-detail-card.editing {
+    margin: 16px;
+    box-sizing: border-box;
+  }
+
+  .task-detail-card.editing {
+    flex-wrap: wrap;
+  }
+
+  .task-detail-card.editing .edit-priority a {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 70px;
+  }
 }

@@ -144,13 +144,17 @@ function getPriorityIcon(priority) {
 
 function closeTaskOverlay() {
   const container = document.getElementById("task-detail-container");
-  if (container) {
-    container.style.display = "none";
-    container.innerHTML = "";
-  }
+  if (!container) return;
+  const card = container.querySelector(".task-detail-card");
+  if (card) card.classList.remove("editing");
+  container.style.display = "none";
+  container.innerHTML = "";
 }
 
 function editTask() {
+  const card = document.querySelector(".task-detail-card");
+    if (card) card.classList.add("editing");
+
   const categoryEl = document.getElementById("task-category");
   if (categoryEl) {
     categoryEl.style.visibility = "hidden";

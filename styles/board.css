@@ -255,7 +255,7 @@ body {
   }
 }
 
-@media (max-width: 798px) {
+@media (max-width: 898px) {
   .wrapper {
     flex-direction: column;
   }
@@ -333,5 +333,15 @@ body {
 @media (min-width: 1300px) {
   .columns {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 380px) {
+  .board-content-headline {
+    padding-left: 16px;
+  }
+
+  .add-task-button {
+    margin-left: 64px;
   }
 }
