@@ -2,6 +2,7 @@
 let contacts = [];
 let selectedContactForOptions = null;
 
+
 import {
   getContactListItemTemplate,
   getContactSeparatorTemplate,
@@ -347,7 +348,7 @@ function editContactOptions() {
   const isMobile = window.innerWidth <= 1024;
 
   if (isMobile) {
-    openEditContactMobileOverlay(selectedContactForOptions);
+    openEditMobileOverlay(selectedContactForOptions); 
   } else {
     openEditOverlay(selectedContactForOptions);
   }
@@ -370,78 +371,28 @@ async function deleteContactOptions() {
   }
 }
 
-async function saveEditedContacts(uid) {
-  const nameInput = document.getElementById('edit-name');
-  const emailInput = document.getElementById('edit-email');
-  const phoneInput = document.getElementById('edit-phone');
 
-  const name = nameInput.value.trim();
-  const email = emailInput.value.trim();
-  const phone = phoneInput.value.trim();
-
-  if (!name || !email || !phone) {
-    alert('Bitte fülle alle Felder aus!');
-    return;
-  }
-
-  try {
-    const url = `https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app/contacts/${uid}.json`;
-
-    const response = await fetch(url, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name, email, phone })
-    });
-
-    if (!response.ok) {
-      throw new Error(`Fehler beim Speichern: ${response.status}`);
-    }
-
-    await loadContactsFromDatabase();
-
-    const grouped = contacts.sort((a, b) => a.name.localeCompare(b.name, 'de'))
-  .reduce((acc, c) => {
-    const L = c.name[0].toUpperCase();
-    (acc[L] ||= []).push(c);
-    return acc;
-  }, {});
-
- renderGroupedContacts(grouped);
-
-    const updatedContact = contacts.find(c => c.uid === uid);
-    if (updatedContact) {
-      selectedContactForOptions = updatedContact;
-      renderContactDetails(updatedContact);
-    }
-
-    closeEditOverlay();
-
-  } catch (err) {
-    alert('Fehler beim Speichern');
-    console.error('Fehler beim PATCH:', err);
-  }
-}
-
-function openEditContactMobileOverlay(contact) {
-  if (!contact) return;
-
+function openEditMobileOverlay(contact) {
   const overlay = document.getElementById('edit-contact-overlay');
-  overlay.classList.remove('hidden');
   overlay.style.display = 'flex';
   overlay.innerHTML = getEditContactMobileOverlayTemplate(contact);
 
   overlay.addEventListener('click', e => {
-    if (e.target.classList.contains('overlay-bg')) {
-      closeEditOverlay();
-    }
+    if (e.target === overlay) closeEditOverlay();
   });
-
   overlay.querySelector('.edit-close-btn').addEventListener('click', closeEditOverlay);
   overlay.querySelector('.delete-btn').addEventListener('click', () => deleteContact(contact));
-  overlay.querySelector('.save-btn').addEventListener('click', () => saveEditedContacts(contact.uid));
+  overlay.querySelector('.save-btn').addEventListener('click', () => saveContactChanges(contact));
+}
+
+function openEditOverlayWrapper(contact) {
+  if (window.innerWidth <= 768) {
+    openEditMobileOverlay(contact);
+  } else {
+    openEditOverlay(contact);
   }
+}
+
 
 function openAddContactMobileOverlay() {
   const overlay = document.getElementById('add-contact-overlay');
@@ -462,3 +413,4 @@ window.returnToContactList = returnToContactList;
 window.selectContact = selectContact;
 window.editContactOptions = editContactOptions;
 window.closeEditOverlay = closeEditOverlay;
+

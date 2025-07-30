@@ -109,10 +109,8 @@ export function getContactSeparatorTemplate(letter) {
             </div>
   
             <div class="edit-actions">
-              <button class="delete-btn" onclick="deleteContactOptions('${uid}')">Delete</button>
-              <button class="save-btn" onclick="editContactOptions('${uid}')">
-                Save <img src="../assets/icons/check.png" alt="Check icon">
-              </button>
+              <button class="delete-btn">Delete</button>
+              <button class="save-btn">Save <img src="../assets/icons/check.png" alt="Save Icon"></button>
             </div>
           </div>
         </div>
