@@ -17,6 +17,9 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 90%;
+  max-width: 350px;
+  box-sizing: border-box;
 }
 
 .task-header {
@@ -43,11 +46,15 @@
   font-size: 36px;
   font-weight: 700;
   margin: 0;
+  white-space: normal;
+  overflow-wrap: break-word; 
 }
 
 .task-description {
   font-size: 16px;
   color: #444;
+  white-space: normal;
+  overflow-wrap: break-word; 
 }
 
 .task-info {

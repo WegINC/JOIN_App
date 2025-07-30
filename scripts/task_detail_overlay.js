@@ -243,7 +243,8 @@ function saveEditedTask() {
         ...window.currentTaskData,
         ...updatedTask
       };
-      openTaskDetailOverlay(window.currentTaskData, window.currentTaskId);
+      loadTasks();
+      openTaskDetailOverlay(window.currentTaskData, taskId);
     })
     .catch((err) => console.error("Fehler beim Speichern:", err));
 }
