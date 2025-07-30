@@ -22,6 +22,40 @@ document.addEventListener("taskDataReady", function (e) {
   fillTaskDetails(e.detail);
 });
 
+function renderSubtasksList() {
+  const subtaskList = document.getElementById("subtask-list");
+  if (!subtaskList) return;
+
+  if (document.querySelector(".task-detail-card.editing")) {
+    subtaskList.innerHTML = `
+      <div class="subtask-add-row">
+        <input id="new-subtask-input" type="text" placeholder="Neue Subtask hinzufügen" />
+        <button onclick="addNewSubtask()">+</button>
+      </div>
+    `;
+  } else {
+    subtaskList.innerHTML = "";
+  }
+
+  const subtasks = window.currentTaskData.subtasks || [];
+  subtasks.forEach((sub, idx) => {
+    const subDiv = document.createElement("div");
+    subDiv.className = "subtask-item";
+    subDiv.innerHTML = `
+      <input 
+        type="checkbox" 
+        ${sub.done ? "checked" : ""} 
+        onchange="toggleSubtask(${idx})" 
+        class="subtask-checkbox"
+      />
+      <span class="subtask-title ${sub.done ? 'done' : ''}">
+        ${sub.title}
+      </span>
+    `;
+    subtaskList.appendChild(subDiv);
+  });
+}
+
 async function fillTaskDetails(task) {
   const categoryColors = {
     "Technical Task": "#1FD7C1",
@@ -91,8 +125,11 @@ function toggleSubtask(index) {
   if (!task.subtasks || !task.subtasks[index]) return;
 
   task.subtasks[index].done = !task.subtasks[index].done;
-
-  updateSubtasksInFirebase(task.id || window.currentTaskId, task.subtasks);
+  
+  updateSubtasksInFirebase(
+    window.currentTaskId,
+    task.subtasks
+  );
 }
 
 function editSubtask(index, newText) {
@@ -111,9 +148,8 @@ function addNewSubtask() {
   const task = window.currentTaskData;
   task.subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
   task.subtasks.push({ title: text, done: false });
-
   input.value = "";
-  updateSubtasksInFirebase(task.id || window.currentTaskId, task.subtasks);
+  renderSubtasksList();
 }
 
 function updateSubtasksInFirebase(taskId, subtasks) {
@@ -231,6 +267,7 @@ function saveEditedTask() {
     description: document.getElementById("task-description").textContent.trim(),
     dueDate: document.getElementById("edit-due-date").value,
     priority: document.getElementById("edit-priority").getAttribute("data-selected") || "low",
+    subtasks: window.currentTaskData.subtasks || []
   };
 
   fetch(`${BASE_URL}/tasks/${taskId}.json`, {
@@ -239,10 +276,7 @@ function saveEditedTask() {
     body: JSON.stringify(updatedTask),
   })
     .then(() => {
-      window.currentTaskData = {
-        ...window.currentTaskData,
-        ...updatedTask
-      };
+      window.currentTaskData = { ...window.currentTaskData, ...updatedTask };
       loadTasks();
       openTaskDetailOverlay(window.currentTaskData, taskId);
     })
