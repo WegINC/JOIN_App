@@ -15,6 +15,7 @@
 
     <div id="splash-greeting" class="splash-greeting">
         <span class="greeting-text-splash">Good morning</span>
+        <span id="splash-user" class="greeting-user"></span>
     </div>
 
     <div class="wrapper opacity hidden visible">
@@ -78,7 +79,7 @@
                                     <img class="icon-default" src="../assets/icons/to-do-icon.svg" alt="">
                                     <img class="icon-hover" src="../assets/icons/to-do-icon-hover.svg" alt="">
                                     <div class="task-info-text">
-                                        <span class="task-count" id="task_count">0</span>
+                                        <span class="task-count" id="todo-count">0</span>
                                         <span class="task-label">To-Do</span>
                                     </div>
                                 </div>
@@ -89,7 +90,7 @@
                                     <img class="icon-default" src="../assets/icons/done-icon.svg" alt="">
                                     <img class="icon-hover" src="../assets/icons/done-icon-hover.svg" alt="">
                                     <div class="task-info-text">
-                                        <span class="task-count" id="task_count">0</span>
+                                        <span class="task-count" id="done-count">0</span>
                                         <span class="task-label">Done</span>
                                     </div>
                                 </div>
@@ -102,12 +103,12 @@
                                 <div class="summary-task-inner">
                                     <img src="../assets/icons/summary-medium-icon.svg" alt="">
                                     <div class="task-info-text">
-                                        <span class="task-count">0</span>
+                                        <span class="task-count" id="urgent-count">0</span>
                                         <span class="task-label">Urgent</span>
                                     </div>
                                     <div class="urgent-separator"></div>
                                     <div class="task-info-text">
-                                        <span id="summary_urgent_date"></span>
+                                        <span class="summary_urgent_date" id="summary_urgent_date"></span>
                                         <span class="task-label">Upcoming Deadline</span>
                                     </div>
                                 </div>
@@ -118,7 +119,7 @@
                             <a class="summary-taskInfo" href="./board.html">
                                 <div class="summary-task-inner">
                                     <div class="task-info-text">
-                                        <span class="task-count">0</span>
+                                        <span class="task-count" id="total-count">0</span>
                                         <span class="task-label">Tasks in Board</span>
                                     </div>
                                 </div>
@@ -127,8 +128,8 @@
                             <a class="summary-taskInfo" href="./board.html">
                                 <div class="summary-task-inner">
                                     <div class="task-info-text">
-                                        <span class="task-count">0</span>
-                                        <span class="task-label">Tasks in Board</span>
+                                        <span class="task-count" id="inProgress-count">0</span>
+                                        <span class="task-label">Tasks in Progress</span>
                                     </div>
                                 </div>
                             </a>
@@ -136,8 +137,8 @@
                             <a class="summary-taskInfo" href="./board.html">
                                 <div class="summary-task-inner">
                                     <div class="task-info-text">
-                                        <span class="task-count">0</span>
-                                        <span class="task-label">Tasks in Board</span>
+                                        <span class="task-count" id="awaitFeedback-count">0</span>
+                                        <span class="task-label">Awaiting Feedback</span>
                                     </div>
                                 </div>
                             </a>
@@ -147,7 +148,7 @@
 
                     <div class="summary-greeting">
                         <span class="greeting-text">Good morning</span>
-                        <span class="user-name" id="user-name"></span>
+                        <span class="greeting-user" id="greeting-user"></span>
                     </div>
                 </div>
 
@@ -158,25 +159,6 @@
 </body>
 
 <script src="../scripts/board.js"></script>
-
-<script>
-    const splash = document.getElementById('splash-greeting');
-    const wrapper = document.querySelector('.wrapper');
-    const smallScreen = window.innerWidth <= 1124;
-
-    if (smallScreen) {
-        splash.classList.remove('hidden');
-        wrapper.classList.add('hidden');
-
-        setTimeout(() => {
-            splash.classList.add('fade-out');
-            wrapper.classList.remove('hidden');
-            wrapper.classList.add('visible');
-        }, 2000);
-    } else {
-        splash.style.display = 'none';
-        wrapper.classList.remove('hidden');
-    }
-</script>
+<script src="../scripts/summary.js"></script>
 
 </html>
