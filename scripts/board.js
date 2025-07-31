@@ -21,16 +21,26 @@ function closeUserMenu(event) {
 }
 
 function setupButtons() {
+  // alte Column-Buttons belassen
   document.querySelectorAll(".column-title button").forEach(btn =>
     btn.addEventListener("click", openFloatingAddTaskPopup)
   );
+
   const addBtn = document.querySelector(".add-task-button");
-  if (addBtn) {
-    addBtn.addEventListener("click", () => {
+  if (!addBtn) return;
+
+  // prüfe bei Klick, ob wir auf Mobil (<=898px) sind
+  addBtn.addEventListener("click", (e) => {
+    const smallScreen = window.innerWidth <= 798;
+    if (smallScreen) {
+      // auf Mobil weiterleiten
+      window.location.href = "../pages/add_task.html";
+    } else {
+      // auf Desktop das Popup öffnen
       popupStatus = "toDo";
       openFloatingAddTaskPopup();
-    });
-  }
+    }
+  });
 }
 
 function initUserInitial() {

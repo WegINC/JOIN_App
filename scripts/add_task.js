@@ -58,7 +58,7 @@ function selectPriority(level) {
   }
 }
 function populateCategoryDropdown() {
-  const categories = ["Development", "Testing", "Technical Task", "User Story"];
+  const categories = ["Technical Task", "User Story"];
   const categorySelect = document.getElementById("category");
 
   categorySelect.innerHTML = `<option disabled selected hidden>Select task category</option>`;
