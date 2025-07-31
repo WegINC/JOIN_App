@@ -244,8 +244,10 @@ function editTask() {
   if (subtaskList) {
     subtaskList.innerHTML = `
       <div class="subtask-add-row">
-        <input id="new-subtask-input" type="text" placeholder="Neue Subtask hinzufügen" />
-        <button onclick="addNewSubtask()">+</button>
+        <div class="subtask-input-wrapper">
+          <input id="new-subtask-input" type="text" placeholder="Neue Subtask hinzufügen" />
+          <button type="button" class="subtask-add-btn" onclick="addNewSubtask()">＋</button>
+        </div>
       </div>
     `;
   }
@@ -262,18 +264,24 @@ function saveEditedTask() {
     return;
   }
 
+  const priorityEl    = document.getElementById("edit-priority");
+  const newPriority   = priorityEl.getAttribute("data-selected");
+  const finalPriority = newPriority !== null && newPriority !== undefined
+                        ? newPriority
+                        : window.currentTaskData.priority;
+
   const updatedTask = {
-    title: document.getElementById("task-title").textContent.trim(),
+    title:       document.getElementById("task-title").textContent.trim(),
     description: document.getElementById("task-description").textContent.trim(),
-    dueDate: document.getElementById("edit-due-date").value,
-    priority: document.getElementById("edit-priority").getAttribute("data-selected") || "low",
-    subtasks: window.currentTaskData.subtasks || []
+    dueDate:     document.getElementById("edit-due-date").value,
+    priority:    finalPriority,
+    subtasks:    window.currentTaskData.subtasks || []
   };
 
   fetch(`${BASE_URL}/tasks/${taskId}.json`, {
-    method: "PATCH",
+    method:  "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updatedTask),
+    body:    JSON.stringify(updatedTask),
   })
     .then(() => {
       window.currentTaskData = { ...window.currentTaskData, ...updatedTask };

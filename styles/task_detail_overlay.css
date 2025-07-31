@@ -19,6 +19,7 @@
   gap: 16px;
   width: 90%;
   max-width: 350px;
+  max-height: 745px;
   box-sizing: border-box;
 }
 
@@ -221,6 +222,29 @@
   border-radius: 6px;
 }
 
+.subtask-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.subtask-input-wrapper input {
+  width: 100%;
+  padding-right: 2.5rem; /* genug Platz für den Button */
+  box-sizing: border-box;
+}
+
+.subtask-input-wrapper .subtask-add-btn {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
 
 .task-actions {
   display: flex;
