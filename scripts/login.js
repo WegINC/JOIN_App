@@ -52,3 +52,20 @@ function hideLoginError() {
     errorDiv.style.display = "none";
   }
 }
+
+window.addEventListener("load", () => {
+  const introLogo = document.getElementById("intro-logo");
+
+  if (introLogo) {
+    // ➤ Animation auslösen
+    introLogo.classList.add("animate-logo");
+
+    // ➤ Dann Element nach 2s entfernen
+    setTimeout(() => {
+      introLogo.remove();
+      document.body.classList.add("loaded");
+    }, 1000);
+  } else {
+    document.body.classList.add("loaded");
+  }
+});

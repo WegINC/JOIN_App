@@ -5,14 +5,14 @@ body {
 }
 
 .join-logo {
-    height: 80px;
-    width: 80px;
+    height: 140px;
+    width: 140px;
 }
 
 .nav-bar {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    padding: 80px;
 }
 
 .nav-right {
@@ -45,7 +45,6 @@ body {
 }
 
 .login-content {
-    max-width: 1440px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -204,3 +203,84 @@ h1 {
   padding: 2px 8px;
   margin: 2px 4px 2px 0;
 }
+
+#intro-logo {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+    transform: translate(-50%, -50%);
+    background-color: #f6f7f8;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #intro-logo.animate-logo {
+    animation: slideAndShrink 2s ease-in-out forwards;
+  }
+  
+  #intro-logo.animate-logo img {
+    animation: shrinkLogo 2s ease-in-out forwards;
+  }
+  
+  #intro-logo img {
+    width: 300px; /* Startgröße in der Mitte */
+    height: 300px;
+    animation: shrinkLogo 2s ease-in-out forwards;
+  }
+  
+  /* Logo von Mitte nach oben links verschieben */
+  @keyframes slideAndShrink {
+    0% {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    100% {
+      top: 20px;
+      left: 20px;
+      transform: translate(0, 0);
+    }
+  }
+  
+  /* Logo von groß nach klein */
+  @keyframes shrinkLogo {
+    0% {
+      width: 300px;
+      height: 300px;
+    }
+    100% {
+      width: 140px;
+      height: 140px;
+    }
+  }
+  
+  /* Inhalt der Seite während Animation ausblenden */
+  body.loaded .nav-bar,
+  body.loaded .sign-up-content {
+    opacity: 1;
+    transition: opacity 0.3s ease-in;
+  }
+
+  .sidebar-bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 50px;
+    padding-top: 192px;
+}
+
+.sidebar-bottom a{
+    text-decoration: none;
+    color: #A8A8A8;
+}
+
+.sidebar-bottom a:hover{
+    color: #28abe2;
+    font-weight: 800;
+}
+  
