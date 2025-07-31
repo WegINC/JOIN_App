@@ -304,7 +304,7 @@ display: none;
   background-color: #f0f0f0;
 }
 
-@media (max-width: 798px) {
+@media (max-width: 898px) {
   .wrapper {
     flex-direction: column;
     min-height: 130vh;
