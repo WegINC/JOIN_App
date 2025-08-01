@@ -77,8 +77,8 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    height: 152px;
-    width: 422px;
+    height: auto;
+    width: 80%;
 
 }
 
@@ -126,10 +126,10 @@ h1 {
 
 .login-button {
     display: flex;
+    justify-content: center;
     text-align: center;
-    gap: 35px;
-    width: 322px;
-    height: 48px;
+    gap: 20px;
+    width: 80%;
     padding-bottom: 60px;
 }
 
@@ -139,17 +139,13 @@ h1 {
 
 .login {
     text-align: center;
-    width: 110px;
     background-color: #2b3646;
     color: white;
     border: 1px;
     border-radius: 8px;
     font-weight: 700;
     font-size: 16px;
-    padding-top: 15px;
-    padding-right: 24px;
-    padding-bottom: 15px;
-    padding-left: 24px;
+    padding: 10px;
     cursor: pointer;
 }
 
@@ -160,7 +156,6 @@ h1 {
 }
 
 .guest {
-    width: 177px;
     background-color: white;
     color: #2b3646;
     border-radius: 8px;
@@ -169,10 +164,7 @@ h1 {
     border-color: #2A3647;
     font-weight: 700;
     font-size: 16px;
-    padding-top: 15px;
-    padding-right: 24px;
-    padding-bottom: 15px;
-    padding-left: 24px;
+    padding: 10px;
     cursor: pointer;
 }
 
@@ -183,7 +175,7 @@ h1 {
     box-shadow: 0px 4px 4px 0px #0000004e;
 }
 
-/* select2 Styling für das Task-Formular */
+
 .select2-container {
   width: 100% !important;
   font-size: 1rem;
@@ -227,12 +219,12 @@ h1 {
   }
   
   #intro-logo img {
-    width: 300px; /* Startgröße in der Mitte */
+    width: 300px; 
     height: 300px;
     animation: shrinkLogo 2s ease-in-out forwards;
   }
   
-  /* Logo von Mitte nach oben links verschieben */
+ 
   @keyframes slideAndShrink {
     0% {
       top: 50%;
@@ -246,7 +238,7 @@ h1 {
     }
   }
   
-  /* Logo von groß nach klein */
+  
   @keyframes shrinkLogo {
     0% {
       width: 300px;
@@ -258,7 +250,6 @@ h1 {
     }
   }
   
-  /* Inhalt der Seite während Animation ausblenden */
   body.loaded .nav-bar,
   body.loaded .sign-up-content {
     opacity: 1;
@@ -284,3 +275,170 @@ h1 {
     font-weight: 800;
 }
   
+@media (max-width: 1024px) {
+    .nav-bar {
+      padding: 40px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+    }
+  
+    .login-content {
+      padding-top: 60px;
+    }
+  
+    .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: auto;
+    padding: 20px;
+    }
+  
+    .login-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 50%;
+    gap: 15px;
+    padding-bottom: 40px;
+    }
+
+    .input-login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+  
+    .login, .guest {
+      width: 95px;
+      font-size: 12px;
+    }
+  
+    h1 {
+      font-size: 48px;
+      width: auto;
+    }
+  
+    .join-logo {
+      width: 80px;
+      height: 80px;
+    }
+  
+    #intro-logo img {
+      width: 200px;
+      height: 200px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .nav-bar {
+      padding: 20px;
+    }
+  
+    .login-content {
+      padding-top: 40px;
+    }
+  
+    .login-container {
+      width: 80%;
+      gap: 16px;
+    }
+  
+    h1 {
+      font-size: 36px;
+    }
+  
+    .login-button {
+    width: 80%;
+    padding-bottom: 30px;
+    }
+  
+    .sidebar-bottom {
+      flex-direction: column;
+      gap: 20px;
+      padding-top: 80px;
+    }
+  }
+
+  @media (max-widt: 548px){
+
+    .input-login{
+    width: 70%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .nav-bar {
+      flex-direction: column;
+      gap: 30px;
+      padding: 30px;
+    }
+  
+    .login-container {
+      width: 80%;
+      padding: 10px;
+      border-radius: 20px;
+    }
+  
+    .input-login {
+      width: 80%;
+    }
+  
+    .login-button {
+      width: 100%;
+      gap: 5px;
+    }
+  
+    h1 {
+      font-size: 28px;
+    }
+  
+    .join-logo {
+      width: 80px;
+      height: 80px;
+    }
+  
+    #intro-logo img {
+      width: 150px;
+      height: 150px;
+    }
+  }
+  
+  @media (max-width: 320px) {
+    h1 {
+      font-size: 24px;
+    }
+  
+    .login-container {
+      gap: 12px;
+    }
+  
+    .login-button {
+      gap: 10px;
+    }
+  
+    .join-logo {
+      width: 60px;
+      height: 60px;
+    }
+  
+    #intro-logo img {
+      width: 120px;
+      height: 120px;
+    }
+  
+    .sidebar-bottom {
+      padding-top: 40px;
+    }
+
+    .nav-button{
+    width: 80px;
+    height: 36px;
+    font-size: 12px;
+    gap: 10px;
+    }
+  }
