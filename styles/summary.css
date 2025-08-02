@@ -260,12 +260,16 @@ body {
     flex-direction: column;
   }
 
+  .summary-buttons {
+    padding-left: 0;
+  }
+
   .summary-greeting {
     display: none;
   }
 }
 
-@media (max-width: 798px) {
+@media (max-width: 862px) {
   .wrapper {
     flex-direction: column;
   }
