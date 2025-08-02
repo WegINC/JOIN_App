@@ -274,14 +274,16 @@ h1 {
     color: #28abe2;
     font-weight: 800;
 }
+
+.nav-right-responsive{
+  display: none;
+}
   
 @media (max-width: 1024px) {
     .nav-bar {
       padding: 40px;
       display: flex;
       flex-direction: row;
-      justify-content: space-around;
-      align-items: center;
     }
   
     .login-content {
@@ -358,7 +360,7 @@ h1 {
     }
   
     .sidebar-bottom {
-      flex-direction: column;
+      flex-direction: row;
       gap: 20px;
       padding-top: 80px;
     }
@@ -376,6 +378,18 @@ h1 {
       flex-direction: column;
       gap: 30px;
       padding: 30px;
+    }
+
+    .nav-right{
+      display: none;
+    }
+
+    .nav-right-responsive{
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding-top: 30px;
     }
   
     .login-container {
@@ -440,5 +454,9 @@ h1 {
     height: 36px;
     font-size: 12px;
     gap: 10px;
+    }
+
+    .hidden{
+    display: none;
     }
   }
