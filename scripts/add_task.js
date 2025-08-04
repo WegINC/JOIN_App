@@ -110,26 +110,15 @@ async function AssigneeDropdown() {
   }
 }
 
-function populateAssigneeDropdown(userData) {
-  const select = document.getElementById("assigned");
-  if (!select) return;
+function updateSelectedAssignees() {
+  const checkboxes = document.querySelectorAll('#assigned-options input[type="checkbox"]:checked');
+  const names = Array.from(checkboxes).map(cb => {
+    const label = cb.parentElement.querySelector('span');
+    return label ? label.textContent : '';
+  });
 
-  select.innerHTML = "";
-
-  const placeholder = document.createElement("option");
-  placeholder.textContent = "Select contacts to assign";
-  placeholder.disabled = true;
-  placeholder.selected = true;
-  placeholder.hidden = true;
-  select.appendChild(placeholder);
-
-  for (let uid in userData) {
-    const user = userData[uid];
-    const option = document.createElement("option");
-    option.value = uid;
-    option.textContent = user.name || "Unnamed";
-    select.appendChild(option);
-  }
+  document.getElementById("assigned-placeholder").textContent =
+    names.length > 0 ? names.join(', ') : "Select contacts to assign";
 }
 
 function addSubtaskInput() {
@@ -167,6 +156,42 @@ async function loadAssigneeSuggestions() {
   }
 }
 
+function toggleAssigneeDropdown() {
+  document.getElementById("assigned-container").classList.toggle("hidden");
+}
+
+function populateAssigneeDropdown(userData) {
+  const container = document.getElementById("assigned-container");
+  container.innerHTML = "";
+
+  for (let uid in userData) {
+    const user = userData[uid];
+
+    const optionDiv = document.createElement("div");
+    optionDiv.className = "assignee-option";
+
+    const label = document.createElement("label");
+    label.textContent = user.name || "Unnamed";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "assignee-checkbox";
+    checkbox.value = uid;
+
+    optionDiv.appendChild(label);
+    optionDiv.appendChild(checkbox);
+    container.appendChild(optionDiv);
+  }
+}
+
+function getSelectedAssignees() {
+  const assignedTo = {};
+  document.querySelectorAll(".assignee-checkbox:checked").forEach(cb => {
+    assignedTo[cb.value] = true;
+  });
+  return assignedTo;
+}
+
 async function createTask() {
   const title = document.getElementById("title").value.trim();
   const description = document.getElementById("description").value.trim();
@@ -174,10 +199,13 @@ async function createTask() {
   const category = document.getElementById("category").value;
   const priority = selectedPriority || "low";
 
-  const assignedSelect = document.getElementById("assigned");
-  const assignedUid = assignedSelect?.value;
+  const checkboxes = document.querySelectorAll('#assigned-options input[type="checkbox"]:checked');
+  const assignedTo = {};
+  checkboxes.forEach(cb => {
+    assignedTo[cb.dataset.uid] = true;
+  });
 
-  if (!title || !dueDate || !assignedUid || !category) {
+  if (!title || !dueDate || Object.keys(assignedTo).length === 0 || !category) {
     alert("Bitte alle Pflichtfelder ausfüllen.");
     return;
   }
@@ -189,8 +217,6 @@ async function createTask() {
     .map(title => ({ title, done: false }));
 
   const userInitial = localStorage.getItem("userInitial") || "G";
-
-  const assignedTo = { [assignedUid]: true };
 
   const taskData = {
     title,
