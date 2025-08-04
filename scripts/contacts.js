@@ -2,7 +2,6 @@
 let contacts = [];
 let selectedContactForOptions = null;
 
-
 import {
   getContactListItemTemplate,
   getContactSeparatorTemplate,
@@ -371,7 +370,6 @@ async function deleteContactOptions() {
   }
 }
 
-
 function openEditMobileOverlay(contact) {
   const overlay = document.getElementById('edit-contact-overlay');
   overlay.style.display = 'flex';
@@ -393,7 +391,6 @@ function openEditOverlayWrapper(contact) {
   }
 }
 
-
 function openAddContactMobileOverlay() {
   const overlay = document.getElementById('add-contact-overlay');
   overlay.classList.remove('hidden');
@@ -413,4 +410,3 @@ window.returnToContactList = returnToContactList;
 window.selectContact = selectContact;
 window.editContactOptions = editContactOptions;
 window.closeEditOverlay = closeEditOverlay;
-

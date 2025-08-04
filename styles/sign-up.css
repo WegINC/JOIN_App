@@ -118,6 +118,7 @@ h1 {
   justify-content: center;
   align-items: center;
   font-size: 14px;
+  padding: 16px;
 }
 
 .checkbox-label a {
@@ -198,7 +199,6 @@ h1 {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 90%;
       gap: 24px;
       padding: 32px;
     }
@@ -232,6 +232,7 @@ h1 {
     }
   
     .sign-up-container {
+      width: 80%;
       padding: 24px;
       gap: 20px;
     }
@@ -267,9 +268,9 @@ h1 {
     }
   
     .sign-up-container {
+      width: 80%;
       padding: 16px;
       border-radius: 20px;
-      width: 95%;
       gap: 18px;
     }
   
@@ -304,9 +305,8 @@ h1 {
     }
   
     .sign-up-container {
-      width: 80%;
     padding: 12px;
-      gap: 16px;
+    gap: 16px;
     }
   
     .input-sign-up {
