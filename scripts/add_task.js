@@ -231,3 +231,9 @@ function toggleUserMenu() {
     dropdown.classList.toggle('hidden');
   }
 }
+
+function logout() {
+  localStorage.removeItem("userInitial");
+  localStorage.removeItem("userId");
+  window.location.href = "../index.html";
+}
