@@ -1,13 +1,86 @@
 const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app";
 
 let selectedPriority = "";
-let assigneeMap = {};
+let selectedContacts = [];
 
 window.addEventListener("DOMContentLoaded", () => {
   initUserInitial();
   setupPriorityButtons();
   populateCategoryDropdown();
+  loadAssigneeSuggestions();
 });
+
+function toggleAssigneeDropdown() {
+  document.getElementById("assigned-container").classList.toggle("hidden");
+}
+
+function getContacts() {
+  return JSON.parse(localStorage.getItem("contacts")) || [];
+}
+
+function renderAssignedToContacts(name, initials, avatarColor) {
+  return `
+    <div class="assignee-option" onclick="toggleContactSelection(this)" data-name="${name}" data-initials="${initials}" data-color="${avatarColor}">
+      <div class="task-user-initials" style="background-color:${avatarColor}">${initials}</div>
+      <span>${name}</span>
+      <input type="checkbox" class="assignee-checkbox" readonly />
+    </div>
+  `;
+}
+
+function getInitials(name) {
+  const parts = name.split(" ");
+  return parts.length > 1
+    ? parts[0][0].toUpperCase() + parts[1][0].toUpperCase()
+    : name.slice(0, 2).toUpperCase();
+}
+
+function toggleContactSelection(element) {
+  const name = element.dataset.name;
+  const initials = element.dataset.initials;
+  const color = element.dataset.color;
+
+  const index = selectedContacts.findIndex(c => c.name === name);
+  const checkbox = element.querySelector("input[type='checkbox']");
+
+  if (index === -1) {
+    selectedContacts.push({ name, initials, color });
+    element.classList.add("selected");
+    if (checkbox) checkbox.checked = true;
+  } else {
+    selectedContacts.splice(index, 1);
+    element.classList.remove("selected");
+    if (checkbox) checkbox.checked = false;
+  }
+
+  updateSelectedContactsView();
+}
+
+function updateSelectedContactsView() {
+  const view = document.getElementById("assigned-dropdown");
+  if (selectedContacts.length === 0) {
+    view.innerText = "Select contacts to assign";
+  } else {
+    view.innerText = selectedContacts.map(c => c.initials).join(", ");
+  }
+}
+
+function createTask() {
+  const title = document.getElementById("title").value;
+  const due = document.getElementById("due").value;
+  if (!title || !due || selectedContacts.length === 0) {
+    alert("Please fill all required fields");
+    return;
+  }
+
+  const task = {
+    title,
+    due,
+    assignedTo: selectedContacts,
+  };
+
+  console.log("Task created:", task);
+} 
 
 function initUserInitial() {
   const initial = localStorage.getItem("userInitial") || "G";
@@ -75,50 +148,12 @@ async function loadAssigneeSuggestions() {
   try {
     const res = await fetch(`${BASE_URL}/users.json`);
     const data = await res.json();
-    assigneeMap = {};
     for (const uid in data) {
       assigneeMap[uid] = data[uid].name;
     }
   } catch (err) {
     console.error("Fehler beim Laden der Kontakte:", err);
   }
-}
-
-async function AssigneeDropdown() {
-  try {
-    const response = await fetch(`${BASE_URL}/users.json`);
-    const data = await response.json();
-
-    const container = document.getElementById("assigned-container");
-    container.innerHTML = ""; 
-
-    for (const uid in data) {
-      const user = data[uid];
-      const userDiv = document.createElement("div");
-      userDiv.className = "assignee-option";
-      userDiv.dataset.uid = uid;
-      userDiv.textContent = user.name || "Unnamed";
-
-      userDiv.addEventListener("click", function () {
-        userDiv.classList.toggle("selected");
-      });
-
-      container.appendChild(userDiv);
-    }
-  } catch (error) {
-    console.error("Fehler beim Laden der Kontakte:", error);
-  }
-}
-
-function updateSelectedAssignees() {
-  const checkboxes = document.querySelectorAll('#assigned-options input[type="checkbox"]:checked');
-  const names = Array.from(checkboxes).map(cb => {
-    const label = cb.parentElement.querySelector('span');
-    return label ? label.textContent : '';
-  });
-
-  document.getElementById("assigned-placeholder").textContent =
-    names.length > 0 ? names.join(', ') : "Select contacts to assign";
 }
 
 function addSubtaskInput() {
@@ -137,59 +172,14 @@ function addSubtaskInput() {
 }
 
 async function loadAssigneeSuggestions() {
-  try {
-    const res = await fetch(`${BASE_URL}/users.json`);
-    const data = await res.json();
-    assigneeMap = {};
-
-    for (const uid in data) {
-      assigneeMap[uid] = {
-        name: data[uid].name || "Unnamed",
-        initials: data[uid].initials || "U",
-        themeColor: data[uid].themeColor || "#cccccc"
-      };
-    }
-
-    populateAssigneeDropdown(data);
-  } catch (err) {
-    console.error("Fehler beim Laden der Kontakte:", err);
-  }
-}
-
-function toggleAssigneeDropdown() {
-  document.getElementById("assigned-container").classList.toggle("hidden");
-}
-
-function populateAssigneeDropdown(userData) {
   const container = document.getElementById("assigned-container");
   container.innerHTML = "";
-
-  for (let uid in userData) {
-    const user = userData[uid];
-
-    const optionDiv = document.createElement("div");
-    optionDiv.className = "assignee-option";
-
-    const label = document.createElement("label");
-    label.textContent = user.name || "Unnamed";
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.className = "assignee-checkbox";
-    checkbox.value = uid;
-
-    optionDiv.appendChild(label);
-    optionDiv.appendChild(checkbox);
-    container.appendChild(optionDiv);
-  }
-}
-
-function getSelectedAssignees() {
-  const assignedTo = {};
-  document.querySelectorAll(".assignee-checkbox:checked").forEach(cb => {
-    assignedTo[cb.value] = true;
+  const contacts = getContacts();
+  contacts.forEach(contact => {
+    const initials = getInitials(contact.name);
+    const color = contact.color || "#0038ff";
+    container.innerHTML += renderAssignedToContacts(contact.name, initials, color);
   });
-  return assignedTo;
 }
 
 async function createTask() {
@@ -263,3 +253,14 @@ function logout() {
   localStorage.removeItem("userId");
   window.location.href = "../index.html";
 }
+
+document.addEventListener('click', function(event) {
+  const dropdown = document.getElementById('assigned-container');
+  const trigger = document.getElementById('assigned-dropdown');
+
+  const clickedInside = dropdown.contains(event.target) || trigger.contains(event.target);
+
+  if (!clickedInside) {
+    dropdown.classList.add('hidden');
+  }
+});

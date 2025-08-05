@@ -50,7 +50,29 @@ async function loadContactsFromDatabase() {
       return acc;
     }, {});
 
+  const simpleContacts = contacts.map(c => ({
+    name: c.name,
+    color: c.color || "#cccccc"
+  }));
+
+  localStorage.setItem("contacts", JSON.stringify(simpleContacts));
+  console.log("Kontakte gespeichert:", simpleContacts);
+
   renderGroupedContacts(grouped);
+}
+
+function buildContactObject(uid, user) {
+  const name = user.name || '';
+  const email = user.email || '';
+  const phone = user.phone || '';
+  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+  const color = user.themeColor || generateRandomColor();
+  return { uid, name, email, phone, initials, color };
+}
+
+function generateRandomColor() {
+  const colors = ['#29ABE2', '#FF7A00', '#6E52FF', '#FC71FF', '#1FD7C1', '#FFBB2B'];
+  return colors[Math.floor(Math.random() * colors.length)];
 }
 
 function renderGroupedContacts(groups) {
@@ -75,20 +97,6 @@ function renderGroupedContacts(groups) {
       list.appendChild(item);
     });
   });
-}
-
-function buildContactObject(uid, user) {
-  const name = user.name || '';
-  const email = user.email || '';
-  const phone = user.phone || '';
-  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-  const color = user.themeColor || generateRandomColor();
-  return { uid, name, email, phone, initials, color };
-}
-
-function generateRandomColor() {
-  const colors = ['#29ABE2', '#FF7A00', '#6E52FF', '#FC71FF', '#1FD7C1', '#FFBB2B'];
-  return colors[Math.floor(Math.random() * colors.length)];
 }
 
 function renderContactListItem(contact) {

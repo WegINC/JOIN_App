@@ -331,6 +331,11 @@ display: none;
   z-index: 10;
 }
 
+.assigned-container.open {
+  opacity: 1;
+  visibility: visible;
+}
+
 .assignee-option {
   display: flex;
   justify-content: space-between;
@@ -341,10 +346,6 @@ display: none;
 
 .assignee-option:hover {
   background-color: #f0f0f0;
-}
-
-.hidden {
-  display: none;
 }
 
 @media (max-width: 898px) {
