@@ -58,29 +58,75 @@ function toggleContactSelection(element) {
 
 function updateSelectedContactsView() {
   const view = document.getElementById("assigned-dropdown");
-  if (selectedContacts.length === 0) {
-    view.innerText = "Select contacts to assign";
-  } else {
-    view.innerText = selectedContacts.map(c => c.initials).join(", ");
-  }
+  const list = collectSelectedAssignees();
+  view.innerText = list.length
+    ? list.map(c => c.initials || (c.name||'').slice(0,2).toUpperCase()).join(", ")
+    : "Select contacts to assign";
+}
+
+function hasAssigneeSelected() {
+  return collectSelectedAssignees().length > 0;
+}
+
+function collectSelectedAssignees() {
+  const checked = Array.from(document.querySelectorAll('.assignee-checkbox:checked')).map(cb => {
+    const opt = cb.closest('.assignee-option');
+    return {
+      name: opt?.dataset.name || '',
+      initials: opt?.dataset.initials || '',
+      color: opt?.dataset.color || '#0038ff'
+    };
+  });
+
+  if (checked.length > 0) return checked;
+  return selectedContacts.slice();
 }
 
 function createTask() {
-  const title = document.getElementById("title").value;
-  const due = document.getElementById("due").value;
-  if (!title || !due || selectedContacts.length === 0) {
-    alert("Please fill all required fields");
+  const title = document.getElementById("title").value.trim();
+  const description = document.getElementById("description").value.trim();
+  const dueDate = document.getElementById("due").value;
+  const category = document.getElementById("category").value;
+  const priority = selectedPriority || "low";
+  const assignedToList = collectSelectedAssignees();
+
+  if (!title || !dueDate || assignedToList.length === 0 || !category) {
+    alert("Bitte alle Pflichtfelder ausfüllen.");
     return;
   }
 
-  const task = {
+  const subtaskInputs = document.querySelectorAll(".subtask-input");
+  const subtasks = Array.from(subtaskInputs)
+    .map(input => input.value.trim())
+    .filter(text => text !== "")
+    .map(title => ({ title, done: false }));
+
+  const userInitial = localStorage.getItem("userInitial") || "G";
+
+  const taskData = {
     title,
-    due,
-    assignedTo: selectedContacts,
+    description,
+    dueDate,
+    category,
+    priority,
+    assignedTo: assignedToList,
+    status: "toDo",
+    userInitials: userInitial,
+    subtasks,
   };
 
-  console.log("Task created:", task);
-} 
+  try {
+    fetch(`${BASE_URL}/tasks.json`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(taskData),
+    });
+    alert("Task erfolgreich erstellt.");
+    window.location.href = "../pages/board.html";
+  } catch (err) {
+    console.error("Fehler beim Erstellen des Tasks:", err);
+  }
+}
 
 function initUserInitial() {
   const initial = localStorage.getItem("userInitial") || "G";
@@ -130,6 +176,7 @@ function selectPriority(level) {
     activeBtn.style.color = level === "low" ? "#000" : "white";
   }
 }
+
 function populateCategoryDropdown() {
   const categories = ["Technical Task", "User Story"];
   const categorySelect = document.getElementById("category");
@@ -145,15 +192,14 @@ function populateCategoryDropdown() {
 }
 
 async function loadAssigneeSuggestions() {
-  try {
-    const res = await fetch(`${BASE_URL}/users.json`);
-    const data = await res.json();
-    for (const uid in data) {
-      assigneeMap[uid] = data[uid].name;
-    }
-  } catch (err) {
-    console.error("Fehler beim Laden der Kontakte:", err);
-  }
+  const container = document.getElementById("assigned-container");
+  container.innerHTML = "";
+  const contacts = getContacts();
+  contacts.forEach(contact => {
+    const initials = getInitials(contact.name);
+    const color = contact.color || "#0038ff";
+    container.innerHTML += renderAssignedToContacts(contact.name, initials, color);
+  });
 }
 
 function addSubtaskInput() {
@@ -169,68 +215,6 @@ function addSubtaskInput() {
   `;
 
   container.appendChild(inputDiv);
-}
-
-async function loadAssigneeSuggestions() {
-  const container = document.getElementById("assigned-container");
-  container.innerHTML = "";
-  const contacts = getContacts();
-  contacts.forEach(contact => {
-    const initials = getInitials(contact.name);
-    const color = contact.color || "#0038ff";
-    container.innerHTML += renderAssignedToContacts(contact.name, initials, color);
-  });
-}
-
-async function createTask() {
-  const title = document.getElementById("title").value.trim();
-  const description = document.getElementById("description").value.trim();
-  const dueDate = document.getElementById("due").value;
-  const category = document.getElementById("category").value;
-  const priority = selectedPriority || "low";
-
-  const checkboxes = document.querySelectorAll('#assigned-options input[type="checkbox"]:checked');
-  const assignedTo = {};
-  checkboxes.forEach(cb => {
-    assignedTo[cb.dataset.uid] = true;
-  });
-
-  if (!title || !dueDate || Object.keys(assignedTo).length === 0 || !category) {
-    alert("Bitte alle Pflichtfelder ausfüllen.");
-    return;
-  }
-
-  const subtaskInputs = document.querySelectorAll(".subtask-input");
-  const subtasks = Array.from(subtaskInputs)
-    .map(input => input.value.trim())
-    .filter(text => text !== "")
-    .map(title => ({ title, done: false }));
-
-  const userInitial = localStorage.getItem("userInitial") || "G";
-
-  const taskData = {
-    title,
-    description,
-    dueDate,
-    category,
-    priority,
-    assignedTo,
-    status: "toDo",
-    userInitials: userInitial,
-    subtasks,
-  };
-
-  try {
-    await fetch(`${BASE_URL}/tasks.json`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(taskData),
-    });
-    alert("Task erfolgreich erstellt.");
-    window.location.href = "../pages/board.html";
-  } catch (err) {
-    console.error("Fehler beim Erstellen des Tasks:", err);
-  }
 }
 
 function closeUserMenu(event) {
@@ -257,9 +241,7 @@ function logout() {
 document.addEventListener('click', function(event) {
   const dropdown = document.getElementById('assigned-container');
   const trigger = document.getElementById('assigned-dropdown');
-
   const clickedInside = dropdown.contains(event.target) || trigger.contains(event.target);
-
   if (!clickedInside) {
     dropdown.classList.add('hidden');
   }
