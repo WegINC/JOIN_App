@@ -1,7 +1,7 @@
 const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app";
 
 let selectedPriority = "";
-let selectedContacts = [];
+let selectedAssignees = {};
 
 window.addEventListener("DOMContentLoaded", () => {
   initUserInitial();
@@ -14,72 +14,59 @@ function toggleAssigneeDropdown() {
   document.getElementById("assigned-container").classList.toggle("hidden");
 }
 
-function getContacts() {
-  return JSON.parse(localStorage.getItem("contacts")) || [];
-}
-
-function renderAssignedToContacts(name, initials, avatarColor) {
+function renderAssignedToContacts(uid, name, initials, avatarColor) {
   return `
-    <div class="assignee-option" onclick="toggleContactSelection(this)" data-name="${name}" data-initials="${initials}" data-color="${avatarColor}">
+    <label class="assignee-option" data-uid="${uid}" data-name="${name}" data-initials="${initials}" data-color="${avatarColor}" onclick="toggleContactSelection(this)">
       <div class="task-user-initials" style="background-color:${avatarColor}">${initials}</div>
       <span>${name}</span>
-      <input type="checkbox" class="assignee-checkbox" readonly />
-    </div>
+      <input type="checkbox" class="assignee-checkbox" />
+    </label>
   `;
 }
 
+async function loadAssigneeSuggestions() {
+  const container = document.getElementById("assigned-container");
+  container.innerHTML = "";
+  try {
+    const res = await fetch(`${BASE_URL}/users.json`);
+    const data = await res.json() || {};
+    Object.entries(data).forEach(([uid, u]) => {
+      const name = u.name || "Unnamed";
+      const color = u.themeColor || "#0038ff";
+      const initials = getInitials(name);
+      container.innerHTML += renderAssignedToContacts(uid, name, initials, color);
+    });
+  } catch (e) {
+    console.error("Fehler beim Laden der Kontakte:", e);
+  }
+}
+
 function getInitials(name) {
-  const parts = name.split(" ");
-  return parts.length > 1
-    ? parts[0][0].toUpperCase() + parts[1][0].toUpperCase()
-    : name.slice(0, 2).toUpperCase();
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return (parts[0] || "").slice(0, 2).toUpperCase();
 }
 
 function toggleContactSelection(element) {
-  const name = element.dataset.name;
-  const initials = element.dataset.initials;
-  const color = element.dataset.color;
-
-  const index = selectedContacts.findIndex(c => c.name === name);
-  const checkbox = element.querySelector("input[type='checkbox']");
-
-  if (index === -1) {
-    selectedContacts.push({ name, initials, color });
-    element.classList.add("selected");
-    if (checkbox) checkbox.checked = true;
-  } else {
-    selectedContacts.splice(index, 1);
+  const uid = element.dataset.uid;
+  const checkbox = element.querySelector(".assignee-checkbox");
+  if (selectedAssignees[uid]) {
+    delete selectedAssignees[uid];
     element.classList.remove("selected");
     if (checkbox) checkbox.checked = false;
+  } else {
+    selectedAssignees[uid] = true;
+    element.classList.add("selected");
+    if (checkbox) checkbox.checked = true;
   }
-
   updateSelectedContactsView();
 }
 
 function updateSelectedContactsView() {
   const view = document.getElementById("assigned-dropdown");
-  const list = collectSelectedAssignees();
-  view.innerText = list.length
-    ? list.map(c => c.initials || (c.name||'').slice(0,2).toUpperCase()).join(", ")
-    : "Select contacts to assign";
-}
-
-function hasAssigneeSelected() {
-  return collectSelectedAssignees().length > 0;
-}
-
-function collectSelectedAssignees() {
-  const checked = Array.from(document.querySelectorAll('.assignee-checkbox:checked')).map(cb => {
-    const opt = cb.closest('.assignee-option');
-    return {
-      name: opt?.dataset.name || '',
-      initials: opt?.dataset.initials || '',
-      color: opt?.dataset.color || '#0038ff'
-    };
-  });
-
-  if (checked.length > 0) return checked;
-  return selectedContacts.slice();
+  const initials = Array.from(document.querySelectorAll(".assignee-option.selected"))
+    .map(el => el.dataset.initials);
+  view.innerText = initials.length ? initials.join(", ") : "Select contacts to assign";
 }
 
 function createTask() {
@@ -88,20 +75,18 @@ function createTask() {
   const dueDate = document.getElementById("due").value;
   const category = document.getElementById("category").value;
   const priority = selectedPriority || "low";
-  const assignedToList = collectSelectedAssignees();
 
-  if (!title || !dueDate || assignedToList.length === 0 || !category) {
-    alert("Bitte alle Pflichtfelder ausfüllen.");
+  if (!title || !dueDate || !category || Object.keys(selectedAssignees).length === 0) {
+    alert("Please fill all required fields");
     return;
   }
 
-  const subtaskInputs = document.querySelectorAll(".subtask-input");
-  const subtasks = Array.from(subtaskInputs)
-    .map(input => input.value.trim())
-    .filter(text => text !== "")
+  const subtasks = Array.from(document.querySelectorAll(".subtask-input"))
+    .map(i => i.value.trim())
+    .filter(Boolean)
     .map(title => ({ title, done: false }));
 
-  const userInitial = localStorage.getItem("userInitial") || "G";
+  const userInitials = localStorage.getItem("userInitial") || "G";
 
   const taskData = {
     title,
@@ -109,23 +94,22 @@ function createTask() {
     dueDate,
     category,
     priority,
-    assignedTo: assignedToList,
+    assignedTo: selectedAssignees, // Map: { uid: true }
     status: "toDo",
-    userInitials: userInitial,
+    userInitials,
     subtasks,
   };
 
-  try {
-    fetch(`${BASE_URL}/tasks.json`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(taskData),
-    });
-    alert("Task erfolgreich erstellt.");
-    window.location.href = "../pages/board.html";
-  } catch (err) {
-    console.error("Fehler beim Erstellen des Tasks:", err);
-  }
+  fetch(`${BASE_URL}/tasks.json`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(taskData),
+  })
+    .then(() => {
+      alert("Task erfolgreich erstellt.");
+      window.location.href = "../pages/board.html";
+    })
+    .catch(err => console.error("Fehler beim Erstellen des Tasks:", err));
 }
 
 function initUserInitial() {
@@ -134,20 +118,12 @@ function initUserInitial() {
   if (nameBtn) nameBtn.textContent = initial;
 }
 
-function getUserInitials(name) {
-  const nameParts = name.trim().split(" ");
-  return nameParts.length >= 2
-    ? nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase()
-    : nameParts[0][0].toUpperCase();
-}
-
 function setupPriorityButtons() {
   const buttons = {
     urgent: document.getElementById("priority-urgent"),
     medium: document.getElementById("priority-medium"),
     low: document.getElementById("priority-low"),
   };
-
   Object.entries(buttons).forEach(([level, btn]) => {
     if (btn) btn.addEventListener("click", () => selectPriority(level));
   });
@@ -155,19 +131,16 @@ function setupPriorityButtons() {
 
 function selectPriority(level) {
   selectedPriority = level;
-
   const buttons = {
     urgent: document.getElementById("priority-urgent"),
     medium: document.getElementById("priority-medium"),
     low: document.getElementById("priority-low"),
   };
-
   Object.values(buttons).forEach(btn => {
     btn.classList.remove("active");
     btn.style.backgroundColor = "#e0e0e0";
     btn.style.color = "#333";
   });
-
   const activeBtn = buttons[level];
   if (activeBtn) {
     activeBtn.classList.add("active");
@@ -180,9 +153,7 @@ function selectPriority(level) {
 function populateCategoryDropdown() {
   const categories = ["Technical Task", "User Story"];
   const categorySelect = document.getElementById("category");
-
   categorySelect.innerHTML = `<option disabled selected hidden>Select task category</option>`;
-
   categories.forEach(cat => {
     const option = document.createElement("option");
     option.value = cat;
@@ -191,29 +162,15 @@ function populateCategoryDropdown() {
   });
 }
 
-async function loadAssigneeSuggestions() {
-  const container = document.getElementById("assigned-container");
-  container.innerHTML = "";
-  const contacts = getContacts();
-  contacts.forEach(contact => {
-    const initials = getInitials(contact.name);
-    const color = contact.color || "#0038ff";
-    container.innerHTML += renderAssignedToContacts(contact.name, initials, color);
-  });
-}
-
 function addSubtaskInput() {
   const container = document.getElementById("subtask-container");
   if (!container) return;
-
   const inputDiv = document.createElement("div");
   inputDiv.className = "subtask-row";
-
   inputDiv.innerHTML = `
     <input type="text" class="subtask-input" placeholder="Add new subtask" />
     <button type="button" class="remove-btn" onclick="this.parentElement.remove()">−</button>
   `;
-
   container.appendChild(inputDiv);
 }
 
@@ -227,9 +184,7 @@ function closeUserMenu(event) {
 
 function toggleUserMenu() {
   const dropdown = document.getElementById('user-dropdown');
-  if (dropdown) {
-    dropdown.classList.toggle('hidden');
-  }
+  if (dropdown) dropdown.classList.toggle('hidden');
 }
 
 function logout() {
@@ -241,8 +196,7 @@ function logout() {
 document.addEventListener('click', function(event) {
   const dropdown = document.getElementById('assigned-container');
   const trigger = document.getElementById('assigned-dropdown');
+  if (!dropdown || !trigger) return;
   const clickedInside = dropdown.contains(event.target) || trigger.contains(event.target);
-  if (!clickedInside) {
-    dropdown.classList.add('hidden');
-  }
+  if (!clickedInside) dropdown.classList.add('hidden');
 });
