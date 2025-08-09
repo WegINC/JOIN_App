@@ -70,13 +70,28 @@ function updateSelectedContactsView() {
 }
 
 function createTask() {
-  const title = document.getElementById("title").value.trim();
+  const title       = document.getElementById("title").value.trim();
   const description = document.getElementById("description").value.trim();
-  const dueDate = document.getElementById("due").value;
-  const category = document.getElementById("category").value;
-  const priority = selectedPriority || "low";
+  const dueDate     = document.getElementById("due").value;
+  const category    = document.getElementById("category").value;
+  const priority    = (typeof selectedPriority === "string" && selectedPriority) ? selectedPriority : "low";
 
-  if (!title || !dueDate || !category || Object.keys(selectedAssignees).length === 0) {
+  let selected = (window.selectedAssignees && typeof window.selectedAssignees === "object")
+    ? window.selectedAssignees
+    : {};
+
+  if (!Object.keys(selected).length) {
+    const checked = document.querySelectorAll('#assigned-container .assignee-checkbox:checked');
+    const uids = Array.from(checked)
+      .map(cb => cb.closest('.assignee-option')?.dataset.uid)
+      .filter(Boolean);
+    selected = Object.fromEntries(uids.map(uid => [uid, true]));
+  }
+
+  const categoryValid = category && category !== "Select task category";
+  const hasAssignees  = Object.keys(selected).length > 0;
+
+  if (!title || !dueDate || !categoryValid || !hasAssignees) {
     alert("Please fill all required fields");
     return;
   }
@@ -84,17 +99,16 @@ function createTask() {
   const subtasks = Array.from(document.querySelectorAll(".subtask-input"))
     .map(i => i.value.trim())
     .filter(Boolean)
-    .map(title => ({ title, done: false }));
+    .map(t => ({ title: t, done: false }));
 
   const userInitials = localStorage.getItem("userInitial") || "G";
-
   const taskData = {
     title,
     description,
     dueDate,
     category,
     priority,
-    assignedTo: selectedAssignees, // Map: { uid: true }
+    assignedTo: selected,
     status: "toDo",
     userInitials,
     subtasks,
@@ -105,11 +119,11 @@ function createTask() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(taskData),
   })
-    .then(() => {
-      alert("Task erfolgreich erstellt.");
-      window.location.href = "../pages/board.html";
-    })
-    .catch(err => console.error("Fehler beim Erstellen des Tasks:", err));
+  .then(() => {
+    alert("Task erfolgreich erstellt.");
+    window.location.href = "../pages/board.html";
+  })
+  .catch(err => console.error("Fehler beim Erstellen des Tasks:", err));
 }
 
 function initUserInitial() {

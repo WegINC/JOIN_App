@@ -93,7 +93,17 @@ function openFloatingAddTaskPopup() {
       container.innerHTML = html;
       container.style.display = "block";
 
-      populateAssigneeDropdown();
+      requestAnimationFrame(() => {
+        import(`./assignees.js?ts=${Date.now()}`)
+          .then(mod => {
+            const Assignees = mod.Assignees || mod.default;
+            Assignees.init({
+              dropdownId: "fa-assigned-dropdown",
+              containerId: "fa-assigned-container",
+            });
+          })
+          .catch(err => console.error("assignees.js load error:", err));
+      });
     })
     .catch(err => console.error("Fehler beim Laden des Popups:", err));
 }

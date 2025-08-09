@@ -45,10 +45,11 @@
         </button>
       </div>
 
-      <label for="assigned">Assigned to<span class="required">*</span></label>
-      <select id="assigned" multiple>
-        <option disabled selected>Select contacts to assign</option>
-      </select>
+      <label>Assigned to<span class="required">*</span></label>
+        <div class="custom-select-wrapper">
+          <div id="fa-assigned-dropdown" class="custom-select-box">Select contacts to assign</div>
+          <div id="fa-assigned-container" class="assigned-container hidden"></div>
+        </div>
 
       <label for="category">Category<span class="required">*</span></label>
       <select id="category">

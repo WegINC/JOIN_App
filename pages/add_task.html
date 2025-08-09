@@ -120,5 +120,15 @@
   });
 </script>
 <script src="../scripts/add_task.js"></script>
+
+<script type="module">
+  import { Assignees } from "../scripts/assignees.js";
+  window.addEventListener("DOMContentLoaded", () => {
+    Assignees.init({
+      dropdownId: "assigned-dropdown",
+      containerId: "assigned-container",
+    });
+  });
+</script>
 </body>
 </html>
