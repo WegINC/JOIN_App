@@ -21,6 +21,7 @@
   max-width: 350px;
   max-height: 745px;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 .task-header {
@@ -48,14 +49,14 @@
   font-weight: 700;
   margin: 0;
   white-space: normal;
-  overflow-wrap: break-word; 
+  overflow-wrap: break-word;
 }
 
 .task-description {
   font-size: 16px;
   color: #444;
   white-space: normal;
-  overflow-wrap: break-word; 
+  overflow-wrap: break-word;
 }
 
 .task-info {
@@ -97,7 +98,7 @@
   color: black;
   border: 1px solid;
   border-radius: 10px;
-  border-color: #D1D1D1;
+  border-color: #d1d1d1;
   margin-top: 0;
 }
 
@@ -229,7 +230,7 @@
 
 .subtask-input-wrapper input {
   width: 100%;
-  padding-right: 2.5rem; /* genug Platz für den Button */
+  padding-right: 2.5rem;
   box-sizing: border-box;
 }
 
@@ -303,6 +304,92 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
+}
+
+.assignee-dropdown-wrapper {
+  position: relative;
+  width: 100%;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin-top: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 2000;
+  background: #fff;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+}
+.dropdown-menu.hidden {
+  display: none;
+}
+.dropdown-trigger {
+  background-color: #fff;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.dropdown-trigger:hover {
+  border-color: #999;
+}
+
+.assignee-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.assignee-option:hover {
+  background-color: #f0f0f0;
+}
+
+.assignee-option .task-user-initials {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assignee-option span {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+}
+
+.assignee-option .assignee-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.assignee-option.selected {
+  background-color: #e8f3ff;
+}
+
+.assignee-option.selected:hover {
+  background-color: #d6eaff;
 }
 
 @media (max-width: 510px) {

@@ -2,21 +2,36 @@ const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedat
 
 let selectedPriority = "";
 let selectedAssignees = {};
+let assigneesLoaded = false;
 
 window.addEventListener("DOMContentLoaded", () => {
   initUserInitial();
   setupPriorityButtons();
   populateCategoryDropdown();
-  loadAssigneeSuggestions();
 });
 
 function toggleAssigneeDropdown() {
-  document.getElementById("assigned-container").classList.toggle("hidden");
+  const container = document.getElementById("assigned-container");
+  if (!container) return;
+
+  const wasHidden = container.classList.contains("hidden");
+  container.classList.toggle("hidden");
+
+  if (wasHidden && !assigneesLoaded) {
+    loadAssigneeSuggestions()
+      .then(() => { assigneesLoaded = true; })
+      .catch(err => console.error("Assignees konnten nicht geladen werden:", err));
+  }
 }
 
 function renderAssignedToContacts(uid, name, initials, avatarColor) {
   return `
-    <label class="assignee-option" data-uid="${uid}" data-name="${name}" data-initials="${initials}" data-color="${avatarColor}" onclick="toggleContactSelection(this)">
+    <label class="assignee-option"
+           data-uid="${uid}"
+           data-name="${name}"
+           data-initials="${initials}"
+           data-color="${avatarColor}"
+           onclick="toggleContactSelection(this)">
       <div class="task-user-initials" style="background-color:${avatarColor}">${initials}</div>
       <span>${name}</span>
       <input type="checkbox" class="assignee-checkbox" />
@@ -26,7 +41,9 @@ function renderAssignedToContacts(uid, name, initials, avatarColor) {
 
 async function loadAssigneeSuggestions() {
   const container = document.getElementById("assigned-container");
+  if (!container) return;
   container.innerHTML = "";
+
   try {
     const res = await fetch(`${BASE_URL}/users.json`);
     const data = await res.json() || {};
@@ -34,10 +51,14 @@ async function loadAssigneeSuggestions() {
       const name = u.name || "Unnamed";
       const color = u.themeColor || "#0038ff";
       const initials = getInitials(name);
-      container.innerHTML += renderAssignedToContacts(uid, name, initials, color);
+      container.insertAdjacentHTML(
+        "beforeend",
+        renderAssignedToContacts(uid, name, initials, color)
+      );
     });
   } catch (e) {
     console.error("Fehler beim Laden der Kontakte:", e);
+    throw e;
   }
 }
 
@@ -47,19 +68,18 @@ function getInitials(name) {
   return (parts[0] || "").slice(0, 2).toUpperCase();
 }
 
-function toggleContactSelection(element) {
-  const uid = element.dataset.uid;
-  const checkbox = element.querySelector(".assignee-checkbox");
-  if (selectedAssignees[uid]) {
-    delete selectedAssignees[uid];
-    element.classList.remove("selected");
-    if (checkbox) checkbox.checked = false;
-  } else {
-    selectedAssignees[uid] = true;
-    element.classList.add("selected");
-    if (checkbox) checkbox.checked = true;
+function toggleAssigneeDropdown() {
+  const container = document.getElementById("assigned-container");
+  if (!container) return;
+
+  const wasHidden = container.classList.contains("hidden");
+  container.classList.toggle("hidden");
+
+  if (wasHidden && !assigneesLoaded) {
+    loadAssigneeSuggestions()
+      .then(() => { assigneesLoaded = true; })
+      .catch(err => console.error("Assignees konnten nicht geladen werden:", err));
   }
-  updateSelectedContactsView();
 }
 
 function updateSelectedContactsView() {
@@ -209,7 +229,7 @@ function logout() {
 
 document.addEventListener('click', function(event) {
   const dropdown = document.getElementById('assigned-container');
-  const trigger = document.getElementById('assigned-dropdown');
+  const trigger  = document.getElementById('assigned-dropdown');
   if (!dropdown || !trigger) return;
   const clickedInside = dropdown.contains(event.target) || trigger.contains(event.target);
   if (!clickedInside) dropdown.classList.add('hidden');

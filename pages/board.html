@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../styles/floating_add_task.css" />
     <link rel="stylesheet" href="../assets/fonts/font.css" />
     <link rel="stylesheet" href="../styles/task_detail_overlay.css" />
-    <link rel="stylesheet" href="../styles/summary.css">
+    <link rel="stylesheet" href="../styles/summary.css" />
   </head>
 
   <body onload="onloadBoard()" onclick="closeUserMenu(event)">
@@ -44,7 +44,9 @@
           <img class="navbar-logo" src="../assets/img/Capa 2.png" alt="Logo" />
           <span>Kanban Projekt Management Tool</span>
           <div class="user-name">
-            <a class="help-link" href="./help.html"><img src="../assets/icons/help.png" alt="" /></a>
+            <a class="help-link" href="./help.html"
+              ><img src="../assets/icons/help.png" alt=""
+            /></a>
             <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
               <button id="user-name" onclick="toggleUserMenu()">G</button>
               <div id="user-dropdown" class="dropdown-menu hidden">
@@ -113,6 +115,7 @@
 
       <script src="../scripts/board.js"></script>
       <script src="../scripts/task_detail_overlay.js"></script>
+      <script src="../scripts/assignees.js"></script>
     </div>
   </body>
 </html>

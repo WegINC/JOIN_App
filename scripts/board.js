@@ -1,42 +1,28 @@
 const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app";
 
 let selectedPriority = "";
+let faAssigneesLoaded = false;
+let faOutsideHandler = null;
+let faPreselectedAssignees = {};
 
 function onloadBoard() {
   loadTasks();
   setupButtons();
   initUserInitial();
 }
+document.addEventListener("DOMContentLoaded", onloadBoard);
 
 function toggleUserMenu() {
-  document.getElementById('user-dropdown').classList.toggle('hidden');
+  const dd = document.getElementById('user-dropdown');
+  if (dd) dd.classList.toggle('hidden');
 }
 
 function closeUserMenu(event) {
   const wrapper = document.getElementById('user-dropdown-wrapper');
   const dropdown = document.getElementById('user-dropdown');
-  if (!wrapper.contains(event.target)) {
+  if (wrapper && dropdown && !wrapper.contains(event.target)) {
     dropdown.classList.add('hidden');
   }
-}
-
-function setupButtons() {
-  document.querySelectorAll(".column-title button").forEach(btn =>
-    btn.addEventListener("click", openFloatingAddTaskPopup)
-  );
-
-  const addBtn = document.querySelector(".add-task-button");
-  if (!addBtn) return;
-
-  addBtn.addEventListener("click", (e) => {
-    const smallScreen = window.innerWidth <= 798;
-    if (smallScreen) {
-      window.location.href = "../pages/add_task.html";
-    } else {
-      popupStatus = "toDo";
-      openFloatingAddTaskPopup();
-    }
-  });
 }
 
 function initUserInitial() {
@@ -45,47 +31,31 @@ function initUserInitial() {
   if (nameBtn) nameBtn.textContent = initial;
 }
 
-async function fetchUsers() {
-  try {
-    const res = await fetch(`${BASE_URL}/users.json`);
-    const data = await res.json();
-    const userDataMap = {};
+function logout() {
+  localStorage.removeItem("userInitial");
+  localStorage.removeItem("userId");
+  window.location.href = "../index.html";
+}
 
-    for (const uid in data) {
-      const user = data[uid];
-      const fullName = user.name || "";
-      const nameParts = fullName.trim().split(" ");
-      const initials = nameParts.length >= 2
-        ? nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase()
-        : nameParts[0][0].toUpperCase();
+function setupButtons() {
+  document.querySelectorAll(".column-title button").forEach(btn =>
+    btn.addEventListener("click", () => openFloatingAddTaskPopup())
+  );
 
-      let themeColor = user.themeColor;
-
-      if (!themeColor) {
-        themeColor = getRandomColor();
-        await fetch(`${BASE_URL}/users/${uid}.json`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ themeColor })
-        });
-      }
-
-      userDataMap[uid] = { initials, themeColor };
+  const addBtn = document.querySelector(".add-task-button");
+  if (!addBtn) return;
+  addBtn.addEventListener("click", () => {
+    const smallScreen = window.innerWidth <= 798;
+    if (smallScreen) {
+      window.location.href = "../pages/add_task.html";
+    } else {
+      window.popupStatus = "toDo";
+      openFloatingAddTaskPopup();
     }
-
-    return userDataMap;
-  } catch (err) {
-    console.error("Fehler beim Laden der Benutzer:", err);
-    return {};
-  }
+  });
 }
 
-function getRandomColor() {
-  const colors = ["#FF5733", "#009688", "#3F51B5", "#795548", "#FF9800"];
-  return colors[Math.floor(Math.random() * colors.length)];
-}
-
-function openFloatingAddTaskPopup() {
+function openFloatingAddTaskPopup(options = {}) {
   fetch("../pages/floating_add_task.html")
     .then(res => res.text())
     .then(html => {
@@ -93,92 +63,263 @@ function openFloatingAddTaskPopup() {
       container.innerHTML = html;
       container.style.display = "block";
 
-      requestAnimationFrame(() => {
-        import(`./assignees.js?ts=${Date.now()}`)
-          .then(mod => {
-            const Assignees = mod.Assignees || mod.default;
-            Assignees.init({
-              dropdownId: "fa-assigned-dropdown",
-              containerId: "fa-assigned-container",
-            });
-          })
-          .catch(err => console.error("assignees.js load error:", err));
-      });
+      const pUrgent = document.getElementById("priority-urgent");
+      const pMedium = document.getElementById("priority-medium");
+      const pLow    = document.getElementById("priority-low");
+      if (pUrgent) pUrgent.addEventListener("click", () => selectPriority("urgent"));
+      if (pMedium) pMedium.addEventListener("click", () => selectPriority("medium"));
+      if (pLow)    pLow.addEventListener("click", () => selectPriority("low"));
+
+      initFloatingAssigneesDropdown();
+
+      const t = options.prefillTask;
+      if (t) {
+        const titleEl = document.getElementById("title");
+        const descEl  = document.getElementById("description");
+        const dueEl   = document.getElementById("due");
+        const catEl   = document.getElementById("category");
+
+        if (titleEl) titleEl.value = t.title || "";
+        if (descEl)  descEl.value  = t.description || "";
+        if (dueEl)   dueEl.value   = t.dueDate || "";
+        if (catEl)   catEl.value   = t.category || "Technical Task";
+
+        if (t.priority) selectPriority(t.priority);
+
+        faPreselectedAssignees = {};
+        Object.keys(t.assignedTo || {}).forEach(uid => faPreselectedAssignees[uid] = true);
+
+        const menu = document.getElementById("fa-assigned-container");
+        if (menu && menu.innerHTML.trim() === "") {
+          loadFloatingAssigneeSuggestions().then(() => {
+            applyFloatingPreselection();
+            updateFloatingSelectedView();
+          });
+        } else {
+          applyFloatingPreselection();
+          updateFloatingSelectedView();
+        }
+      } else {
+        faPreselectedAssignees = {};
+        faAssigneesLoaded = false;
+        updateFloatingSelectedView();
+      }
     })
     .catch(err => console.error("Fehler beim Laden des Popups:", err));
 }
 
 function closePopup() {
   const popup = document.getElementById("popup-container");
-  popup.style.display = "none";
-  popup.innerHTML = "";
-}
-
-const categoryColors = {
-  "Technical Task": "#1FD7C1",
-  "User Story": "#0038FF"
-};
-
-function getUserInitials(name) {
-  const nameParts = name.trim().split(" ");
-  return nameParts.length >= 2
-    ? nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase()
-    : nameParts[0][0].toUpperCase();
-}
-
-let assigneeMap = {};
-async function loadAssigneeMap() {
-  try {
-    const res = await fetch(`${BASE_URL}/users.json`);
-    const data = await res.json();
-    assigneeMap = {};
-    for (const uid in data) {
-      assigneeMap[uid] = {
-        name: data[uid].name || "Unnamed",
-        initials: data[uid].initials || getUserInitials(data[uid].name || "Unnamed"),
-        themeColor: data[uid].themeColor || "#0038FF"
-      };
-    }
-  } catch (err) {
-    console.error("Fehler beim Laden der Kontakte:", err);
+  if (popup) {
+    popup.style.display = "none";
+    popup.innerHTML = "";
+  }
+  if (faOutsideHandler) {
+    document.removeEventListener("click", faOutsideHandler);
+    faOutsideHandler = null;
   }
 }
 
+function initFloatingAssigneesDropdown() {
+  const trigger = document.getElementById("fa-assigned-dropdown");
+  const menu    = document.getElementById("fa-assigned-container");
+  if (!trigger || !menu) return;
+
+  trigger.addEventListener("click", handleFloatingAssigneeTriggerClick);
+
+  menu.addEventListener("click", (e) => e.stopPropagation());
+
+  if (!faOutsideHandler) {
+    faOutsideHandler = (e) => {
+      if (menu.classList.contains("hidden")) return;
+      const inside = menu.contains(e.target) || trigger.contains(e.target);
+      if (!inside) menu.classList.add("hidden");
+    };
+    document.addEventListener("click", faOutsideHandler);
+  }
+}
+
+async function handleFloatingAssigneeTriggerClick(e) {
+  e?.stopPropagation();
+  const menu = document.getElementById("fa-assigned-container");
+  if (!menu) return;
+
+  const opening = menu.classList.contains("hidden");
+  menu.classList.toggle("hidden");
+
+  if (opening && !faAssigneesLoaded) {
+    try {
+      await loadFloatingAssigneeSuggestions();
+      faAssigneesLoaded = true;
+      applyFloatingPreselection();
+      updateFloatingSelectedView();
+    } catch (err) {
+      console.error("Floating Assignees konnten nicht geladen werden:", err);
+    }
+  }
+}
+
+function getInitials(name = "") {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return (parts[0] || "").slice(0, 2).toUpperCase();
+}
+
+function renderAssignedToContacts(uid, name, initials, color) {
+  return `
+    <label class="assignee-option" data-uid="${uid}" data-initials="${initials}">
+      <div class="task-user-initials" style="background-color:${color}">${initials}</div>
+      <span>${name}</span>
+      <input type="checkbox" class="assignee-checkbox" />
+    </label>
+  `;
+}
+
+async function loadFloatingAssigneeSuggestions() {
+  const container = document.getElementById("fa-assigned-container");
+  if (!container) return;
+  if (container.innerHTML.trim() !== "") return;
+
+  try {
+    const res = await fetch(`${BASE_URL}/users.json`);
+    const data = await res.json() || {};
+
+    const frag = document.createDocumentFragment();
+    Object.entries(data).forEach(([uid, u]) => {
+      const name = u.name || "Unnamed";
+      const color = u.themeColor || "#0038ff";
+      const initials = getInitials(name);
+
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = renderAssignedToContacts(uid, name, initials, color);
+      frag.appendChild(wrapper.firstElementChild);
+    });
+
+    container.appendChild(frag);
+
+    container.addEventListener("click", (e) => {
+      const row = e.target.closest(".assignee-option");
+      if (!row) return;
+      const cb = row.querySelector(".assignee-checkbox");
+      const uid = row.dataset.uid;
+
+      if (row.classList.contains("selected")) {
+        row.classList.remove("selected");
+        if (cb) cb.checked = false;
+        delete faPreselectedAssignees[uid];
+      } else {
+        row.classList.add("selected");
+        if (cb) cb.checked = true;
+        faPreselectedAssignees[uid] = true;
+      }
+      updateFloatingSelectedView();
+    });
+  } catch (e) {
+    console.error("Fehler beim Laden der Kontakte:", e);
+  }
+}
+
+function applyFloatingPreselection() {
+  const cont = document.getElementById("fa-assigned-container");
+  if (!cont) return;
+  Object.keys(faPreselectedAssignees || {}).forEach(uid => {
+    const row = cont.querySelector(`.assignee-option[data-uid="${uid}"]`);
+    if (!row) return;
+    row.classList.add("selected");
+    const cb = row.querySelector(".assignee-checkbox");
+    if (cb) cb.checked = true;
+  });
+}
+
+function updateFloatingSelectedView() {
+  const view = document.getElementById("fa-assigned-dropdown");
+  const cont = document.getElementById("fa-assigned-container");
+  if (!view || !cont) return;
+  const initials = Array.from(cont.querySelectorAll(".assignee-option.selected"))
+    .map(el => el.dataset.initials);
+  view.innerText = initials.length ? initials.join(", ") : "Select contacts to assign";
+}
+
+function getFloatingSelectedAssignees() {
+  const cont = document.getElementById('fa-assigned-container');
+  if (!cont) return {};
+  const checked = cont.querySelectorAll('.assignee-checkbox:checked');
+  const uids = Array.from(checked)
+    .map(cb => cb.closest('.assignee-option')?.dataset.uid)
+    .filter(Boolean);
+  return Object.fromEntries(uids.map(uid => [uid, true]));
+}
+
+function selectPriority(level) {
+  selectedPriority = level;
+
+  const buttons = {
+    urgent: document.getElementById("priority-urgent"),
+    medium: document.getElementById("priority-medium"),
+    low: document.getElementById("priority-low"),
+  };
+
+  Object.values(buttons).forEach(btn => {
+    if (!btn) return;
+    btn.classList.remove("active");
+    btn.style.backgroundColor = "#e0e0e0";
+    btn.style.color = "#333";
+  });
+
+  const activeBtn = buttons[level];
+  if (activeBtn) {
+    activeBtn.classList.add("active");
+    activeBtn.style.backgroundColor = level === "urgent" ? "red" : level === "medium" ? "#ffa800" : "lightgreen";
+    activeBtn.style.color = level === "low" ? "#000" : "white";
+  }
+}
+
+function addSubtaskInput() {
+  const container = document.getElementById("subtask-container");
+  if (!container) return;
+
+  const row = document.createElement("div");
+  row.className = "subtask-row";
+  row.innerHTML = `
+    <input type="text" class="subtask-input" placeholder="Add new subtask" />
+    <button type="button" class="remove-btn" onclick="this.parentElement.remove()">−</button>
+  `;
+  container.appendChild(row);
+}
+
 function createTask() {
-  const title = document.getElementById("title").value;
-  const description = document.getElementById("description").value;
-  const dueDate = document.getElementById("due").value;
-  const selectedCategory = document.getElementById("category").value;
+  const title = (document.getElementById("title")?.value || "").trim();
+  const description = (document.getElementById("description")?.value || "").trim();
+  const dueDate = document.getElementById("due")?.value || "";
+  const selectedCategory = document.getElementById("category")?.value || "";
   const priority = selectedPriority || "low";
 
-  const select = document.getElementById("assigned");
-  const assignedUids = Array.from(select.selectedOptions)
-    .filter(opt => !opt.disabled)
-    .map(opt => opt.value);
+  let assignedTo = getFloatingSelectedAssignees();
 
-  const subtaskInputs = document.querySelectorAll(".subtask-input");
-  const subtasks = Array.from(subtaskInputs)
-    .map(input => input.value.trim())
-    .filter(text => text !== "")
-    .map(title => ({ title, done: false }));
+  if (!Object.keys(assignedTo).length) {
+    const select = document.getElementById("assigned");
+    if (select) {
+      const assignedUids = Array.from(select.selectedOptions)
+        .filter(opt => !opt.disabled)
+        .map(opt => opt.value);
+      assignedTo = Object.fromEntries(assignedUids.map(uid => [uid, true]));
+    }
+  }
 
-  const userInitial = localStorage.getItem("userInitial") || "G";
+  const categoryValid = selectedCategory && selectedCategory !== "Select task category";
+  const hasAssignees = Object.keys(assignedTo).length > 0;
 
-  if (!title || !dueDate || assignedUids.length === 0 || selectedCategory === "Select task category") {
+  if (!title || !dueDate || !categoryValid || !hasAssignees) {
     alert("Bitte alle Pflichtfelder ausfüllen.");
     return;
   }
 
-  const assignedTo = {};
-  assignedUids.forEach(uid => {
-    const user = assigneeMap[uid];
-    if (user) {
-      assignedTo[uid] = {
-        initials: user.initials || getUserInitials(user.name),
-        themeColor: user.themeColor || "#0038FF"
-      };
-    }
-  });
+  const subtasks = Array.from(document.querySelectorAll(".subtask-input"))
+    .map(i => i.value.trim())
+    .filter(Boolean)
+    .map(t => ({ title: t, done: false }));
+
+  const userInitial = localStorage.getItem("userInitial") || "G";
 
   const taskData = {
     title,
@@ -204,7 +345,7 @@ function createTask() {
         window.editingTaskId = null;
         closePopup();
         loadTasks();
-        closeTaskOverlay();
+        if (typeof closeTaskOverlay === "function") closeTaskOverlay();
       })
       .catch(err => console.error("Fehler beim Aktualisieren:", err));
   } else {
@@ -221,9 +362,64 @@ function createTask() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", loadAssigneeMap);
+async function startEditTask(taskId) {
+  try {
+    const res = await fetch(`${BASE_URL}/tasks/${taskId}.json`);
+    const task = await res.json();
+    if (!task) return;
 
-let draggedCard = null;
+    window.editingTaskId = taskId;
+
+    faPreselectedAssignees = {};
+    Object.keys(task.assignedTo || {}).forEach(uid => faPreselectedAssignees[uid] = true);
+
+    openFloatingAddTaskPopup({ prefillTask: task });
+  } catch (e) {
+    console.error("Fehler beim Laden des Tasks fürs Edit:", e);
+  }
+}
+
+async function fetchUsers() {
+  try {
+    const res = await fetch(`${BASE_URL}/users.json`);
+    const data = await res.json();
+    const userDataMap = {};
+
+    for (const uid in data) {
+      const user = data[uid];
+      const fullName = user.name || "";
+      const nameParts = fullName.trim().split(" ");
+      const initials = nameParts.length >= 2
+        ? nameParts[0][0].toUpperCase() + nameParts[1][0].toUpperCase()
+        : nameParts[0][0].toUpperCase();
+
+      let themeColor = user.themeColor;
+      if (!themeColor) {
+        themeColor = getRandomColor();
+        await fetch(`${BASE_URL}/users/${uid}.json`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ themeColor })
+        });
+      }
+      userDataMap[uid] = { initials, themeColor };
+    }
+    return userDataMap;
+  } catch (err) {
+    console.error("Fehler beim Laden der Benutzer:", err);
+    return {};
+  }
+}
+
+function getRandomColor() {
+  const colors = ["#FF5733", "#009688", "#3F51B5", "#795548", "#FF9800"];
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
+const categoryColors = {
+  "Technical Task": "#1FD7C1",
+  "User Story": "#0038FF"
+};
 
 async function loadTasks() {
   const userInitialsMap = await fetchUsers();
@@ -234,10 +430,10 @@ async function loadTasks() {
       const columns = ["toDo", "inProgress", "awaitFeedback", "done"];
       columns.forEach(id => {
         const column = document.getElementById(id);
-        if (column) {
-          column.innerHTML = "";
-        }
+        if (column) column.innerHTML = "";
       });
+
+      if (!tasks) return;
 
       for (let id in tasks) {
         const task = tasks[id];
@@ -261,30 +457,29 @@ async function loadTasks() {
           const user = userInitialsMap[uid];
           const initials = user?.initials || "G";
           const themeColor = user?.themeColor || "#0038FF";
-
           return `<div class="task-user-initials" style="background-color: ${themeColor};">${initials}</div>`;
         }).join("");
 
         const color = categoryColors[task.category] || "#ccc";
 
         card.innerHTML = `
-            <div class="task-category" style="background-color: ${color};">
-              ${task.category}
-            </div>
-            <div class="task-title"><strong>${task["title"]}</strong></div>
-            <div class="task-description">${task["description"]}</div>
+          <div class="task-category" style="background-color: ${color};">
+            ${task.category}
+          </div>
+          <div class="task-title"><strong>${task["title"]}</strong></div>
+          <div class="task-description">${task["description"] || ""}</div>
 
-            <div class="subtask-counter">
-              <progress value="${getSubtaskProgress(task)}" max="100"></progress>
-              <span>${getSubtaskLabel(task)}</span>
-            </div>
+          <div class="subtask-counter">
+            <progress value="${getSubtaskProgress(task)}" max="100"></progress>
+            <span>${getSubtaskLabel(task)}</span>
+          </div>
 
-            <div class="task-footer">
-              <div class="task-user">
-                ${userBadges}
-              </div>
+          <div class="task-footer">
+            <div class="task-user">
+              ${userBadges}
             </div>
-          `;
+          </div>
+        `;
 
         column.appendChild(card);
       }
@@ -294,6 +489,8 @@ async function loadTasks() {
     });
 }
 
+let draggedCard = null;
+
 ["toDo", "inProgress", "awaitFeedback", "done"].forEach(id => {
   const column = document.getElementById(id);
   if (column) {
@@ -301,51 +498,24 @@ async function loadTasks() {
     column.addEventListener("drop", handleDrop);
   }
 });
-
-async function populateAssigneeDropdown() {
-  try {
-    const response = await fetch(`${BASE_URL}/users.json`);
-    const data = await response.json();
-
-    const select = document.getElementById("assigned");
-    if (!select) return;
-
-    select.innerHTML = `<option disabled selected>Select contacts to assign</option>`;
-
-    for (let uid in data) {
-      const user = data[uid];
-      const option = document.createElement("option");
-      option.value = uid;
-      option.textContent = user.name || "Unnamed";
-      select.appendChild(option);
-    }
-  } catch (error) {
-    console.error("Fehler beim Laden der Kontakte für das Dropdown:", error);
-  }
-}
-
 function handleDragStart(e) {
   draggedCard = e.target;
   e.dataTransfer.setData("text/plain", draggedCard.getAttribute("data-id"));
   setTimeout(() => draggedCard.classList.add("invisible"), 0);
 }
-
 function handleDragEnd() {
   if (draggedCard) {
     draggedCard.classList.remove("invisible");
     draggedCard = null;
   }
 }
-
 function handleDragOver(e) {
   e.preventDefault();
 }
-
 function handleDrop(e) {
   e.preventDefault();
   const targetColumn = e.currentTarget;
   const taskId = e.dataTransfer.getData("text/plain");
-
   if (!taskId || !targetColumn) return;
 
   const taskCard = document.querySelector(`[data-id="${taskId}"]`);
@@ -353,7 +523,6 @@ function handleDrop(e) {
     targetColumn.appendChild(taskCard);
 
     const newStatus = targetColumn.id;
-
     fetch(`${BASE_URL}/tasks/${taskId}.json`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -364,70 +533,25 @@ function handleDrop(e) {
   }
 }
 
-function selectPriority(level) {
-  selectedPriority = level;
-
-  const buttons = {
-    urgent: document.getElementById("priority-urgent"),
-    medium: document.getElementById("priority-medium"),
-    low: document.getElementById("priority-low"),
-  };
-
-  Object.values(buttons).forEach(btn => {
-    btn.classList.remove("active");
-    btn.style.backgroundColor = "#e0e0e0";
-    btn.style.color = "#333";
-  });
-
-  const activeBtn = buttons[level];
-  if (activeBtn) {
-    activeBtn.classList.add("active");
-    activeBtn.style.backgroundColor = level === "urgent" ? "red" : level === "medium" ? "#ffa800" : "lightgreen";
-    activeBtn.style.color = level === "low" ? "#000" : "white";
-  }
-}
-
-const userNameButton = document.getElementById("user-name");
-
-window.addEventListener("DOMContentLoaded", () => {
-  const initial = localStorage.getItem("userInitial") || "G";
-  if (userNameButton) {
-    userNameButton.textContent = initial;
-  }
-});
-
-function logout() {
-  localStorage.removeItem("userInitial");
-  localStorage.removeItem("userId");
-  window.location.href = "../index.html";
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  onloadBoard();
-});
-
 function openTaskDetailOverlay(task, taskId) {
   fetch("../pages/task_detail_overlay.html")
-    .then(function(response) {
-      return response.text();
-    })
-    .then(function(html) {
-      var container = document.getElementById("task-detail-container");
+    .then((response) => response.text())
+    .then((html) => {
+      const container = document.getElementById("task-detail-container");
       container.innerHTML = html;
       container.style.display = "block";
 
       window.currentTaskId = taskId;
       window.currentTaskData = task;
 
-      var overlayEvent = new CustomEvent("taskDataReady", {
-        detail: task 
-      });
+      const overlayEvent = new CustomEvent("taskDataReady", { detail: task });
       document.dispatchEvent(overlayEvent);
+
     })
-    .catch(function(error) {
+    .catch((error) => {
       console.error("Fehler beim Laden des Task-Details:", error);
     });
-};
+}
 
 function getSubtaskProgress(task) {
   const subtasks = task.subtasks || [];
@@ -435,10 +559,29 @@ function getSubtaskProgress(task) {
   const completed = subtasks.filter(st => st.done).length;
   return Math.round((completed / subtasks.length) * 100);
 }
-
 function getSubtaskLabel(task) {
   const subtasks = task.subtasks || [];
   if (!subtasks.length) return "0/0 subtasks";
   const completed = subtasks.filter(st => st.done).length;
   return `${completed}/${subtasks.length} subtasks`;
+}
+
+async function populateAssigneeDropdown() {
+  try {
+    const response = await fetch(`${BASE_URL}/users.json`);
+    const data = await response.json();
+    const select = document.getElementById("assigned");
+    if (!select) return;
+
+    select.innerHTML = `<option disabled selected>Select contacts to assign</option>`;
+    for (let uid in data) {
+      const user = data[uid];
+      const option = document.createElement("option");
+      option.value = uid;
+      option.textContent = user.name || "Unnamed";
+      select.appendChild(option);
+    }
+  } catch (error) {
+    console.error("Fehler beim Laden der Kontakte für das Dropdown:", error);
+  }
 }

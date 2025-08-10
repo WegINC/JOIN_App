@@ -5,10 +5,12 @@
       <button class="close-btn" onclick="closeTaskOverlay()">×</button>
     </div>
 
-    <span id="title-span" style="font-size: 20px; display: none;" >Title</span>
+    <span id="title-span" style="font-size: 20px; display: none">Title</span>
     <h2 class="task-title" id="task-title">Task Title</h2>
 
-    <span id="description-span" style="font-size: 20px; display: none;">Description</span>
+    <span id="description-span" style="font-size: 20px; display: none"
+      >Description</span
+    >
     <p class="task-description" id="task-description">Task Description</p>
 
     <div class="task-info">
@@ -26,12 +28,19 @@
     <div class="assigned-section">
       <span>Assigned To:</span>
       <div id="assigned-users" class="assigned-users"></div>
+
+      <div class="assignee-dropdown-wrapper">
+        <div id="fa-assigned-dropdown" class="dropdown-trigger hidden">
+          Select contacts to assign
+        </div>
+        <div id="fa-assigned-container" class="dropdown-menu hidden"></div>
+      </div>
     </div>
 
-      <div class="subtasks-section">
-        <span>Subtasks</span>
-        <div id="subtask-list" class="subtask-list"></div>
-      </div>
+    <div class="subtasks-section">
+      <span>Subtasks</span>
+      <div id="subtask-list" class="subtask-list"></div>
+    </div>
 
     <div class="task-actions">
       <button onclick="deleteTask()" class="action-btn">
