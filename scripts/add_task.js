@@ -10,108 +10,111 @@ window.addEventListener("DOMContentLoaded", () => {
   populateCategoryDropdown();
 });
 
-function toggleAssigneeDropdown() {
-  const container = document.getElementById("assigned-container");
-  if (!container) return;
+async function toggleAssigneeDropdown() {
+  const container = document.getElementById("fa-assigned-container");
+  const trigger = document.getElementById("fa-assigned-dropdown");
+  if (!container || !trigger) return;
 
-  const wasHidden = container.classList.contains("hidden");
-  container.classList.toggle("hidden");
+  const isHidden = container.classList.contains("hidden");
 
-  if (wasHidden && !assigneesLoaded) {
-    loadAssigneeSuggestions()
-      .then(() => { assigneesLoaded = true; })
-      .catch(err => console.error("Assignees konnten nicht geladen werden:", err));
+  if (isHidden) {
+    if (!assigneesLoaded) {
+      await loadAssigneeSuggestions();
+      assigneesLoaded = true;
+    }
+    updateSelectedContactsView();
+    container.classList.remove("hidden");
+  } else {
+    container.classList.add("hidden");
+  }
+
+  if (!window._addTaskOutsideHandler) {
+    window._addTaskOutsideHandler = (e) => {
+      const inside = container.contains(e.target) || trigger.contains(e.target);
+      if (!inside) container.classList.add("hidden");
+    };
+    document.addEventListener("click", window._addTaskOutsideHandler);
   }
 }
 
-function renderAssignedToContacts(uid, name, initials, avatarColor) {
-  return `
-    <label class="assignee-option"
-           data-uid="${uid}"
-           data-name="${name}"
-           data-initials="${initials}"
-           data-color="${avatarColor}"
-           onclick="toggleContactSelection(this)">
-      <div class="task-user-initials" style="background-color:${avatarColor}">${initials}</div>
-      <span>${name}</span>
-      <input type="checkbox" class="assignee-checkbox" />
-    </label>
-  `;
-}
-
 async function loadAssigneeSuggestions() {
-  const container = document.getElementById("assigned-container");
+  const container = document.getElementById("fa-assigned-container");
   if (!container) return;
   container.innerHTML = "";
 
   try {
     const res = await fetch(`${BASE_URL}/users.json`);
     const data = await res.json() || {};
+
+    const frag = document.createDocumentFragment();
     Object.entries(data).forEach(([uid, u]) => {
       const name = u.name || "Unnamed";
       const color = u.themeColor || "#0038ff";
       const initials = getInitials(name);
-      container.insertAdjacentHTML(
-        "beforeend",
-        renderAssignedToContacts(uid, name, initials, color)
-      );
+
+      const row = document.createElement("label");
+      row.className = "assignee-option";
+      row.dataset.uid = uid;
+      row.dataset.initials = initials;
+      row.innerHTML = `
+        <div class="task-user-initials" style="background-color:${color}">${initials}</div>
+        <span>${name}</span>
+        <input type="checkbox" class="assignee-checkbox" />
+      `;
+      frag.appendChild(row);
+    });
+    container.appendChild(frag);
+
+    container.addEventListener("click", (e) => {
+      const row = e.target.closest(".assignee-option");
+      if (!row) return;
+      const cb = row.querySelector(".assignee-checkbox");
+      const uid = row.dataset.uid;
+
+      if (row.classList.contains("selected")) {
+        row.classList.remove("selected");
+        if (cb) cb.checked = false;
+        delete selectedAssignees[uid];
+      } else {
+        row.classList.add("selected");
+        if (cb) cb.checked = true;
+        selectedAssignees[uid] = true;
+      }
+      updateSelectedContactsView();
     });
   } catch (e) {
     console.error("Fehler beim Laden der Kontakte:", e);
-    throw e;
   }
 }
 
-function getInitials(name) {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
-  return (parts[0] || "").slice(0, 2).toUpperCase();
-}
-
-function toggleAssigneeDropdown() {
-  const container = document.getElementById("assigned-container");
-  if (!container) return;
-
-  const wasHidden = container.classList.contains("hidden");
-  container.classList.toggle("hidden");
-
-  if (wasHidden && !assigneesLoaded) {
-    loadAssigneeSuggestions()
-      .then(() => { assigneesLoaded = true; })
-      .catch(err => console.error("Assignees konnten nicht geladen werden:", err));
-  }
+function getInitials(name = "") {
+  const p = name.trim().split(/\s+/);
+  return (p[0]?.[0] + (p[1]?.[0] || "")).toUpperCase() || (p[0] || "").slice(0, 2).toUpperCase();
 }
 
 function updateSelectedContactsView() {
-  const view = document.getElementById("assigned-dropdown");
-  const initials = Array.from(document.querySelectorAll(".assignee-option.selected"))
+  const view = document.getElementById("fa-assigned-dropdown");
+  const cont = document.getElementById("fa-assigned-container");
+  if (!view || !cont) return;
+  const initials = Array.from(cont.querySelectorAll(".assignee-option.selected"))
     .map(el => el.dataset.initials);
   view.innerText = initials.length ? initials.join(", ") : "Select contacts to assign";
 }
-
 function createTask() {
   const title       = document.getElementById("title").value.trim();
   const description = document.getElementById("description").value.trim();
   const dueDate     = document.getElementById("due").value;
   const category    = document.getElementById("category").value;
-  const priority    = (typeof selectedPriority === "string" && selectedPriority) ? selectedPriority : "low";
+  const priority    = selectedPriority || "low";
 
-  let selected = (window.selectedAssignees && typeof window.selectedAssignees === "object")
-    ? window.selectedAssignees
-    : {};
+  let selected = Object.keys(selectedAssignees).length
+    ? selectedAssignees
+    : Object.fromEntries(
+        Array.from(document.querySelectorAll('#assigned-container .assignee-checkbox:checked'))
+          .map(cb => [cb.closest('.assignee-option').dataset.uid, true])
+      );
 
-  if (!Object.keys(selected).length) {
-    const checked = document.querySelectorAll('#assigned-container .assignee-checkbox:checked');
-    const uids = Array.from(checked)
-      .map(cb => cb.closest('.assignee-option')?.dataset.uid)
-      .filter(Boolean);
-    selected = Object.fromEntries(uids.map(uid => [uid, true]));
-  }
-
-  const categoryValid = category && category !== "Select task category";
-  const hasAssignees  = Object.keys(selected).length > 0;
-
-  if (!title || !dueDate || !categoryValid || !hasAssignees) {
+  if (!title || !dueDate || category === "Select task category" || !Object.keys(selected).length) {
     alert("Please fill all required fields");
     return;
   }
@@ -139,11 +142,11 @@ function createTask() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(taskData),
   })
-  .then(() => {
-    alert("Task erfolgreich erstellt.");
-    window.location.href = "../pages/board.html";
-  })
-  .catch(err => console.error("Fehler beim Erstellen des Tasks:", err));
+    .then(() => {
+      alert("Task erfolgreich erstellt.");
+      window.location.href = "../pages/board.html";
+    })
+    .catch(err => console.error("Fehler beim Erstellen des Tasks:", err));
 }
 
 function initUserInitial() {
@@ -153,29 +156,23 @@ function initUserInitial() {
 }
 
 function setupPriorityButtons() {
-  const buttons = {
-    urgent: document.getElementById("priority-urgent"),
-    medium: document.getElementById("priority-medium"),
-    low: document.getElementById("priority-low"),
-  };
-  Object.entries(buttons).forEach(([level, btn]) => {
+  ["urgent", "medium", "low"].forEach(level => {
+    const btn = document.getElementById(`priority-${level}`);
     if (btn) btn.addEventListener("click", () => selectPriority(level));
   });
 }
 
 function selectPriority(level) {
   selectedPriority = level;
-  const buttons = {
-    urgent: document.getElementById("priority-urgent"),
-    medium: document.getElementById("priority-medium"),
-    low: document.getElementById("priority-low"),
-  };
-  Object.values(buttons).forEach(btn => {
-    btn.classList.remove("active");
-    btn.style.backgroundColor = "#e0e0e0";
-    btn.style.color = "#333";
+  ["urgent", "medium", "low"].forEach(lvl => {
+    const btn = document.getElementById(`priority-${lvl}`);
+    if (btn) {
+      btn.classList.remove("active");
+      btn.style.backgroundColor = "#e0e0e0";
+      btn.style.color = "#333";
+    }
   });
-  const activeBtn = buttons[level];
+  const activeBtn = document.getElementById(`priority-${level}`);
   if (activeBtn) {
     activeBtn.classList.add("active");
     activeBtn.style.backgroundColor =
@@ -226,11 +223,3 @@ function logout() {
   localStorage.removeItem("userId");
   window.location.href = "../index.html";
 }
-
-document.addEventListener('click', function(event) {
-  const dropdown = document.getElementById('assigned-container');
-  const trigger  = document.getElementById('assigned-dropdown');
-  if (!dropdown || !trigger) return;
-  const clickedInside = dropdown.contains(event.target) || trigger.contains(event.target);
-  if (!clickedInside) dropdown.classList.add('hidden');
-});

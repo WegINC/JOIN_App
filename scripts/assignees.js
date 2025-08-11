@@ -1,6 +1,4 @@
-const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app";
-
-export const Assignees = (() => {
+const Assignees = (() => {
   let cfg = { dropdownId: "assigned-dropdown", containerId: "assigned-container" };
   let selected = {};
 

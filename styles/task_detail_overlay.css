@@ -378,18 +378,19 @@
   color: #333;
 }
 
+.assignee-option.selected span {
+  color: white;
+}
+
 .assignee-option .assignee-checkbox {
   width: 16px;
   height: 16px;
   cursor: pointer;
+  color: white;
 }
 
 .assignee-option.selected {
-  background-color: #e8f3ff;
-}
-
-.assignee-option.selected:hover {
-  background-color: #d6eaff;
+  background-color: #2a3647;
 }
 
 @media (max-width: 510px) {

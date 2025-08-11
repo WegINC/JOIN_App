@@ -12,7 +12,6 @@ body {
   display: flex;
   flex-direction: row;
   min-height: 100vh;
-  height: auto;
 }
 
 .add-task-content {
@@ -42,7 +41,6 @@ body {
   box-sizing: border-box;
   justify-content: space-between;
   min-height: 60vh;
-  align-items: stretch;
 }
 
 .main-infos,
@@ -56,6 +54,7 @@ body {
 select {
   padding: 12px;
   border-radius: 8px;
+  border: 1px solid #d1d1d1;
   font-size: 16px;
   width: 100%;
   box-sizing: border-box;
@@ -96,7 +95,6 @@ textarea {
 .separator {
   width: 2px;
   background-color: #d1d1d1;
-  margin: 0 10px;
 }
 
 .priority-buttons {
@@ -120,15 +118,13 @@ textarea {
   padding-left: 4px;
 }
 
-.equals {
-  width: 20px;
-}
-
-.urgent {
+.urgent,
+.low {
   background-color: white;
 }
 
-.urgent:hover {
+.urgent:hover,
+.low:hover {
   transition: 100ms ease-in-out;
   box-shadow: 0px 4px 4px 0px #0000004e;
 }
@@ -138,54 +134,11 @@ textarea {
   color: white;
 }
 
-.low {
-  background-color: white;
-}
-
-.low:hover {
-  transition: 100ms ease-in-out;
-  box-shadow: 0px 4px 4px 0px #0000004e;
-}
-
 .required-text {
   color: red;
   font-size: 14px;
   margin-top: 70px;
   margin-left: 96px;
-}
-
-.subtask-wrapper {
-  position: relative;
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.subtask-input {
-  width: 100%;
-  padding: 12px 40px 12px 12px;
-  border-radius: 8px;
-  border: 0px;
-  font-size: 16px;
-  box-sizing: border-box;
-}
-
-.subtask-button {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  font-size: 20px;
-  font-weight: bold;
-  color: #2a3647;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-}
-
-.subtask-button:hover {
-  color: #29abe2;
 }
 
 .form-buttons {
@@ -194,7 +147,6 @@ textarea {
   justify-content: flex-end;
   margin-top: 40px;
   height: 64px;
-  font-size: 32px !important;
 }
 
 .cancel {
@@ -230,89 +182,115 @@ textarea {
   box-shadow: 0px 4px 4px 0px #0000004e;
 }
 
-.top-navbar span {
-  font-size: 21px;
-  font-weight: 400;
-  color: #2a3647;
-}
-
-select {
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #d1d1d1;
-  font-size: 16px;
-  width: 100%;
-  box-sizing: border-box;
-  cursor: pointer;
-}
-
-.navbar-logo {
-  display: none;
-}
-
-.help-link-madia {
-  display: none;
-}
-.suggestions-box {
-  position: absolute;
-  background-color: white;
-  border: 1px solid #ccc;
-  max-height: 150px;
-  overflow-y: auto;
-  z-index: 100;
-}
-.suggestion-item {
-  padding: 8px;
-  cursor: pointer;
-}
-.suggestion-item:hover {
-  background-color: #f0f0f0;
-}
 .hidden {
-  display: none;
+  display: none !important;
 }
-.subtask-row {
+
+.assignee-dropdown-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-trigger {
+  background-color: #fff;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  min-height: 40px;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+}
+
+.dropdown-trigger:hover {
+  border-color: #999;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin-top: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 2000;
+  background: #fff;
   border: 1px solid #d1d1d1;
   border-radius: 8px;
-  overflow: hidden;
-  background-color: white;
-  margin-bottom: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 8px;
 }
 
-.subtask-input {
+.assignee-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.assignee-option:hover {
+  background-color: #f0f0f0;
+}
+
+.assignee-option .task-user-initials {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assignee-option span {
   flex: 1;
-  border: none !important;
-  padding: 12px;
-  font-size: 16px;
-  outline: none;
+  font-size: 14px;
+  color: #333;
 }
 
-.subtask-row button {
-  background-color: transparent;
-  border: none;
-  padding: 0 16px;
-  font-size: 20px;
-  color: #2a3647;
+.assignee-option.selected {
+  background-color: #2a3647;
+}
+
+.assignee-option.selected span {
+  color: white;
+}
+
+.assignee-option .assignee-checkbox {
+  width: 16px;
+  height: 16px;
   cursor: pointer;
 }
 
-.subtask-row button:hover {
-  background-color: #f0f0f0;
-}
 .custom-select-wrapper {
   position: relative;
   width: 100%;
 }
 
 .custom-select-box {
+  background-color: #fff;
   border: 1px solid #d1d1d1;
   border-radius: 8px;
-  padding: 12px;
-  font-size: 16px;
-  background-color: white;
+  padding: 8px 12px;
   cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.custom-select-box:hover {
+  border-color: #999;
 }
 
 .assigned-container {
@@ -320,42 +298,90 @@ select {
   top: 100%;
   left: 0;
   width: 100%;
-  max-height: 200px;
+  margin-top: 4px;
+  max-height: 300px;
   overflow-y: auto;
-  background-color: white;
+  z-index: 2000;
+  background: #fff;
   border: 1px solid #d1d1d1;
-  border-top: none;
-  border-radius: 0 0 8px 8px;
-  z-index: 10;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 8px;
 }
 
-.assigned-container.open {
-  opacity: 1;
-  visibility: visible;
+.assignee-option.selected span {
+  color: #fff;
 }
 
-.assignee-option {
+/* + Button in der ersten Subtask-Zeile */
+.subtask-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.subtask-input {
+  width: 100%;
+  padding: 12px 40px 12px 12px;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.subtask-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: #2a3647;
+  border-radius: 6px;
+}
+
+.subtask-button:hover {
+  background: #f0f0f0;
+}
+
+/* Fix: Subtask-Zeilen mit "-" ohne Innenrand */
+.subtask-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
+  background: #fff;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.subtask-row .subtask-input {
+  flex: 1;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 12px;
+  font-size: 16px;
+  outline: none;
+}
+
+.subtask-row .remove-btn {
+  width: 40px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
-.assignee-option:hover {
-  background-color: #f0f0f0;
-}
-.task-user-initials {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 32px;
-  width: 32px;
-  color: white;
-  border-radius: 45px;
-  background-color: #0038ff;
-  font-size: 14px;
-  font-weight: bold;
+.subtask-row .remove-btn:hover {
+  background: #f0f0f0;
 }
 
 @media (max-width: 898px) {
@@ -363,6 +389,7 @@ select {
     flex-direction: column;
     min-height: 130vh;
   }
+
   .side-navbar {
     flex-direction: row;
     width: 100%;
@@ -372,8 +399,9 @@ select {
     left: 0;
     justify-content: space-around;
     align-items: center;
-    padding: 0 16px 0 16px;
+    padding: 0 16px;
   }
+
   .content-area {
     padding-bottom: 300px;
   }
@@ -436,7 +464,7 @@ select {
   }
 
   .required-text {
-    margin-left: 24px;
+    display: none;
   }
 
   .headline-text {
@@ -452,9 +480,6 @@ select {
   .form-buttons button {
     width: 50%;
   }
-  .required-text {
-    display: none;
-  }
 }
 
 @media (max-width: 416px) {
@@ -464,6 +489,7 @@ select {
     white-space: nowrap;
     padding: 8px;
   }
+
   .side-navbar {
     padding: 0;
   }
