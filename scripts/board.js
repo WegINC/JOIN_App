@@ -279,10 +279,10 @@ function addSubtaskInput() {
   if (!container) return;
 
   const row = document.createElement("div");
-  row.className = "subtask-row";
+  row.className = "subtask-wrapper";
   row.innerHTML = `
     <input type="text" class="subtask-input" placeholder="Add new subtask" />
-    <button type="button" class="remove-btn" onclick="this.parentElement.remove()">−</button>
+    <button type="button" class="subtask-button" onclick="this.parentElement.remove()">−</button>
   `;
   container.appendChild(row);
 }

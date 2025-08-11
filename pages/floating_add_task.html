@@ -22,27 +22,13 @@
     <div class="column">
       <label>Priority</label>
       <div class="priority-buttons">
-        <button
-          style="background-color: red; color: white"
-          id="priority-urgent"
-          onclick="selectPriority('urgent')"
-        >
+        <button id="priority-urgent" onclick="selectPriority('urgent')">
           Urgent ↑
         </button>
-        <button
-          style="background-color: #ff800d; color: white"
-          id="priority-medium"
-          onclick="selectPriority('medium')"
-        >
+        <button id="priority-medium" onclick="selectPriority('medium')">
           Medium =
         </button>
-        <button
-          style="background-color: lightgreen"
-          id="priority-low"
-          onclick="selectPriority('low')"
-        >
-          Low ↓
-        </button>
+        <button id="priority-low" onclick="selectPriority('low')">Low ↓</button>
       </div>
 
       <label>Assigned to<span class="required">*</span></label>
@@ -66,13 +52,19 @@
 
       <label for="subtasks">Subtasks</label>
       <div id="subtask-container">
-        <div style="display: flex; gap: 10px; margin-bottom: 5px">
+        <div class="subtask-wrapper">
           <input
             type="text"
             class="subtask-input"
             placeholder="Add new subtask"
           />
-          <button type="button" onclick="addSubtaskInput()">+</button>
+          <button
+            type="button"
+            class="subtask-button"
+            onclick="addSubtaskInput()"
+          >
+            +
+          </button>
         </div>
       </div>
     </div>

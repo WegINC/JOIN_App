@@ -313,7 +313,6 @@ textarea {
   color: #fff;
 }
 
-/* + Button in der ersten Subtask-Zeile */
 .subtask-wrapper {
   position: relative;
   width: 100%;
@@ -349,7 +348,6 @@ textarea {
   background: #f0f0f0;
 }
 
-/* Fix: Subtask-Zeilen mit "-" ohne Innenrand */
 .subtask-row {
   display: flex;
   align-items: center;
