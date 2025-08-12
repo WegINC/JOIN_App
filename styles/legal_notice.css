@@ -3,6 +3,7 @@ body {
     font-family: 'Inter';
     background-color: #f6f7f8;
     height: 100vh;
+    max-width: 1920px;
 }
 
 .legal_notice-content {
