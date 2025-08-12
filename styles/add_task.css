@@ -183,7 +183,7 @@ textarea {
 }
 
 .hidden {
-  display: none !important;
+  display: none;
 }
 
 .assignee-dropdown-wrapper {
@@ -411,7 +411,6 @@ textarea {
 
   .sidebar-menu {
     flex-direction: row;
-    gap: 12px;
   }
 
   .sidebar-menu a {
@@ -421,7 +420,6 @@ textarea {
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 4px;
   }
 
   .sidebar-menu img {
@@ -438,7 +436,7 @@ textarea {
   }
 
   .navbar-logo {
-    display: inline-block;
+    display: block;
     width: 32px;
     height: 40px;
   }
@@ -481,9 +479,12 @@ textarea {
 }
 
 @media (max-width: 416px) {
+
+  .sidebar-menu {
+    gap: 0;
+  }
+
   .sidebar-menu a {
-    gap: 4px;
-    font-size: 10px;
     white-space: nowrap;
     padding: 8px;
   }

@@ -42,3 +42,92 @@ body {
     font-size: 16px;
     font-weight: 400;
 }
+
+.hidden {
+    display: none;
+}
+
+@media (max-width: 950px) {
+
+    .side-navbar {
+        flex-direction: row;
+        width: 100%;
+        height: 80px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0 16px 0 16px;
+    }
+
+    .sidebar-img,
+    .sidebar-bottom {
+        display: none;
+    }
+
+    .sidebar-menu {
+        flex-direction: row;
+    }
+
+    .sidebar-menu a {
+        flex-direction: column;
+        white-space: nowrap;
+    }
+
+    .privacy_policy-headline {
+        padding-left: 20px;
+    }
+
+    .headline-text {
+        font-size: 47px;
+    }
+
+    .privacy_policy-text {
+        padding-left: 20px;
+    }
+}
+
+@media (max-width: 570px) {
+    .top-navbar span {
+        display: none;
+    }
+
+    .help-link {
+        display: none;
+    }
+
+    .help-link-madia {
+        display: inline-flex;
+    }
+
+    .navbar-logo {
+        display: inline-block;
+        width: 32px;
+        height: 40px;
+    }
+
+    .top-navbar {
+        padding-left: 40px;
+    }
+
+    .sidebar-menu {
+        gap: 0;
+    }
+
+    .side-navbar {
+        padding: 0;
+    }
+}
+
+@media (max-width: 416px) {
+
+    .headline-text {
+        font-size: 36px;
+    }
+
+    .sidebar-menu a {
+        font-size: 14px;
+        padding: 8px;
+    }
+}

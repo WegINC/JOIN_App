@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../styles/standard.css">
     <link rel="stylesheet" href="../styles/legal_notice.css">
     <link rel="stylesheet" href="../assets/fonts/font.css">
+    <link rel="shortcut icon" href="../assets/img/Capa 1.png" type="image/x-icon">
 </head>
 
 <body onclick="closeUserMenu(event)">
@@ -40,13 +41,15 @@
         <div class="content-area">
             <div class="top-navbar">
                 <span>Kanban Projekt Management Tool</span>
+                <img class="navbar-logo hidden" src="../assets/img/Capa 2.png" alt="join-logo">
                 <div class="user-name">
-                    <a href="./help.html"><img src="../assets/icons/help.png" alt=""></a>
+                    <a class="help-link" href="./help.html"><img src="../assets/icons/help.png" alt=""></a>
 
                     <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
                         <button id="user-name" onclick="toggleUserMenu()">G</button>
 
                         <div id="user-dropdown" class="dropdown-menu hidden">
+                            <a class="help-link-madia" href="./help.html">Help</a>
                             <a href="./privacy_policy.html">Privacy Policy</a>
                             <a href="./legal_notice.html">Legal Notice</a>
                             <a href="#" onclick="logout()">Log Out</a>
@@ -61,7 +64,7 @@
                     <span class="headline-text">Legal Notice</span>
                 </div>
                 <div class="legal_notice-text">
-                    <section class="imprint-text" style="padding: 40px 96px; font-family: 'Inter', sans-serif;">
+                    <section class="imprint-text">
                         <h1>Imprint</h1>
                         <p>
                             Arvinder Drojjin, Carolin Henning, Tim Wegmeyer<br>

@@ -1,158 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Task</title>
 
-    <link rel="stylesheet" href="../styles/standard.css" />
-    <link rel="stylesheet" href="../styles/add_task.css" />
-    <link rel="stylesheet" href="../assets/fonts/font.css" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Task</title>
 
-  <body onclick="closeUserMenu(event)">
-    <div class="wrapper">
-      <div class="side-navbar">
-        <div class="sidebar-img">
-          <img src="../assets/img/Capa 1.png" alt="" />
-        </div>
-        <div class="sidebar-menu">
-          <a href="./summary.html"
-            ><img src="../assets/icons/summary_icon.png" alt="" />Summary</a
-          >
-          <a href="./add_task.html"
-            ><img src="../assets/icons/add_task_icon.png" alt="" />Add Task</a
-          >
-          <a href="./board.html"
-            ><img src="../assets/icons/board_icon.png" alt="" />Board</a
-          >
-          <a href="./contacts.html"
-            ><img src="../assets/icons/contacts_icon.png" alt="" />Contacts</a
-          >
-        </div>
-        <div class="sidebar-bottom">
-          <a href="./privacy_policy.html">Privacy Policy</a>
-          <a href="./legal_notice.html">Legal notice</a>
+  <link rel="stylesheet" href="../styles/standard.css" />
+  <link rel="stylesheet" href="../styles/add_task.css" />
+  <link rel="stylesheet" href="../assets/fonts/font.css" />
+  <link rel="shortcut icon" href="../assets/img/Capa 1.png" type="image/x-icon">
+</head>
+
+<body onclick="closeUserMenu(event)">
+  <div class="wrapper">
+    <div class="side-navbar">
+      <div class="sidebar-img">
+        <img src="../assets/img/Capa 1.png" alt="" />
+      </div>
+      <div class="sidebar-menu">
+        <a href="./summary.html"><img src="../assets/icons/summary_icon.png" alt="" />Summary</a>
+        <a href="./add_task.html"><img src="../assets/icons/add_task_icon.png" alt="" />Add Task</a>
+        <a href="./board.html"><img src="../assets/icons/board_icon.png" alt="" />Board</a>
+        <a href="./contacts.html"><img src="../assets/icons/contacts_icon.png" alt="" />Contacts</a>
+      </div>
+      <div class="sidebar-bottom">
+        <a href="./privacy_policy.html">Privacy Policy</a>
+        <a href="./legal_notice.html">Legal notice</a>
+      </div>
+    </div>
+
+    <div class="content-area">
+      <div class="top-navbar">
+        <span>Kanban Projekt Management Tool</span>
+        <img class="navbar-logo hidden" src="../assets/img/Capa 2.png" alt="join-logo">
+        <div class="user-name">
+          <a class="help-link" href="./help.html"><img src="../assets/icons/help.png" alt=""></a>
+
+          <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
+            <button id="user-name" onclick="toggleUserMenu()">G</button>
+
+            <div id="user-dropdown" class="dropdown-menu hidden">
+              <a class="help-link-madia" href="./help.html">Help</a>
+              <a href="./privacy_policy.html">Privacy Policy</a>
+              <a href="./legal_notice.html">Legal Notice</a>
+              <a href="#" onclick="logout()">Log Out</a>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <div class="content-area">
-        <div class="top-navbar">
-          <span>Kanban Projekt Management Tool</span>
-          <img
-            class="navbar-logo hidden"
-            src="../assets/img/Capa 2.png"
-            alt="join-logo"
-          />
-          <div class="user-name">
-            <a class="help-link" href="./help.html"
-              ><img src="../assets/icons/help.png" alt="Help"
-            /></a>
-            <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
-              <button id="user-name" onclick="toggleUserMenu()">G</button>
-              <div id="user-dropdown" class="dropdown-menu hidden">
-                <a class="help-link-madia" href="./help.html">Help</a>
-                <a href="./privacy_policy.html">Privacy Policy</a>
-                <a href="./legal_notice.html">Legal Notice</a>
-                <a href="#" onclick="logout()">Log Out</a>
-              </div>
-            </div>
-          </div>
+      <div class="add-task-content">
+        <div class="add-task-content-headline">
+          <span class="headline-text">Add Task</span>
         </div>
 
-        <div class="add-task-content">
-          <div class="add-task-content-headline">
-            <span class="headline-text">Add Task</span>
+        <div class="form-sections">
+          <div class="main-infos">
+            <label for="title">Title<span class="required">*</span></label>
+            <input type="text" id="title" placeholder="Enter a title" />
+
+            <label for="description">Description</label>
+            <textarea id="description" placeholder="Enter a Description" rows="5"></textarea>
+
+            <label for="due">Due date<span class="required">*</span></label>
+            <input type="date" id="due" />
+
+            <p class="required-text">*This field is required</p>
           </div>
 
-          <div class="form-sections">
-            <div class="main-infos">
-              <label for="title">Title<span class="required">*</span></label>
-              <input type="text" id="title" placeholder="Enter a title" />
+          <div class="separator"></div>
 
-              <label for="description">Description</label>
-              <textarea
-                id="description"
-                placeholder="Enter a Description"
-                rows="5"
-              ></textarea>
-
-              <label for="due">Due date<span class="required">*</span></label>
-              <input type="date" id="due" />
-
-              <p class="required-text">*This field is required</p>
+          <div class="detailed-infos">
+            <label>Priority</label>
+            <div class="priority-buttons">
+              <button id="priority-urgent">Urgent ↑</button>
+              <button id="priority-medium">Medium =</button>
+              <button id="priority-low">Low ↓</button>
             </div>
 
-            <div class="separator"></div>
-
-            <div class="detailed-infos">
-              <label>Priority</label>
-              <div class="priority-buttons">
-                <button id="priority-urgent">Urgent ↑</button>
-                <button id="priority-medium">Medium =</button>
-                <button id="priority-low">Low ↓</button>
+            <label>Assigned to<span class="required">*</span></label>
+            <div class="assignee-dropdown-wrapper">
+              <div id="fa-assigned-dropdown" class="dropdown-trigger" onclick="toggleAssigneeDropdown()">
+                Select contacts to assign
               </div>
+              <div id="fa-assigned-container" class="dropdown-menu hidden"></div>
+            </div>
 
-              <label>Assigned to<span class="required">*</span></label>
-              <div class="assignee-dropdown-wrapper">
-                <div
-                  id="fa-assigned-dropdown"
-                  class="dropdown-trigger"
-                  onclick="toggleAssigneeDropdown()"
-                >
-                  Select contacts to assign
-                </div>
-                <div
-                  id="fa-assigned-container"
-                  class="dropdown-menu hidden"
-                ></div>
-              </div>
+            <label for="category">Category<span class="required">*</span></label>
+            <select id="category"></select>
 
-              <label for="category"
-                >Category<span class="required">*</span></label
-              >
-              <select id="category"></select>
-
-              <label for="subtasks">Subtasks</label>
-              <div id="subtask-container">
-                <div class="subtask-wrapper">
-                  <input
-                    type="text"
-                    id="subtasks"
-                    class="subtask-input"
-                    placeholder="Add new subtask"
-                  />
-                  <button
-                    type="button"
-                    class="subtask-button"
-                    onclick="addSubtaskInput()"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div class="form-buttons">
-                <button class="cancel" onclick="window.location.reload()">
-                  Clear ✖
-                </button>
-                <button class="create" onclick="createTask()">
-                  Create Task ✔
+            <label for="subtasks">Subtasks</label>
+            <div id="subtask-container">
+              <div class="subtask-wrapper">
+                <input type="text" id="subtasks" class="subtask-input" placeholder="Add new subtask" />
+                <button type="button" class="subtask-button" onclick="addSubtaskInput()">
+                  +
                 </button>
               </div>
+            </div>
+
+            <div class="form-buttons">
+              <button class="cancel" onclick="window.location.reload()">
+                Clear ✖
+              </button>
+              <button class="create" onclick="createTask()">
+                Create Task ✔
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <script>
-      window.addEventListener("DOMContentLoaded", async () => {
-        initUserInitial();
-        setupPriorityButtons();
-        populateCategoryDropdown();
-      });
-    </script>
-    <script src="../scripts/add_task.js"></script>
-  </body>
+  <script>
+    window.addEventListener("DOMContentLoaded", async () => {
+      initUserInitial();
+      setupPriorityButtons();
+      populateCategoryDropdown();
+    });
+  </script>
+  <script src="../scripts/add_task.js"></script>
+</body>
+
 </html>
