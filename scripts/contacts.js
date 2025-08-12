@@ -56,7 +56,6 @@ async function loadContactsFromDatabase() {
   }));
 
   localStorage.setItem("contacts", JSON.stringify(simpleContacts));
-  console.log("Kontakte gespeichert:", simpleContacts);
 
   renderGroupedContacts(grouped);
 }

@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: 'Inter';
+  font-family: "Inter";
   background-color: #f6f7f8;
   height: 100vh;
   overflow: hidden;
@@ -42,6 +42,8 @@ body {
   background-color: white;
   box-shadow: 4px 0px 6px 0px #00000014;
   z-index: 1;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
 }
 
 .new-contact-button {
@@ -65,9 +67,9 @@ body {
 }
 
 .new-contact-button:hover {
-background-color: #29abe2;
-transition: 100ms ease-in-out;
-box-shadow: 0px 4px 4px 0px #0000004e;
+  background-color: #29abe2;
+  transition: 100ms ease-in-out;
+  box-shadow: 0px 4px 4px 0px #0000004e;
 }
 
 .add-person-icon {
@@ -81,6 +83,7 @@ box-shadow: 0px 4px 4px 0px #0000004e;
   overflow-y: auto;
   margin-top: 80px;
   scroll-behavior: smooth;
+  overflow-y: auto;
 }
 
 .contact-entry {
@@ -90,7 +93,7 @@ box-shadow: 0px 4px 4px 0px #0000004e;
 .contact-letter {
   font-size: 20px;
   font-weight: bold;
-  color: #2A3647;
+  color: #2a3647;
   margin-bottom: 16px;
   display: block;
 }
@@ -107,7 +110,7 @@ box-shadow: 0px 4px 4px 0px #0000004e;
 
 .contact-item:hover,
 .contact-item.active {
-  background: #2A3647;
+  background: #2a3647;
   color: white;
 }
 
@@ -146,7 +149,7 @@ h1 {
 .seperator {
   border-radius: 3px;
   height: 59px;
-  border: 3px solid #29ABE2;
+  border: 3px solid #29abe2;
   margin: 12px 0;
 }
 
@@ -154,10 +157,10 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Inter';
+  font-family: "Inter";
   font-weight: 400;
   font-size: 27px;
-  color: #2A3647;
+  color: #2a3647;
 }
 
 .contact-details {
@@ -167,6 +170,7 @@ h1 {
   flex-direction: column;
   overflow-y: auto;
   background-color: #f6f7f8;
+  overflow: hidden;
 }
 
 .contact-header {
@@ -242,7 +246,7 @@ h1 {
 .contact-actions button {
   background: none;
   border: none;
-  color: #2A3647;
+  color: #2a3647;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -255,7 +259,8 @@ h1 {
 }
 
 .contact-actions button:hover img {
-  filter: brightness(0) saturate(100%) invert(46%) sepia(93%) saturate(405%) hue-rotate(162deg) brightness(98%) contrast(94%);
+  filter: brightness(0) saturate(100%) invert(46%) sepia(93%) saturate(405%)
+    hue-rotate(162deg) brightness(98%) contrast(94%);
 }
 
 .contact-actions img {
@@ -306,12 +311,12 @@ h1 {
   width: 840px;
   max-width: 90%;
   border-radius: 20px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   animation: slideIn 0.4s ease;
 }
 
-.edit-overlay-left{
+.edit-overlay-left {
   background-color: #2a3647;
   color: white;
   padding: 48px 40px;
@@ -322,7 +327,7 @@ h1 {
   align-items: flex-start;
 }
 
-.add-overlay-left{
+.add-overlay-left {
   background-color: #2a3647;
   color: white;
   padding: 48px 40px;
@@ -380,12 +385,12 @@ h1 {
   cursor: pointer;
   border-radius: 50%;
   transition: background-color 0.2s ease, transform 0.2s ease;
-  padding: 0; 
+  padding: 0;
 }
 
 .edit-close-btn:hover,
 .add-close-btn:hover {
-  background-color: #f0f0f0; 
+  background-color: #f0f0f0;
 }
 
 .edit-avatar {
@@ -401,7 +406,7 @@ h1 {
   margin-right: 40px;
 }
 
-.add-avatar{
+.add-avatar {
   width: 120px;
   height: 120px;
   background-color: #d1d1d1;
@@ -411,8 +416,8 @@ h1 {
   justify-content: center;
   gap: 10px;
   margin-right: 40px;
-  box-shadow: 0px 0px 4px 0px #0000001A;
-  border: 3px solid #FFFFFF
+  box-shadow: 0px 0px 4px 0px #0000001a;
+  border: 3px solid #ffffff;
 }
 
 .edit-form .input-group,
@@ -469,7 +474,8 @@ h1 {
 }
 
 .cancel-btn:hover img {
-  filter: brightness(0) saturate(100%) invert(46%) sepia(93%) saturate(405%) hue-rotate(162deg) brightness(98%) contrast(94%);
+  filter: brightness(0) saturate(100%) invert(46%) sepia(93%) saturate(405%)
+    hue-rotate(162deg) brightness(98%) contrast(94%);
 }
 
 .delete-btn,
@@ -477,7 +483,7 @@ h1 {
   display: flex;
   align-items: center;
   background: none;
-  border: 1px solid #2A3647;
+  border: 1px solid #2a3647;
   border-radius: 8px;
   padding: 10px 20px;
   cursor: pointer;
@@ -487,13 +493,13 @@ h1 {
 .edit-actions .delete-btn:hover,
 .add-actions .cancel-btn:hover {
   border: 1px solid #29abe2;
-  color: #29ABE2;
+  color: #29abe2;
   font-weight: 700;
 }
 
 .save-btn,
 .create-btn {
-  background-color: #2A3647;
+  background-color: #2a3647;
   color: white;
   padding: 10px 20px;
   border-radius: 8px;
@@ -507,23 +513,27 @@ h1 {
 
 .edit-actions .save-btn:hover,
 .add-actions .create-btn:hover {
-  background-color: #29ABE2;
+  background-color: #29abe2;
   font-weight: 700;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideIn {
   from {
-      transform: translateY(-30px);
-      opacity: 0;
+    transform: translateY(-30px);
+    opacity: 0;
   }
   to {
-      transform: translateY(0);
-      opacity: 1;
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
@@ -543,15 +553,15 @@ h1 {
   cursor: pointer;
 }
 
-.floating-btn .icon-hover{
+.floating-btn .icon-hover {
   display: none;
 }
 
-.floating-btn:hover .icon-default{
-display: none;
+.floating-btn:hover .icon-default {
+  display: none;
 }
 
-.floating-btn:hover .icon-hover{
+.floating-btn:hover .icon-hover {
   display: inline;
 }
 
@@ -562,7 +572,7 @@ display: none;
   margin-top: 16px;
   font-weight: 600;
   font-size: 18px;
-  color: #2A3647;
+  color: #2a3647;
 }
 
 .contact-separator span {
@@ -573,14 +583,14 @@ display: none;
   flex-grow: 1;
   height: 2px;
   width: 100%;
-  background-color: #D1D1D1;
+  background-color: #d1d1d1;
 }
 
 .hidden {
   display: none !important;
 }
 
-.back-arrow{
+.back-arrow {
   display: none;
 }
 
@@ -596,12 +606,13 @@ display: none;
   flex-direction: column;
 }
 
-.contact-options-overlay button:hover{
-  color: #29ABE2;
+.contact-options-overlay button:hover {
+  color: #29abe2;
   font-weight: 700;
 }
-.contact-options-overlay button:hover img{
-  filter: brightness(0) saturate(100%) invert(46%) sepia(93%) saturate(405%) hue-rotate(162deg) brightness(98%) contrast(94%);
+.contact-options-overlay button:hover img {
+  filter: brightness(0) saturate(100%) invert(46%) sepia(93%) saturate(405%)
+    hue-rotate(162deg) brightness(98%) contrast(94%);
 }
 
 .contact-options-overlay button {
@@ -615,9 +626,9 @@ display: none;
 
 .edit-button-overlay,
 .delete-button-overlay {
-padding-right: 10px;
-width: 18px;
-height: 18px;
+  padding-right: 10px;
+  width: 18px;
+  height: 18px;
 }
 
 @keyframes slideDown {

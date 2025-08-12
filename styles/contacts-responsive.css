@@ -1,18 +1,23 @@
-
-
-@media (max-width: 1240px) {
-    .contact-header {
-      flex-direction: column;
-      align-items: flex-start;
-      top: 120px;
-      gap: 10px;
-    }
-
-    .seperator {
-        width: 70px;
-      }
+@media (max-width: 1600px) {
+  #add-contact-overlay {
+    left: 200px;
   }
+}
 
+@media (max-width: 1250px) {
+  #add-contact-overlay {
+    left: 0px;
+  }
+}
+@media (max-width: 1024px) {
+  #add-contact-overlay {
+    left: -100px;
+  }
+  .add-avatar {
+    position: fixed;
+    margin-left: -200px;
+  }
+}
 
 @media (max-width: 1240px) {
   .contact-header {
@@ -27,114 +32,123 @@
   }
 }
 
+@media (max-width: 1240px) {
+  .contact-header {
+    flex-direction: column;
+    align-items: flex-start;
+    top: 120px;
+    gap: 10px;
+  }
+
+  .seperator {
+    width: 70px;
+  }
+}
 
 @media (max-width: 1024px) {
-  
-    .side-navbar {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      width: 100%;
-      padding: 0;
-    }
-  
-    .wrapper {
-      flex-direction: column-reverse;
-    }
-  
-    .sidebar-img,
-    .sidebar-bottom {
-      display: none; 
-    }
-  
-    .sidebar-menu a {
-      flex-direction: column;
-      font-size: 12px;
-      gap: 4px;
-    }
-  
-    .sidebar-img,
-    .sidebar-bottom {
-      display: none;
-    }
-    
-    .sidebar-menu {
-      flex-direction: row;
-    }
-    
-    .sidebar-menu a {
-      flex-direction: column;
-      font-size: 10px;
-      white-space: nowrap;
-    }
-    
-    .sidebar-menu img {
-      width: 20px;
-      height: 20px;
-    }
-  
-    
-    .top-navbar span,
-    .help-link {
-      display: none;
-    }
-  
-    .top-navbar {
-      display: flex;
-      justify-content: space-between;
-      padding: 16px;
-      height: 64px;
-      box-shadow: 0px 2px 4px 0px #0000004e
-    }
-  
-    .top-navbar::before {
-      content: '';
-      display: inline-block;
-      background-image: url('/assets/icons/Capa\ 3.png'); 
-      background-size: contain;
-      background-repeat: no-repeat;
-      width: 40px;
-      height: 40px;
-    }
-  
-    .contacts-content {
-      flex-direction: column;
-    }
-  
-    #contact-details-content{
+  .side-navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+    padding: 0;
+  }
+
+  .wrapper {
+    flex-direction: column-reverse;
+  }
+
+  .sidebar-img,
+  .sidebar-bottom {
+    display: none;
+  }
+
+  .sidebar-menu a {
+    flex-direction: column;
+    font-size: 16px;
+    gap: 4px;
+  }
+
+  .sidebar-img,
+  .sidebar-bottom {
+    display: none;
+  }
+
+  .sidebar-menu {
+    flex-direction: row;
+  }
+
+  .sidebar-menu a {
+    flex-direction: column;
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  .sidebar-menu img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .top-navbar span,
+  .help-link {
+    display: none;
+  }
+
+  .top-navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    height: 64px;
+    box-shadow: 0px 2px 4px 0px #0000004e;
+  }
+
+  .top-navbar::before {
+    content: "";
+    display: inline-block;
+    background-image: url("/assets/icons/Capa\ 3.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 40px;
+    height: 40px;
+  }
+
+  .contacts-content {
+    flex-direction: column;
+  }
+
+  #contact-details-content {
     top: 0;
     left: 0;
-    }
-  
-    .contact-bar {
-      position: relative;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: auto;
-      padding-top: 6px; 
-    }
-  
-    .contact-list-content {
-      position: static;
-      width: 100%;
-      height: calc(100vh - 96px); 
-      box-shadow: none;
-      padding: 24px 16px;
-      overflow-y: auto;
-    }
-  
-    .contact-details {
-      display: none;
-    }
-  
-   
+  }
+
+  .contact-bar {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    padding-top: 6px;
+  }
+
+  .contact-list-content {
+    position: static;
+    width: 100%;
+    height: calc(100vh - 96px);
+    box-shadow: none;
+    padding: 24px 16px;
+    overflow-y: auto;
+  }
+
+  .contact-details {
+    display: none;
+  }
+
   .show-contact-details-mobile .contact-list-content {
     display: none;
   }
-  
+
   .show-contact-details-mobile .contact-details {
     display: flex;
     flex-direction: column;
@@ -142,330 +156,324 @@
     height: calc(100vh - 96px);
     overflow-y: auto;
   }
-  
-  
+
   .contact-header {
     position: static;
     width: 100%;
     padding: 16px;
     gap: 16px;
   }
-  
-  .contact-actions{
+
+  .contact-actions {
     display: none;
   }
-  
-  .contact-text{
+
+  .contact-text {
     margin-top: 10px;
   }
-  
-    .new-contact-button {
-      display: none;
+
+  .new-contact-button {
+    display: none;
+  }
+
+  .contact-scrollbar {
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    margin-top: 0;
+  }
+
+  .mobile-back-arrow {
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  .back-arrow.hidden {
+    display: none;
+  }
+
+  #contact-details-container {
+    display: none;
+  }
+  .floating-btn {
+    display: block;
+  }
+
+  body.show-contact-details-mobile .contact-list-content {
+    display: none;
+  }
+
+  body.show-contact-details-mobile #contact-details-container {
+    display: block;
+  }
+
+  body.show-contact-details-mobile .back-arrow {
+    display: block;
+  }
+
+  .overlay-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+
+  .edit-contact-overlay,
+  .add-contact-overlay {
+    width: 400px;
+    background-color: white;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideInFromTop 0.3s ease-out;
+  }
+
+  .edit-overlay-top,
+  .add-overlay-top {
+    background-color: #2a3647;
+    height: 120px;
+    color: white;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+  }
+
+  .edit-overlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 50px;
+  }
+
+  .add-overlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+    padding-top: 20px;
+    padding-bottom: 10px;
+  }
+
+  .add-overlay-header p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .edit-overlay-header h1 {
+    font-size: 24px;
+    margin: 0;
+  }
+
+  .add-overlay-header h1 {
+    font-size: 24px;
+    margin: 0;
+  }
+
+  .close-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+  }
+
+  .edit-underline,
+  .add-underline {
+    width: 50px;
+    height: 3px;
+    background-color: #29abe2;
+    border-radius: 2px;
+  }
+
+  .add-underline {
+    margin-top: 0;
+  }
+
+  .add-overlay-header {
+    margin-top: 0;
+  }
+
+  .edit-avatar-circle,
+  .add-avatar {
+    width: 80px;
+    height: 80px;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+
+  .add-avatar {
+    margin-top: 0px;
+  }
+
+  .edit-form,
+  .add-form {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 70px;
+  }
+
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 12px 40px 12px 12px;
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  .input-group img {
+    position: absolute;
+    right: 12px;
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+  }
+
+  .add-form {
+    margin-top: 50px;
+  }
+
+  .edit-actions {
+    display: flex;
+    margin-top: 24px;
+  }
+
+  .edit-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+  }
+
+  .delete-btn {
+    background-color: white;
+    border: 1px solid #2a3647;
+    color: #2a3647;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .save-btn {
+    background-color: #2a3647;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .save-btn img {
+    width: 16px;
+    height: 16px;
+  }
+
+  @keyframes slideInFromTop {
+    from {
+      transform: translateY(-50px);
+      opacity: 0;
     }
-  
-    .contact-scrollbar {
-      max-height: calc(100vh - 180px);
-      overflow-y: auto;
-      margin-top: 0;
+    to {
+      transform: translateY(0);
+      opacity: 1;
     }
-    
-    .mobile-back-arrow {
-      display: inline-block;
-      cursor: pointer;
-    }
-  
-    .back-arrow.hidden {
-      display: none;
-    }
-   
-    #contact-details-container {
-      display: none;
-    }
-    .floating-btn {
-      display: block;
-    }
-  
-    body.show-contact-details-mobile .contact-list-content {
-      display: none;
-    }
-  
-    body.show-contact-details-mobile #contact-details-container {
-      display: block;
-    }
-  
-    body.show-contact-details-mobile .back-arrow {
-      display: block;
-    }
-  
-    .overlay-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.3);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-    }
-    
-    .edit-contact-overlay,
-    .add-contact-overlay{
-      width: 400px;
-      background-color: white;
-      border-radius: 24px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      animation: slideInFromTop 0.3s ease-out;
-    }
-    
-    .edit-overlay-top,
-    .add-overlay-top {
-      background-color: #2A3647;
-      height: 120px;
-      color: white;
-      padding: 24px;
-      text-align: center;
-      position: relative;
-    }
-  
-    
-    .edit-overlay-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 50px;
-    }
-  
-    .add-overlay-header{
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-direction: column;
-      padding-top: 20px;
-      padding-bottom: 10px;
-    }
-  
-    .add-overlay-header p{
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    
-    .edit-overlay-header h1 {
-      font-size: 24px;
-      margin: 0;
-    }
-  
-    .add-overlay-header h1{
-      font-size: 24px;
-      margin: 0;
-    }
-    
-    .close-icon {
-      width: 24px;
-      height: 24px;
-      cursor: pointer;
-    }
-    
-    .edit-underline,
-    .add-underline {
-      width: 50px;
-      height: 3px;
-      background-color: #29ABE2;
-      border-radius: 2px;
-    }
-  
-    .add-underline{
-      margin-top: 0;
-    }
-  
-    .add-overlay-header{
-      margin-top: 0;
-    }
-    
-    .edit-avatar-circle,
-    .add-avatar {
-      width: 80px;
-      height: 80px;
-      color: white;
-      font-size: 28px;
-      font-weight: bold;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: absolute; 
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-    }
-  
-    .add-avatar{
-     margin-top: 0px;
-    }
-    
-    .edit-form,
-    .add-form {
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      padding-top: 70px;
-    }
-    
-    .input-group {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-    
-    .input-group input {
-      width: 100%;
-      padding: 12px 40px 12px 12px;
-      border: 1px solid #D1D1D1;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    
-    .input-group img {
-      position: absolute;
-      right: 12px;
-      width: 20px;
-      height: 20px;
-      opacity: 0.7;
-    }
-  
-    .add-form {
-      margin-top: 50px;
-    }
-    
-    .edit-actions {
-      display: flex;
-      margin-top: 24px;
-    }
-  
-    .edit-btn{
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border-radius: 8px;
-    }
-    
-    .delete-btn {
-      background-color: white;
-      border: 1px solid #2A3647;
-      color: #2A3647;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    
-    .save-btn {
-      background-color: #2A3647;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    
-    .save-btn img {
-      width: 16px;
-      height: 16px;
-    }
-    
-    @keyframes slideInFromTop {
-      from {
-        transform: translateY(-50px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-  
-  
+  }
+
   @media (min-width: 1025px) {
     .mobile-back-arrow {
       display: none;
     }
   }
-  
+
   @media (max-width: 1024px) {
-  
-    .seperator{
+    .seperator {
       display: none;
     }
-  
-    .contact-header{
+
+    .contact-header {
       flex-direction: column;
       display: flex;
       align-items: flex-start;
       gap: 10px;
     }
-    
-  .text-headline{
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
-    font-size: 16px;
+
+    .text-headline {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: column;
+      font-size: 16px;
+    }
+
+    .seperator-mobile {
+      border-radius: 3px;
+      width: 80px;
+      border: 1px solid #29abe2;
+    }
+
+    .back-arrow {
+      position: absolute;
+      top: 142px;
+      right: 20px;
+    }
+
+    .edit-contact-overlay {
+      width: 90%;
+      height: 90%;
+      max-height: 90%;
+    }
+
+    .add-contact-overlay {
+      width: 90%;
+      height: 90%;
+      max-height: 90%;
+    }
+
+    .floating-btn img {
+      width: 44px;
+      height: 44px;
+    }
   }
-  
-  .seperator-mobile{
-    border-radius: 3px;
-    width: 80px;
-    border: 1px solid #29ABE2;
-  }
-  
-  .back-arrow{
-    position: absolute;
-    top: 142px;
-    right: 20px;
-  }
-  
-  .edit-contact-overlay {
-    width: 90%;
-    height: 90%;
-    max-height: 90%;
-  }
-  
-  .add-contact-overlay{
-    width: 90%;
-    height: 90%;
-    max-height: 90%;
-  }
-  
-  .floating-btn img{
-    width: 44px;
-    height: 44px;
-  }
-  
-  
-  }
-  
+
   @media (max-width: 768px) {
-  
-    .edit-form, .add-form {
+    .edit-form,
+    .add-form {
       padding-top: 70px;
       padding-left: 16px;
       padding-right: 16px;
       padding-bottom: 16px;
     }
-  
-    .floating-btn img{
+
+    .floating-btn img {
       width: 44px;
       height: 44px;
     }
-  
+
     .edit-avatar-circle {
       width: 80px;
       height: 80px;
@@ -473,56 +481,60 @@
       position: absolute;
       top: 130px;
     }
-  
+
     .edit-actions,
     .add-actions {
       flex-direction: row;
       gap: 12px;
     }
   }
-  
-    @keyframes slideInFromTop {
-      from { transform: translateY(-100%); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+
+  @keyframes slideInFromTop {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
     }
-  
-    .close-btn {
-      top: 16px;
-      right: 16px;
+    to {
+      transform: translateY(0);
+      opacity: 1;
     }
   }
-  
-  @media (max-width: 420px){
-    .edit-avatar-circle{
-      width: 80px;
-      height: 80px;
-    }
-  
+
+  .close-btn {
+    top: 16px;
+    right: 16px;
   }
-  
-  @media (max-width: 380px) {
-  
-    .floating-btn img {
-      width: 44px;
-      height: 44px;
-    }
-  
-    .contact-options-overlay{
-      font-size: 14px;
-    }
-  
-    .contact-options-overlay img{
-      width: 20px;
-      height: 20px;
-    }
-  
-    .contact-name-actions h2{
-      font-size: 20px;
-    }
-  
-    .edit-button-overlay,
-  .delete-button-overlay{
+}
+
+@media (max-width: 420px) {
+  .edit-avatar-circle {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+@media (max-width: 380px) {
+  .floating-btn img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .contact-options-overlay {
+    font-size: 14px;
+  }
+
+  .contact-options-overlay img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .contact-name-actions h2 {
+    font-size: 20px;
+  }
+
+  .edit-button-overlay,
+  .delete-button-overlay {
     width: 14px;
     height: 14px;
   }
-  }
+}
