@@ -112,6 +112,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 252px;
+  box-sizing: border-box;
 }
 
 .column-title {
@@ -146,7 +148,7 @@ body {
   flex: 1;
   border-radius: 8px;
   overflow-y: auto;
-  width: 100%;
+  width: 246px;
 }
 
 .task-card {
@@ -157,6 +159,11 @@ body {
   padding: 16px;
   margin-bottom: 10px;
   cursor: pointer;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word; /* bricht lange Wörter */
+  word-break: break-word;    /* für Kompatibilität */
+  white-space: normal; 
 }
 
 .task-category {
@@ -367,7 +374,7 @@ body {
   }
 }
 
-@media (min-width: 800px) {
+@media (min-width: 600px) {
   .columns {
     grid-template-columns: repeat(2, 1fr);
   }
