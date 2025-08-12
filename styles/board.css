@@ -161,8 +161,8 @@ body {
   cursor: pointer;
   max-width: 100%;
   box-sizing: border-box;
-  overflow-wrap: break-word; /* bricht lange Wörter */
-  word-break: break-word;    /* für Kompatibilität */
+  overflow-wrap: break-word;
+  word-break: break-word;    
   white-space: normal; 
 }
 
