@@ -16,17 +16,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const acceptedPolicy = document.getElementById("checkbox").checked;
 
     if (!name || !email || !password || !confirmPassword) {
-      alert("Bitte alle Felder ausfüllen.");
+      showMessage("Bitte alle Felder ausfüllen.");
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Die Passwörter stimmen nicht überein.");
+      showMessage("Die Passwörter stimmen nicht überein.");
       return;
     }
 
     if (!acceptedPolicy) {
-      alert("Bitte akzeptiere die Datenschutzrichtlinie.");
+      showMessage("Bitte akzeptiere die Datenschutzrichtlinie.");
       return;
     }
 
@@ -47,13 +47,17 @@ document.addEventListener("DOMContentLoaded", function () {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData)
-      });
+      })
 
-      alert("Registrierung erfolgreich!");
-      window.location.href = "../pages/board.html";
+      .then(() => {
+      showIcon("../assets/img/signedUp-successfully.svg");
+      setTimeout(() => {
+        window.location.href = "../index.html";
+      }, 1500);
+    })
+
     } catch (error) {
-      console.error("Fehler bei der Registrierung:", error);
-      alert("Es ist ein Fehler aufgetreten.");
+      showMessage("Es ist ein Fehler aufgetreten.");
     }
   });
 });
@@ -73,3 +77,26 @@ window.addEventListener("load", () => {
     document.body.classList.add("loaded");
   }
 });
+
+function showIcon(src, duration = 1500) {
+  const icon = document.getElementById("alert-icon");
+  if (!icon) return;
+  icon.src = src;
+  icon.classList.remove("hidden");
+  setTimeout(() => {
+    icon.classList.add("hidden");
+  }, duration);
+}
+
+function showMessage(message, duration = 1500) {
+  const msg = document.getElementById("alert-text-message");
+  if (!msg) return;
+
+  msg.textContent = message;
+  msg.classList.remove("hidden");
+  void msg.offsetWidth;
+
+  setTimeout(() => {
+    msg.classList.add("hidden");
+  }, duration);
+}

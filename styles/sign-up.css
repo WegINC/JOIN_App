@@ -188,6 +188,53 @@ h1 {
     font-weight: 800;
 }
 
+.hidden {
+  display: none;
+}
+
+#alert-icon {
+  width: 326px;
+  height: 74px;
+}
+
+#alert-icon,
+#alert-text-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  opacity: 0;
+  animation: fromBottom 0.3s ease-out forwards;
+}
+
+#alert-text-message {
+  background-color: #2A3647;
+  padding: 25px 25px;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: 400;
+  width: max-content;
+  text-align: center;
+  color: white;
+  box-shadow: 0px 0px 4px 0px #353535;
+}
+
+ @keyframes fromBottom {
+  0% {
+    transform: translate(-50%, 80vh) scale(0.9);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -52%) scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
 @media (max-width: 1024px) {
 
     h1 {

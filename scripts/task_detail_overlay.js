@@ -351,7 +351,7 @@ function updateAssigneeTriggerText(menu, trigger) {
 function saveEditedTask() {
   const taskId = window.currentTaskId;
   if (!taskId) {
-    alert("Fehlende Task-ID");
+    showMessage("Fehlende Task-ID");
     return;
   }
 
@@ -363,7 +363,7 @@ function saveEditedTask() {
 
   const assignedTo = { ...(window.overlaySelectedAssignees || {}) };
   if (!Object.keys(assignedTo).length) {
-    alert("Bitte mindestens eine Person zuweisen.");
+    showMessage("Bitte mindestens eine Person zuweisen.");
     return;
   }
 
@@ -408,4 +408,27 @@ function deleteTask() {
       loadTasks();
     })
     .catch((err) => console.error("Fehler beim Löschen:", err));
+}
+
+function showIcon(src, duration = 1500) {
+  const icon = document.getElementById("alert-icon");
+  if (!icon) return;
+  icon.src = src;
+  icon.classList.remove("hidden");
+  setTimeout(() => {
+    icon.classList.add("hidden");
+  }, duration);
+}
+
+function showMessage(message, duration = 1500) {
+  const msg = document.getElementById("alert-text-message");
+  if (!msg) return;
+
+  msg.textContent = message;
+  msg.classList.remove("hidden");
+  void msg.offsetWidth;
+
+  setTimeout(() => {
+    msg.classList.add("hidden");
+  }, duration);
 }

@@ -383,6 +383,32 @@ textarea {
   background: #f0f0f0;
 }
 
+#alert-icon {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 326px;
+  height: 74px;
+  z-index: 9999;
+  animation: fromBottom 0.3s ease-out forwards;
+}
+
+ @keyframes fromBottom {
+  0% {
+    transform: translate(-50%, 80vh) scale(0.9);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -52%) scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
 @media (max-width: 898px) {
   .wrapper {
     flex-direction: column;

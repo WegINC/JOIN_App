@@ -105,7 +105,7 @@ function openFloatingAddTaskPopup(options = {}) {
         updateFloatingSelectedView();
       }
     })
-    .catch(err => console.error("Fehler beim Laden des Popups:", err));
+    .catch(err => showMessage("Fehler beim Laden des Popups:", err));
 }
 
 function closePopup() {
@@ -154,7 +154,7 @@ async function handleFloatingAssigneeTriggerClick(e) {
       applyFloatingPreselection();
       updateFloatingSelectedView();
     } catch (err) {
-      console.error("Floating Assignees konnten nicht geladen werden:", err);
+      showMessage("Floating Assignees konnten nicht geladen werden:", err);
     }
   }
 }
@@ -215,7 +215,7 @@ async function loadFloatingAssigneeSuggestions() {
       updateFloatingSelectedView();
     });
   } catch (e) {
-    console.error("Fehler beim Laden der Kontakte:", e);
+    showMessage("Fehler beim Laden der Kontakte:", e);
   }
 }
 
@@ -310,7 +310,7 @@ function createTask() {
   const hasAssignees = Object.keys(assignedTo).length > 0;
 
   if (!title || !dueDate || !categoryValid || !hasAssignees) {
-    alert("Bitte alle Pflichtfelder ausfüllen.");
+    showMessage("Bitte alle Pflichtfelder ausfüllen.");
     return;
   }
 
@@ -347,7 +347,7 @@ function createTask() {
         loadTasks();
         if (typeof closeTaskOverlay === "function") closeTaskOverlay();
       })
-      .catch(err => console.error("Fehler beim Aktualisieren:", err));
+      .catch(err => showMessage("Fehler beim Aktualisieren:", err));
   } else {
     fetch(`${BASE_URL}/tasks.json`, {
       method: "POST",
@@ -358,7 +358,7 @@ function createTask() {
         closePopup();
         loadTasks();
       })
-      .catch(err => console.error("Fehler beim Erstellen:", err));
+      .catch(err => showMessage("Fehler beim Erstellen:", err));
   }
 }
 
@@ -375,7 +375,7 @@ async function startEditTask(taskId) {
 
     openFloatingAddTaskPopup({ prefillTask: task });
   } catch (e) {
-    console.error("Fehler beim Laden des Tasks fürs Edit:", e);
+    showMessage("Fehler beim Laden des Tasks fürs Edit:", e);
   }
 }
 
@@ -406,7 +406,7 @@ async function fetchUsers() {
     }
     return userDataMap;
   } catch (err) {
-    console.error("Fehler beim Laden der Benutzer:", err);
+    showMessage("Fehler beim Laden der Benutzer:", err);
     return {};
   }
 }
@@ -485,7 +485,7 @@ async function loadTasks() {
       }
     })
     .catch((error) => {
-      console.error("Fehler beim Laden der Tasks:", error);
+      showMessage("Fehler beim Laden der Tasks:", error);
     });
 }
 
@@ -528,8 +528,8 @@ function handleDrop(e) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: newStatus })
     })
-      .then(() => console.log(`Task ${taskId} verschoben nach ${newStatus}`))
-      .catch((err) => console.error("Fehler beim Aktualisieren:", err));
+      .then(() => showMessage(`Task ${taskId} verschoben nach ${newStatus}`))
+      .catch((err) => showMessage("Fehler beim Aktualisieren:", err));
   }
 }
 
@@ -549,7 +549,7 @@ function openTaskDetailOverlay(task, taskId) {
 
     })
     .catch((error) => {
-      console.error("Fehler beim Laden des Task-Details:", error);
+      showMessage("Fehler beim Laden des Task-Details:", error);
     });
 }
 
@@ -582,6 +582,29 @@ async function populateAssigneeDropdown() {
       select.appendChild(option);
     }
   } catch (error) {
-    console.error("Fehler beim Laden der Kontakte für das Dropdown:", error);
+    showMessage("Fehler beim Laden der Kontakte für das Dropdown:", error);
   }
+}
+
+function showIcon(src, duration = 1500) {
+  const icon = document.getElementById("alert-icon");
+  if (!icon) return;
+  icon.src = src;
+  icon.classList.remove("hidden");
+  setTimeout(() => {
+    icon.classList.add("hidden");
+  }, duration);
+}
+
+function showMessage(message, duration = 1500) {
+  const msg = document.getElementById("alert-text-message");
+  if (!msg) return;
+
+  msg.textContent = message;
+  msg.classList.remove("hidden");
+  void msg.offsetWidth;
+
+  setTimeout(() => {
+    msg.classList.add("hidden");
+  }, duration);
 }

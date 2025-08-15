@@ -126,7 +126,7 @@ async function deleteContact(contact) {
     document.getElementById('contact-details-content').innerHTML = '';
     closeEditOverlay();
   } catch (err) {
-    alert("Fehler beim Löschen.");
+    showMessage("Fehler beim Löschen.");
   }
 }
 
@@ -152,7 +152,7 @@ async function saveContactChanges(contact) {
   const newEmail = document.getElementById('edit-email').value.trim();
   const newPhone = document.getElementById('edit-phone').value.trim();
 
-  if (!newName || !newEmail || !newPhone) return alert('Bitte fülle alle Felder aus!');
+  if (!newName || !newEmail || !newPhone) return showMessage('Bitte fülle alle Felder aus!');
 
   try {
     await updateContactInDB(contact.uid, { name: newName, email: newEmail, phone: newPhone });
@@ -160,7 +160,7 @@ async function saveContactChanges(contact) {
     renderContactDetails(contact);
     closeEditOverlay();
   } catch (err) {
-    alert("Fehler beim Speichern der Änderungen.");
+    showMessage("Fehler beim Speichern der Änderungen.");
   }
 }
 
@@ -206,7 +206,7 @@ async function createNewContact() {
   const email = document.getElementById('new-email').value.trim();
   const phone = document.getElementById('new-phone').value.trim();
 
-  if (!name || !email || !phone) return alert('Bitte fülle alle Felder aus!');
+  if (!name || !email || !phone) return showMessage('Bitte fülle alle Felder aus!');
 
   try {
     const color = generateRandomColor();
@@ -224,7 +224,7 @@ async function createNewContact() {
     closeAddContactOverlay();
     showSuccessPopup();
   } catch (err) {
-    alert("Fehler beim Erstellen des Kontakts.");
+    showMessage("Fehler beim Erstellen des Kontakts.");
   }
 }
 
@@ -373,7 +373,7 @@ async function deleteContactOptions() {
     document.getElementById('contact-details-content').innerHTML = '';
     closeContactOptionsOverlay();
   } catch (err) {
-    alert("Fehler beim Löschen.");
+    showMessage("Fehler beim Löschen.");
   }
 }
 
@@ -409,6 +409,29 @@ function openAddContactMobileOverlay() {
       closeAddContactOverlay();
     }
   });
+}
+
+function showIcon(src, duration = 1500) {
+  const icon = document.getElementById("alert-icon");
+  if (!icon) return;
+  icon.src = src;
+  icon.classList.remove("hidden");
+  setTimeout(() => {
+    icon.classList.add("hidden");
+  }, duration);
+}
+
+function showMessage(message, duration = 1500) {
+  const msg = document.getElementById("alert-text-message");
+  if (!msg) return;
+
+  msg.textContent = message;
+  msg.classList.remove("hidden");
+  void msg.offsetWidth;
+
+  setTimeout(() => {
+    msg.classList.add("hidden");
+  }, duration);
 }
 
 window.deleteContactOptions = deleteContactOptions;

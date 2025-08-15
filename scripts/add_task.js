@@ -101,18 +101,18 @@ function updateSelectedContactsView() {
   view.innerText = initials.length ? initials.join(", ") : "Select contacts to assign";
 }
 function createTask() {
-  const title       = document.getElementById("title").value.trim();
+  const title = document.getElementById("title").value.trim();
   const description = document.getElementById("description").value.trim();
-  const dueDate     = document.getElementById("due").value;
-  const category    = document.getElementById("category").value;
-  const priority    = selectedPriority || "low";
+  const dueDate = document.getElementById("due").value;
+  const category = document.getElementById("category").value;
+  const priority = selectedPriority || "low";
 
   let selected = Object.keys(selectedAssignees).length
     ? selectedAssignees
     : Object.fromEntries(
-        Array.from(document.querySelectorAll('#assigned-container .assignee-checkbox:checked'))
-          .map(cb => [cb.closest('.assignee-option').dataset.uid, true])
-      );
+      Array.from(document.querySelectorAll('#assigned-container .assignee-checkbox:checked'))
+        .map(cb => [cb.closest('.assignee-option').dataset.uid, true])
+    );
 
   if (!title || !dueDate || category === "Select task category" || !Object.keys(selected).length) {
     alert("Please fill all required fields");
@@ -143,8 +143,10 @@ function createTask() {
     body: JSON.stringify(taskData),
   })
     .then(() => {
-      alert("Task erfolgreich erstellt.");
-      window.location.href = "../pages/board.html";
+      showIcon("../assets/img/task-added-toBoard.svg");
+      setTimeout(() => {
+        window.location.href = "../pages/board.html";
+      }, 1500);
     })
     .catch(err => console.error("Fehler beim Erstellen des Tasks:", err));
 }
@@ -222,4 +224,14 @@ function logout() {
   localStorage.removeItem("userInitial");
   localStorage.removeItem("userId");
   window.location.href = "../index.html";
+}
+
+function showIcon(src, duration = 1500) {
+  const icon = document.getElementById("alert-icon");
+  if (!icon) return;
+  icon.src = src;
+  icon.classList.remove("hidden");
+  setTimeout(() => {
+    icon.classList.add("hidden");
+  }, duration);
 }
