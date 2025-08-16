@@ -450,7 +450,7 @@
 
     .add-contact-overlay {
       width: 90%;
-      height: 90%;
+      height: 50%;
       max-height: 90%;
     }
 
@@ -503,6 +503,7 @@
   .close-btn {
     top: 16px;
     right: 16px;
+    cursor: pointer;
   }
 }
 

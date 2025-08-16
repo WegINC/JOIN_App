@@ -1,10 +1,10 @@
 body {
   margin: 0;
-  font-family: 'Inter';
+  font-family: "Inter";
   background-color: #f6f7f8;
   height: 100vh;
   overflow: hidden;
-  max-width: 1920px;
+  max-width: 100%;
 }
 
 .opacity {
@@ -46,7 +46,7 @@ body {
 .greeting-text-splash {
   font-size: 36px;
   font-weight: 400;
-  color: #2A3647;
+  color: #2a3647;
 }
 
 .summary-content {
@@ -95,7 +95,7 @@ body {
 }
 
 .summary-buttons a:hover {
-  background-color: #2A3647;
+  background-color: #2a3647;
   transition: 100ms ease-in-out;
   box-shadow: 0px 4px 4px 0px #0000004e;
   transform: scale(1.08);
@@ -161,7 +161,7 @@ body {
 }
 
 .task-label {
-  color: #2A3647;
+  color: #2a3647;
   font-size: 20px;
   text-align: center;
 }
@@ -195,7 +195,7 @@ body {
 }
 
 .urgent-separator {
-  background-color: #D1D1D1;
+  background-color: #d1d1d1;
   width: 2px;
   height: 80px;
 }
@@ -222,7 +222,7 @@ body {
   font-size: 47px;
   font-weight: 500;
   margin-bottom: 8px;
-  color: #2A3647;
+  color: #2a3647;
 }
 
 .greeting-user {
@@ -366,7 +366,6 @@ body {
 }
 
 @media (max-width: 416px) {
-
   .headline-text-1 {
     font-size: 36px;
   }
