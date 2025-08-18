@@ -6,7 +6,7 @@ body {
   height: auto;
   overflow-x: hidden;
   overflow-y: auto;
-  max-width: 100%;
+  max-width: 1920px;
 }
 
 .wrapper {
