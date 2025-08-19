@@ -136,15 +136,15 @@ export function getContactSeparatorTemplate(letter) {
           </div>
           <form class="add-form">
             <div class="input-group">
-              <input type="text" id="edit-name" value="${name}" placeholder="Name">
+              <input type="text" id="new-name" value="${name}" placeholder="Name">
               <img src="../assets/icons/person.png" alt="Person icon" />
             </div>
             <div class="input-group">
-              <input type="email" id="edit-email" value="${email}" placeholder="Email">
+              <input type="email" id="new-email" value="${email}" placeholder="Email">
               <img src="../assets/icons/mail.png" alt="Mail icon" />
             </div>
             <div class="input-group">
-              <input type="tel" id="edit-phone" value="${phone}" placeholder="Phone">
+              <input type="tel" id="new-phone" value="${phone}" placeholder="Phone">
               <img src="../assets/icons/call.png" alt="Call icon" />
             </div>
             <div class="add-actions">
@@ -180,15 +180,15 @@ export function getContactSeparatorTemplate(letter) {
         <form class="add-form">
             <div class="input-group">
               <input type="text" id="new-name" value="${name}" placeholder="Name">
-              <img src="../assets/icons/person.png" alt="Person icon" />
+              <img src="/assets/icons/person.png" alt="Person icon" />
             </div>
             <div class="input-group">
               <input type="email" id="new-email" value="${email}" placeholder="Email">
-              <img src="../assets/icons/mail.png" alt="Mail icon" />
+              <img src="/assets/icons/mail.png" alt="Mail icon" />
             </div>
             <div class="input-group">
               <input type="tel" id="new-phone" value="${phone}" placeholder="Phone">
-              <img src="../assets/icons/call.png" alt="Call icon" />
+              <img src="/assets/icons/call.png" alt="Call icon" />
             </div>
             <div class="add-actions">
               <button type="button" class="create-btn" onclick="createNewContact()">

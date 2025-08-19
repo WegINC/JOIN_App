@@ -4,7 +4,7 @@ body {
   background-color: #f6f7f8;
   height: 100vh;
   overflow: hidden;
-  max-width: 100%;
+  max-width: 1920px;
 }
 
 .wrapper {
@@ -42,7 +42,6 @@ body {
   background-color: white;
   box-shadow: 4px 0px 6px 0px #00000014;
   z-index: 1;
-  max-height: calc(100vh - 180px);
   overflow-y: auto;
 }
 

@@ -202,20 +202,33 @@ function closeAddContactOverlay() {
 }
 
 async function createNewContact() {
-  const name = document.getElementById('new-name').value.trim();
-  const email = document.getElementById('new-email').value.trim();
-  const phone = document.getElementById('new-phone').value.trim();
+  
+  const overlay = document.querySelector(
+    ".contact-add-overlay, .add-contact-overlay"
+  );
+  if (!overlay) return showMessage("Kein Overlay geöffnet!");
 
-  if (!name || !email || !phone) return showMessage('Bitte fülle alle Felder aus!');
+ 
+  const nameInput = overlay.querySelector("#new-name");
+  const emailInput = overlay.querySelector("#new-email");
+  const phoneInput = overlay.querySelector("#new-phone");
+
+  const name = nameInput?.value.trim();
+  const email = emailInput?.value.trim();
+  const phone = phoneInput?.value.trim();
+
+  if (!name || !email || !phone) {
+    return showMessage("Bitte fülle alle Felder aus!");
+  }
 
   try {
     const color = generateRandomColor();
-    const contact = buildContactObject('', { name, email, phone, themeColor: color });
+    const contact = buildContactObject("", { name, email, phone, themeColor: color });
 
     const res = await fetch(`${BASE_URL}/users.json`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, phone, themeColor: color })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, phone, themeColor: color }),
     });
 
     const data = await res.json();
