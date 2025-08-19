@@ -68,6 +68,7 @@
     flex-direction: column;
     font-size: 16px;
     gap: 4px;
+    white-space: nowrap;
   }
 
   .sidebar-img,
@@ -77,12 +78,6 @@
 
   .sidebar-menu {
     flex-direction: row;
-  }
-
-  .sidebar-menu a {
-    flex-direction: column;
-    font-size: 16px;
-    white-space: nowrap;
   }
 
   .sidebar-menu img {
@@ -510,6 +505,9 @@
   .edit-avatar-circle {
     width: 80px;
     height: 80px;
+  }
+  .sidebar-menu a {
+    padding: 8px 2px;
   }
 }
 

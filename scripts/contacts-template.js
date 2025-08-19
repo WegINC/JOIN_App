@@ -62,7 +62,7 @@ export function getContactSeparatorTemplate(letter) {
               <img src="../assets/icons/person.png" alt="Person icon" />
             </div>
             <div class="input-group">
-              <input type="email" id="edit-email" value="${email}" placeholder="Email">
+              <input type="email" id="edit-email" value="${email}" placeholder="Email" required>
               <img src="../assets/icons/mail.png" alt="Mail icon" />
             </div>
             <div class="input-group">
