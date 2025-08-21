@@ -79,10 +79,9 @@ body {
 .contact-scrollbar {
   width: 100%;
   height: auto;
-  overflow-y: auto;
   margin-top: 80px;
   scroll-behavior: smooth;
-  overflow-y: auto;
+  
 }
 
 .contact-entry {
