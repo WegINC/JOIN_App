@@ -206,22 +206,21 @@ export function getContactSeparatorTemplate(letter) {
     return `
       <div style="
         position: fixed;
-        top: 120px;
+        top: 50%;
         left: 50%;
-        transform: translateX(-50%);
-        background-color: #2A3647;
-        color: white;
-        padding: 16px;
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        font-size: 16px;
+        transform: translate(-50%, -50%);
         z-index: 9999;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        opacity: 0;
+        animation: fromBottom 0.3s ease-out forwards;
+        background-color: #2a3647;
+        padding: 25px 25px;
+        border-radius: 20px;
+        font-size: 20px;
+        font-weight: 400;
+        width: max-content;
         text-align: center;
-        width: 60%;
-        animation: fadeInOut 3s ease-in-out;
+        color: white;
+        box-shadow: 0px 0px 4px 0px #353535;
       ">
         Contact successfully created
       </div>
