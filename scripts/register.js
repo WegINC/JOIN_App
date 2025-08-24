@@ -45,22 +45,6 @@ async function submitSignup(name, email, pwd){
 }
 
 
-window.addEventListener("load", () => {
-  const introLogo = document.getElementById("intro-logo");
-
-  if (introLogo) {
-    
-    introLogo.classList.add("animate-logo");
-
-    setTimeout(() => {
-      introLogo.remove();
-      document.body.classList.add("loaded");
-    }, 1000);
-  } else {
-    document.body.classList.add("loaded");
-  }
-});
-
 function showIcon(src, duration = 1500) {
   const icon = document.getElementById("alert-icon");
   if (!icon) return;

@@ -3,6 +3,7 @@ body {
     margin: 0;
     font-family: 'Inter';
     max-width: 1920px;
+    overflow: hidden;
 }
 
 .sign-up-content{
@@ -218,6 +219,16 @@ h1 {
   text-align: center;
   color: white;
   box-shadow: 0px 0px 4px 0px #353535;
+}
+
+.join-logo-sign-up {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  width: 120px;
+  height: auto;
+  transform: none;
+  z-index: 10;
 }
 
  @keyframes fromBottom {
