@@ -224,7 +224,7 @@ body.loaded .join-logo {
 .sidebar-bottom,
 .nav-right {
   opacity: 0;
-  transition: opacity 1s ease-in-out;
+  transition: opacity 2s ease-in-out;
 }
 
 

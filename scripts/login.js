@@ -54,18 +54,28 @@ function hideLoginError() {
 }
 
 window.addEventListener("load", () => {
+  const logo = document.querySelector(".join-logo");
+  const content = document.querySelector(".login-content");
+  const sidebar = document.querySelector(".sidebar-bottom");
+  const navRight = document.querySelector(".nav-right");
+
   // Logo-Animation starten
   document.body.classList.add("loaded");
 
-  const logo = document.querySelector(".join-logo");
+  // Content leicht einblenden, sobald Logo anfängt zu sliden
+  setTimeout(() => {
+    content.style.opacity = "1";   // halbtransparent während Slide
+    sidebar.style.opacity = "1";
+    navRight.style.opacity = "1";
+  }, 50); // kleine Verzögerung, damit CSS-Klasse geladen ist
 
-  // Warten bis die Transition des Logos beendet ist
+  // Sobald Logo oben ist → Content vollständig sichtbar
   logo.addEventListener(
     "transitionend",
     () => {
-      document.querySelector(".login-content").classList.add("visible");
-      document.querySelector(".sidebar-bottom").classList.add("visible");
-      document.querySelector(".nav-right").classList.add("visible");
+      content.classList.add("visible");
+      sidebar.classList.add("visible");
+      navRight.classList.add("visible");
     },
     { once: true }
   );
