@@ -54,7 +54,19 @@ function hideLoginError() {
 }
 
 window.addEventListener("load", () => {
-  setTimeout(() => {
-    document.body.classList.add("loaded");
-  },);
+  // Logo-Animation starten
+  document.body.classList.add("loaded");
+
+  const logo = document.querySelector(".join-logo");
+
+  // Warten bis die Transition des Logos beendet ist
+  logo.addEventListener(
+    "transitionend",
+    () => {
+      document.querySelector(".login-content").classList.add("visible");
+      document.querySelector(".sidebar-bottom").classList.add("visible");
+      document.querySelector(".nav-right").classList.add("visible");
+    },
+    { once: true }
+  );
 });

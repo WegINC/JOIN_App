@@ -197,25 +197,39 @@ h1 {
 }
 
 .join-logo {
-  position: absolute; /* Start: wir überschreiben die normale Header-Position */
+  position: absolute;
   left: 50%;
   top: 50%;
   width: 300px;
   height: 300px;
+  height: auto;
   transform: translate(-50%, -50%) scale(1);
-  z-index: 1000; /* über allem */
-  transition: all 5s ease-in-out; /* smooth Bewegung */
+  z-index: 1000;
+  transition: all 2s ease-in-out;
 }
 
-/* Nach dem Laden → Logo normal im Header */
+
 body.loaded .join-logo {
-  position: fixed;       /* fixiert oben im Header */
-  left: 20px;            /* deine Header-Position */
+  position: fixed;
+  left: 20px;
   top: 20px;
-  width: 120px;          /* Endgröße anpassen */
+  width: 120px;
   height: auto;
   transform: none;
-  z-index: 10;           /* normale Ebene */
+  z-index: 10;
+}
+
+
+.login-content,
+.sidebar-bottom,
+.nav-right {
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+}
+
+
+.visible {
+  opacity: 1;
 }
 
   
