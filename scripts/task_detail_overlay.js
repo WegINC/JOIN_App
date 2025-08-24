@@ -17,7 +17,7 @@ function openTaskDetailOverlay(task, taskId) {
           document.dispatchEvent(overlayEvent);
         });
     })
-    .catch(err => console.error("Fehler beim Öffnen des Task-Overlays:", err));
+    .catch(err => showMessage("Fehler beim Öffnen des Task-Overlays:", err));
 }
 
 document.addEventListener("taskDataReady", function (e) {
@@ -164,7 +164,7 @@ function updateSubtasksInFirebase(taskId, subtasks) {
       fillTaskDetails(window.currentTaskData);
       loadTasks();
     })
-    .catch((err) => console.error("Fehler beim Subtask-Update:", err));
+    .catch((err) => showMessage("Fehler beim Subtask-Update:", err));
 }
 
 function getPriorityIcon(priority) {
@@ -266,7 +266,7 @@ function initAssigneeDropdown() {
   const trigger = document.getElementById("fa-assigned-dropdown");
   const menu    = document.getElementById("fa-assigned-container");
   if (!trigger || !menu) {
-    console.warn("Assignee-Trigger oder -Container nicht gefunden (fa-assigned-*).");
+    showMessage("Assignee-Trigger oder -Container nicht gefunden (fa-assigned-*).");
     return;
   }
   trigger.classList.remove("hidden");
@@ -386,13 +386,13 @@ function saveEditedTask() {
       loadTasks();
       openTaskDetailOverlay(window.currentTaskData, taskId);
     })
-    .catch((err) => console.error("Fehler beim Speichern:", err));
+    .catch((err) => showMessage("Fehler beim Speichern:", err));
 }
 
 function deleteTask() {
   const taskId = window.currentTaskId;
   if (!taskId) {
-    console.error("Task-ID fehlt!");
+    showMessage("Task-ID fehlt!");
     return;
   }
 
@@ -403,11 +403,11 @@ function deleteTask() {
     method: "DELETE",
   })
     .then(() => {
-      console.log(`Task ${taskId} gelöscht`);
+      showMessage(`Task ${taskId} gelöscht`);
       closeTaskOverlay();
       loadTasks();
     })
-    .catch((err) => console.error("Fehler beim Löschen:", err));
+    .catch((err) => showMessage("Fehler beim Löschen:", err));
 }
 
 function showIcon(src, duration = 1500) {

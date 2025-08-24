@@ -4,8 +4,7 @@ body {
   background-color: #f6f7f8;
   min-height: 100vh;
   height: auto;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   max-width: 1920px;
 }
 
@@ -22,7 +21,7 @@ body {
 }
 
 .add-task-content-headline {
-  padding-top: 80px;
+  padding-top: 70px;
   padding-left: 96px;
   display: flex;
   align-items: center;
@@ -73,11 +72,10 @@ select {
 .detailed-infos input,
 .detailed-infos select,
 .detailed-infos textarea {
-  min-height: 50px;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #d1d1d1;
-  font-size: 16px;
+  font-size: 14px;
   width: 100%;
   box-sizing: border-box;
   resize: none;
@@ -100,40 +98,33 @@ textarea {
 
 .priority-buttons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
-.priority-buttons button {
-  height: 48px;
-  font-size: 16px;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  flex: 1;
+.priority-buttons a {
+  height: 44px;
+  width: 136px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 0 4px 0 #e3e3e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #000;
+  gap: 8px;
+  font-size: 20px;
+  padding: 2px 4px;
 }
 
-.priority-buttons img {
-  height: 12px;
-  padding-left: 4px;
-}
+.priority-buttons a img { height: 15px; width: 20px; }
+.priority-buttons a:hover { box-shadow: 0px 4px 4px 0px #c5c5c5; }
 
-.urgent,
-.low {
-  background-color: white;
-}
+.priority-buttons a.active.urgent { background: #ff3d00; color:#fff; }
+.priority-buttons a.active.medium { background: #ffa800; color:#fff; }
+.priority-buttons a.active.low    { background: #7ae229; color:#fff; }
 
-.urgent:hover,
-.low:hover {
-  transition: 100ms ease-in-out;
-  box-shadow: 0px 4px 4px 0px #0000004e;
-}
-
-.medium {
-  background-color: #ffa800;
-  color: white;
-}
+.priority-buttons a.active img { filter: brightness(0) invert(1); }
 
 .required-text {
   color: red;
@@ -147,7 +138,6 @@ textarea {
   gap: 20px;
   justify-content: flex-end;
   margin-top: 40px;
-  height: 64px;
 }
 
 .cancel {
@@ -196,7 +186,7 @@ textarea {
   background-color: #fff;
   border: 1px solid #d1d1d1;
   border-radius: 8px;
-  padding: 8px 12px;
+  padding-left: 12px;
   cursor: pointer;
   font-size: 14px;
   color: #333;
@@ -409,7 +399,7 @@ textarea {
   }
 }
 
-@media (max-width: 898px) {
+@media (max-width: 1042px) {
   .wrapper {
     flex-direction: column;
     min-height: 130vh;
@@ -425,10 +415,12 @@ textarea {
     justify-content: space-around;
     align-items: center;
     padding: 0 16px;
+    z-index: 5000;
   }
 
   .content-area {
-    padding-bottom: 300px;
+    padding-bottom: 350px;
+    overflow: auto;
   }
 
   .sidebar-img,
@@ -517,5 +509,10 @@ textarea {
 
   .side-navbar {
     padding: 0;
+  }
+
+  .priority-buttons a {
+    width: 80px;
+    font-size: 14px;
   }
 }

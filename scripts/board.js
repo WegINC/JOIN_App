@@ -421,6 +421,16 @@ const categoryColors = {
   "User Story": "#0038FF"
 };
 
+function getPriorityData(p) {
+  const key = (p || "low").toLowerCase();
+  const map = {
+    urgent: { label: "Urgent", color: "#FF3D00", icon: "../assets/icons/urgent.svg" },
+    medium: { label: "Medium", color: "#FFA800", icon: "../assets/icons/medium.svg" },
+    low:    { label: "Low",    color: "#7AE229", icon: "../assets/icons/low.svg" }
+  };
+  return map[key] || map.low;
+}
+
 async function loadTasks() {
   const userInitialsMap = await fetchUsers();
 
@@ -461,6 +471,7 @@ async function loadTasks() {
         }).join("");
 
         const color = categoryColors[task.category] || "#ccc";
+        const pr = getPriorityData(task.priority);
 
         card.innerHTML = `
           <div class="task-category" style="background-color: ${color};">
@@ -478,6 +489,7 @@ async function loadTasks() {
             <div class="task-user">
               ${userBadges}
             </div>
+            <img class="task-priority-icon" src="${pr.icon}" alt="${pr.label}">
           </div>
         `;
 

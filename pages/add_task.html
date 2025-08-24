@@ -75,9 +75,9 @@
           <div class="detailed-infos">
             <label>Priority</label>
             <div class="priority-buttons">
-              <button id="priority-urgent">Urgent ↑</button>
-              <button id="priority-medium">Medium =</button>
-              <button id="priority-low">Low ↓</button>
+              <a id="priority-urgent" class="priority-btn urgent" href="#">Urgent <img src="../assets/icons/urgent.svg" alt="Urgent"></a>
+              <a id="priority-medium" class="priority-btn medium" href="#">Medium <img src="../assets/icons/medium.svg" alt="Medium"></a>
+              <a id="priority-low" class="priority-btn low" href="#">Low <img src="../assets/icons/low.svg" alt="Low"></a>
             </div>
 
             <label>Assigned to<span class="required">*</span></label>
@@ -117,13 +117,6 @@
 
   <img id="alert-icon" src="../assets/img/task-added-toBoard.svg" alt="Alert Icon" class="hidden">
 
-  <script>
-    window.addEventListener("DOMContentLoaded", async () => {
-      initUserInitial();
-      setupPriorityButtons();
-      populateCategoryDropdown();
-    });
-  </script>
   <script src="../scripts/add_task.js"></script>
 </body>
 

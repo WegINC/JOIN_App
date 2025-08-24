@@ -4,11 +4,18 @@ let selectedPriority = "";
 let selectedAssignees = {};
 let assigneesLoaded = false;
 
-window.addEventListener("DOMContentLoaded", () => {
+function initPage() {
   initUserInitial();
   setupPriorityButtons();
   populateCategoryDropdown();
-});
+  setDefaultPriority();
+}
+
+function setDefaultPriority() {
+  selectPriority("medium");
+}
+
+window.addEventListener("DOMContentLoaded", initPage);
 
 async function toggleAssigneeDropdown() {
   const container = document.getElementById("fa-assigned-container");
@@ -160,7 +167,12 @@ function initUserInitial() {
 function setupPriorityButtons() {
   ["urgent", "medium", "low"].forEach(level => {
     const btn = document.getElementById(`priority-${level}`);
-    if (btn) btn.addEventListener("click", () => selectPriority(level));
+    if (btn) {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        selectPriority(level);
+      });
+    }
   });
 }
 
@@ -168,19 +180,10 @@ function selectPriority(level) {
   selectedPriority = level;
   ["urgent", "medium", "low"].forEach(lvl => {
     const btn = document.getElementById(`priority-${lvl}`);
-    if (btn) {
-      btn.classList.remove("active");
-      btn.style.backgroundColor = "#e0e0e0";
-      btn.style.color = "#333";
-    }
+    if (btn) btn.classList.remove("active");
   });
   const activeBtn = document.getElementById(`priority-${level}`);
-  if (activeBtn) {
-    activeBtn.classList.add("active");
-    activeBtn.style.backgroundColor =
-      level === "urgent" ? "red" : level === "medium" ? "#ffa800" : "lightgreen";
-    activeBtn.style.color = level === "low" ? "#000" : "white";
-  }
+  if (activeBtn) activeBtn.classList.add("active");
 }
 
 function populateCategoryDropdown() {
