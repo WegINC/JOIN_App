@@ -12,7 +12,7 @@ body {
 
 .nav-bar {
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
     padding: 80px;
 }
 
@@ -196,59 +196,28 @@ h1 {
   margin: 2px 4px 2px 0;
 }
 
-#intro-logo {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    z-index: 1000;
-    transform: translate(-50%, -50%);
-    background-color: #f6f7f8;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.join-logo {
+  position: absolute; /* Start: wir überschreiben die normale Header-Position */
+  left: 50%;
+  top: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 1000; /* über allem */
+  transition: all 5s ease-in-out; /* smooth Bewegung */
+}
 
-  #intro-logo.animate-logo {
-    animation: slideAndShrink 2s ease-in-out forwards;
-  }
-  
-  #intro-logo.animate-logo img {
-    animation: shrinkLogo 2s ease-in-out forwards;
-  }
-  
-  #intro-logo img {
-    width: 300px; 
-    height: 300px;
-    animation: shrinkLogo 2s ease-in-out forwards;
-  }
-  
- 
-  @keyframes slideAndShrink {
-    0% {
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    100% {
-      top: 20px;
-      left: 20px;
-      transform: translate(0, 0);
-    }
-  }
-  
-  
-  @keyframes shrinkLogo {
-    0% {
-      width: 300px;
-      height: 300px;
-    }
-    100% {
-      width: 140px;
-      height: 140px;
-    }
-  }
+/* Nach dem Laden → Logo normal im Header */
+body.loaded .join-logo {
+  position: fixed;       /* fixiert oben im Header */
+  left: 20px;            /* deine Header-Position */
+  top: 20px;
+  width: 120px;          /* Endgröße anpassen */
+  height: auto;
+  transform: none;
+  z-index: 10;           /* normale Ebene */
+}
+
   
   body.loaded .nav-bar,
   body.loaded .sign-up-content {

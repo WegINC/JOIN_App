@@ -54,17 +54,7 @@ function hideLoginError() {
 }
 
 window.addEventListener("load", () => {
-  const introLogo = document.getElementById("intro-logo");
-
-  if (introLogo) {
-    
-    introLogo.classList.add("animate-logo");
-
-    setTimeout(() => {
-      introLogo.remove();
-      document.body.classList.add("loaded");
-    }, 1000);
-  } else {
+  setTimeout(() => {
     document.body.classList.add("loaded");
-  }
+  },);
 });

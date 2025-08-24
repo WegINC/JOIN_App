@@ -106,10 +106,13 @@ body {
   transition: background 0.2s ease;
 }
 
-.contact-item:hover,
-.contact-item.active {
-  background: #2a3647;
-  color: white;
+.contact-item:hover {
+  background-color: #F6F7F8;
+}
+
+.contact-item.active{
+background-color: #2a3647;
+color: white;
 }
 
 .contact-avatar {
@@ -636,7 +639,17 @@ h1 {
 
 .back-arrow {
   display: none;
+  cursor: pointer;
 }
+
+.back-arrow:active{
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+}
+
+
 
 .contact-options-overlay {
   position: fixed;

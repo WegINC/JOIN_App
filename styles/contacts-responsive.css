@@ -1,18 +1,23 @@
 @media (max-width: 1600px) {
-  #add-contact-overlay {
+  #add-contact-overlay,
+  #edit-contact-overlay {
     left: 200px;
   }
 }
 
 @media (max-width: 1250px) {
-  #add-contact-overlay {
+  #add-contact-overlay,
+  #edit-contact-overlay {
     left: 0px;
   }
+
 }
 @media (max-width: 1024px) {
-  #add-contact-overlay {
+  #add-contact-overlay,
+  #edit-contact-overlay {
     left: -100px;
   }
+
   .add-avatar {
     position: fixed;
   }
