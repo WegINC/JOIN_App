@@ -205,7 +205,7 @@ h1 {
   height: auto;
   transform: translate(-50%, -50%) scale(1);
   z-index: 1000;
-  transition: all 2s ease-in-out;
+  transition: all 1s ease-in-out;
 }
 
 
@@ -224,7 +224,7 @@ body.loaded .join-logo {
 .sidebar-bottom,
 .nav-right {
   opacity: 0;
-  transition: opacity 2s ease-in-out;
+  transition: opacity 1s ease-in-out;
 }
 
 
