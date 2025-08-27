@@ -5,11 +5,6 @@ body {
     max-width: 1920px;
 }
 
-.join-logo {
-    height: 140px;
-    width: 140px;
-}
-
 .nav-bar {
     display: flex;
     justify-content: right;
@@ -205,15 +200,14 @@ h1 {
   height: auto;
   transform: translate(-50%, -50%) scale(1);
   z-index: 1000;
-  transition: all 1s ease-in-out;
+  transition: all 2s ease-in-out;
 }
 
 
 body.loaded .join-logo {
-  position: fixed;
   left: 20px;
   top: 20px;
-  width: 120px;
+  width: 80px;
   height: auto;
   transform: none;
   z-index: 10;
@@ -265,13 +259,8 @@ body.loaded .join-logo {
   
 @media (max-width: 1024px) {
     .nav-bar {
-      padding: 40px;
       display: flex;
       flex-direction: row;
-    }
-  
-    .login-content {
-      padding-top: 60px;
     }
   
     .login-container {
@@ -324,13 +313,7 @@ body.loaded .join-logo {
   }
   
   @media (max-width: 768px) {
-    .nav-bar {
-      padding: 20px;
-    }
-  
-    .login-content {
-      padding-top: 40px;
-    }
+    
   
     .login-container {
       width: 80%;
@@ -373,7 +356,6 @@ body.loaded .join-logo {
     .nav-bar {
       flex-direction: column;
       gap: 30px;
-      padding: 30px;
     }
 
     .nav-right{
@@ -426,6 +408,10 @@ body.loaded .join-logo {
     h1 {
       font-size: 24px;
     }
+
+    .nav-bar{
+      width: 20px;
+    }
   
     .login-container {
       gap: 12px;
@@ -437,7 +423,6 @@ body.loaded .join-logo {
   
     .join-logo {
       width: 60px;
-      height: 60px;
     }
   
     #intro-logo img {

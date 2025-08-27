@@ -277,12 +277,20 @@ h1 {
       gap: 30px;
       flex-wrap: wrap;
     }
+
+    .join-logo-sign-up {
+      width: 80px;   /* kleineres Logo */
+      left: 16px;
+      top: 16px;
+      padding: 20px;
+    }
+  }
   
     .arrow-left-button img {
       top: 40px;
       left: 40px;
     }
-  }
+  
   
   @media (max-width: 768px) {
     h1 {
@@ -312,14 +320,22 @@ h1 {
       gap: 20px;
       padding-top: 20px;
     }
-  
+    
+    .join-logo-sign-up {
+      width: 80px;   /* kleineres Logo */
+      left: 16px;
+      top: 16px;
+      padding: 20px;
+    }
+  }
+
     .arrow-left-button img {
       top: 30px;
       left: 24px;
       width: 28px;
       height: 28px;
     }
-  }
+  
   
   @media (max-width: 480px) {
     h1 {
@@ -349,6 +365,14 @@ h1 {
     .sidebar-bottom {
       padding-top: 20px;
     }
+
+    .join-logo-sign-up {
+      width: 80px;   /* noch kleiner */
+      left: 12px;
+      top: 12px;
+      padding: 20px;
+    }
+  }
   
     .arrow-left-button img {
       top: 20px;
@@ -356,15 +380,15 @@ h1 {
       width: 26px;
       height: 26px;
     }
-  }
+  
   
   @media (max-width: 320px) {
     h1 {
       font-size: 26px;
     }
-  
+
+
     .sign-up-container {
-    padding: 12px;
     gap: 16px;
     }
   
@@ -381,6 +405,14 @@ h1 {
       gap: 16px;
       font-size: 13px;
     }
+
+    .join-logo-sign-up {
+      width: 80px;
+      left: 8px;
+      top: 8px;
+      padding: 20px;
+    }
+  }
   
     .arrow-left-button img {
       top: 16px;
@@ -388,4 +420,4 @@ h1 {
       width: 24px;
       height: 24px;
     }
-  }
+  
