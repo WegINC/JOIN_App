@@ -250,28 +250,15 @@ function getFloatingSelectedAssignees() {
   return Object.fromEntries(uids.map(uid => [uid, true]));
 }
 
-function selectPriority(level) {
+function selectPriority(level, ev) {
+  ev?.preventDefault?.();
   selectedPriority = level;
-
-  const buttons = {
-    urgent: document.getElementById("priority-urgent"),
-    medium: document.getElementById("priority-medium"),
-    low: document.getElementById("priority-low"),
-  };
-
-  Object.values(buttons).forEach(btn => {
-    if (!btn) return;
-    btn.classList.remove("active");
-    btn.style.backgroundColor = "#e0e0e0";
-    btn.style.color = "#333";
+  ["urgent","medium","low"].forEach(l=>{
+    const b = document.getElementById(`priority-${l}`);
+    if (b) b.classList.remove("active");
   });
-
-  const activeBtn = buttons[level];
-  if (activeBtn) {
-    activeBtn.classList.add("active");
-    activeBtn.style.backgroundColor = level === "urgent" ? "red" : level === "medium" ? "#ffa800" : "lightgreen";
-    activeBtn.style.color = level === "low" ? "#000" : "white";
-  }
+  const activeBtn = document.getElementById(`priority-${level}`);
+  if (activeBtn) activeBtn.classList.add("active");
 }
 
 function addSubtaskInput() {

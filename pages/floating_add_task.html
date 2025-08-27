@@ -7,11 +7,7 @@
       <input type="text" id="title" placeholder="Enter a title" />
 
       <label for="description">Description</label>
-      <textarea
-        id="description"
-        placeholder="Enter a Description"
-        rows="5"
-      ></textarea>
+      <textarea id="description" placeholder="Enter a Description" rows="5"></textarea>
 
       <label for="due">Due date<span class="required">*</span></label>
       <input type="date" id="due" />
@@ -22,13 +18,15 @@
     <div class="column">
       <label>Priority</label>
       <div class="priority-buttons">
-        <button id="priority-urgent" onclick="selectPriority('urgent')">
-          Urgent ↑
-        </button>
-        <button id="priority-medium" onclick="selectPriority('medium')">
-          Medium =
-        </button>
-        <button id="priority-low" onclick="selectPriority('low')">Low ↓</button>
+        <a id="priority-urgent" class="priority-btn-urgent" href="#" onclick="selectPriority('urgent')">
+          Urgent <img src="../assets/icons/urgent.svg" alt="Urgent">
+        </a>
+        <a id="priority-medium" class="priority-btn-medium" href="#" onclick="selectPriority('medium')">
+          Medium <img src="../assets/icons/medium.svg" alt="Medium">
+        </a>
+        <a id="priority-low" class="priority-btn-low" href="#" onclick="selectPriority('low')">
+          Low <img src="../assets/icons/low.svg" alt="Low">
+        </a>
       </div>
 
       <label>Assigned to<span class="required">*</span></label>
@@ -46,19 +44,11 @@
         <option value="User Story">User Story</option>
       </select>
 
-      <label for="subtasks">Subtasks</label>
+      <label>Subtasks</label>
       <div id="subtask-container">
         <div class="subtask-wrapper">
-          <input
-            type="text"
-            class="subtask-input"
-            placeholder="Add new subtask"
-          />
-          <button
-            type="button"
-            class="subtask-button"
-            onclick="addSubtaskInput()"
-          >
+          <input type="text" class="subtask-input" placeholder="Add new subtask" />
+          <button type="button" class="subtask-button" onclick="addSubtaskInput()">
             +
           </button>
         </div>

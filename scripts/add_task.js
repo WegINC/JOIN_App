@@ -155,7 +155,7 @@ function createTask() {
         window.location.href = "../pages/board.html";
       }, 1500);
     })
-    .catch(err => console.error("Fehler beim Erstellen des Tasks:", err));
+    .catch(err => showMessage("Fehler beim Erstellen des Tasks:", err));
 }
 
 function initUserInitial() {
@@ -236,5 +236,18 @@ function showIcon(src, duration = 1500) {
   icon.classList.remove("hidden");
   setTimeout(() => {
     icon.classList.add("hidden");
+  }, duration);
+}
+
+function showMessage(message, duration = 1500) {
+  const msg = document.getElementById("alert-text-message");
+  if (!msg) return;
+
+  msg.textContent = message;
+  msg.classList.remove("hidden");
+  void msg.offsetWidth;
+
+  setTimeout(() => {
+    msg.classList.add("hidden");
   }, duration);
 }
