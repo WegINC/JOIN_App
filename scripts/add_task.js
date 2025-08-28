@@ -75,18 +75,23 @@ async function loadAssigneeSuggestions() {
     container.addEventListener("click", (e) => {
       const row = e.target.closest(".assignee-option");
       if (!row) return;
+
       const cb = row.querySelector(".assignee-checkbox");
       const uid = row.dataset.uid;
 
-      if (row.classList.contains("selected")) {
-        row.classList.remove("selected");
-        if (cb) cb.checked = false;
-        delete selectedAssignees[uid];
-      } else {
-        row.classList.add("selected");
-        if (cb) cb.checked = true;
+      if (e.target !== cb) e.preventDefault();
+
+      const willSelect = (e.target === cb) ? cb.checked : !row.classList.contains("selected");
+
+      row.classList.toggle("selected", willSelect);
+      cb.checked = willSelect;
+
+      if (willSelect) {
         selectedAssignees[uid] = true;
+      } else {
+        delete selectedAssignees[uid];
       }
+
       updateSelectedContactsView();
     });
   } catch (e) {
@@ -107,6 +112,7 @@ function updateSelectedContactsView() {
     .map(el => el.dataset.initials);
   view.innerText = initials.length ? initials.join(", ") : "Select contacts to assign";
 }
+
 function createTask() {
   const title = document.getElementById("title").value.trim();
   const description = document.getElementById("description").value.trim();
