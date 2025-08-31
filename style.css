@@ -51,6 +51,7 @@ body {
     background-color: white;
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-direction: column;
     height: 449px;
     width: 652px;
@@ -61,11 +62,19 @@ body {
 
 h1 {
     text-align: center;
-    width: 315px;
-    height: 73px;
     gap: 16px;
     font-weight: 700;
     font-size: 61px;
+}
+
+.login-container h1::after {
+  content: "";
+  display: block;
+  width: 120px;
+  height: 2px;
+  background: #29abe2;
+  border-radius: 999px;
+  margin: 8px auto 0; 
 }
 
 .input-login {
@@ -74,20 +83,18 @@ h1 {
     gap: 20px;
     height: auto;
     width: 80%;
-
+    margin: 0 auto;
 }
 
 .input-login input {
     color: #FFFFFF;
     border-radius: 10px;
     border: 1px;
-    border-style: groove;
+    border: 1px solid #D1D1D1;
     border-color: #D1D1D1;
+    box-sizing: border-box;
     gap: 10px;
-    padding-left: 21px;
-    padding-top: 12px;
-    padding-right: 21px;
-    padding-bottom: 12px;
+    padding: 12px 44px 12px 16px;
     width: 100%;
     color: #2a3647;
 }
@@ -105,7 +112,6 @@ h1 {
     background-size: 15px 15px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    padding-left: 12px;
     width: 100%;
 }
 
@@ -115,7 +121,6 @@ h1 {
     background-size: 15px 15px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    padding-left: 12px;
     width: 100%;
 }
 
@@ -239,7 +244,7 @@ body.loaded .join-logo {
     align-items: center;
     flex-direction: row;
     gap: 50px;
-    padding-top: 30px;
+    padding-top: 40px;
 }
 
 .sidebar-bottom a{
@@ -298,7 +303,6 @@ body.loaded .join-logo {
   
     h1 {
       font-size: 48px;
-      width: auto;
     }
   
     .join-logo {
@@ -323,6 +327,10 @@ body.loaded .join-logo {
     h1 {
       font-size: 36px;
     }
+
+    .login-container h1::after {
+      width: 80px;
+    }
   
     .login-button {
     width: 80%;
@@ -337,11 +345,10 @@ body.loaded .join-logo {
     .sidebar-bottom {
       flex-direction: row;
       gap: 20px;
-      padding-top: 80px;
     }
   }
 
-  @media (max-widt: 548px){
+  @media (max-width: 548px){
 
     .input-login{
     width: 70%;
@@ -391,6 +398,10 @@ body.loaded .join-logo {
   
     h1 {
       font-size: 28px;
+    }
+
+    .login-container h1::after {
+      width: 60px;
     }
   
     .join-logo {

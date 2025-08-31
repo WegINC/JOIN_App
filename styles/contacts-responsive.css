@@ -49,7 +49,7 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1189px) {
   .side-navbar {
     display: flex;
     flex-direction: row;
@@ -82,6 +82,7 @@
 
   .sidebar-menu {
     flex-direction: row;
+    padding-left: 0;
   }
 
   .sidebar-menu img {

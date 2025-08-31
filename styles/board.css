@@ -387,6 +387,7 @@ body {
   .sidebar-menu {
     flex-direction: row;
     gap: 12px;
+    padding-left: 0;
   }
 
   .sidebar-menu a {

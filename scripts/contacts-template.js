@@ -89,7 +89,7 @@ export function getContactSeparatorTemplate(letter) {
             </div>
             <div class="edit-underline"></div>
             <button class="edit-close-btn" title="Close" onclick="closeEditOverlay()">
-              <img src="../assets/icons/close1.png" alt="Close">
+              <img src="../assets/icons/Close1.png" alt="Close">
             </button>
             <div class="edit-avatar-circle" style="background-color: ${color}">${initials}</div>
           </div>
@@ -172,7 +172,7 @@ export function getContactSeparatorTemplate(letter) {
           <div class="add-underline"></div>
           </div>
           <button class="add-close-btn" onclick="closeAddContactOverlay()">
-            <img src="../assets/icons/close1.png" alt="Close">
+            <img src="../assets/icons/Close1.png" alt="Close">
           </button>
           <div class="add-avatar">
             <img src="../assets/icons/person-add-profile.png" alt="User">
@@ -180,15 +180,15 @@ export function getContactSeparatorTemplate(letter) {
         <form class="add-form">
             <div class="input-group">
               <input type="text" id="new-name" value="${name}" placeholder="Name">
-              <img src="/assets/icons/person.png" alt="Person icon" />
+              <img src="../assets/icons/person.png" alt="Person icon" />
             </div>
             <div class="input-group">
               <input type="email" id="new-email" value="${email}" placeholder="Email">
-              <img src="/assets/icons/mail.png" alt="Mail icon" />
+              <img src="../assets/icons/mail.png" alt="Mail icon" />
             </div>
             <div class="input-group">
               <input type="tel" id="new-phone" value="${phone}" placeholder="Phone">
-              <img src="/assets/icons/call.png" alt="Call icon" />
+              <img src="../assets/icons/call.png" alt="Call icon" />
             </div>
             <div class="add-actions">
               <button type="button" class="create-btn" onclick="createNewContact()">

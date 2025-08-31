@@ -303,6 +303,7 @@ body {
 
   .sidebar-menu {
     flex-direction: row;
+    padding-left: 0;
   }
 
   .sidebar-menu a {

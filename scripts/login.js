@@ -59,17 +59,14 @@ window.addEventListener("load", () => {
   const sidebar = document.querySelector(".sidebar-bottom");
   const navRight = document.querySelector(".nav-right");
 
-  // Logo-Animation starten
   document.body.classList.add("loaded");
 
-  // Content leicht einblenden, sobald Logo anfängt zu sliden
   setTimeout(() => {
-    content.style.opacity = "1";   // halbtransparent während Slide
+    content.style.opacity = "1";
     sidebar.style.opacity = "1";
     navRight.style.opacity = "1";
-  }, 50); // kleine Verzögerung, damit CSS-Klasse geladen ist
+  }, 50);
 
-  // Sobald Logo oben ist → Content vollständig sichtbar
   logo.addEventListener(
     "transitionend",
     () => {
