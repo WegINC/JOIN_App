@@ -5,7 +5,6 @@ body {
   min-height: 100vh;
   height: auto;
   overflow: hidden;
-  max-width: 1920px;
 }
 
 .wrapper {
@@ -117,14 +116,30 @@ textarea {
   padding: 2px 4px;
 }
 
-.priority-buttons a img { height: 15px; width: 20px; }
-.priority-buttons a:hover { box-shadow: 0px 4px 4px 0px #c5c5c5; }
+.priority-buttons a img {
+  height: 15px;
+  width: 20px;
+}
+.priority-buttons a:hover {
+  box-shadow: 0px 4px 4px 0px #c5c5c5;
+}
 
-.priority-buttons a.active.urgent { background: #ff3d00; color:#fff; }
-.priority-buttons a.active.medium { background: #ffa800; color:#fff; }
-.priority-buttons a.active.low    { background: #7ae229; color:#fff; }
+.priority-buttons a.active.urgent {
+  background: #ff3d00;
+  color: #fff;
+}
+.priority-buttons a.active.medium {
+  background: #ffa800;
+  color: #fff;
+}
+.priority-buttons a.active.low {
+  background: #7ae229;
+  color: #fff;
+}
 
-.priority-buttons a.active img { filter: brightness(0) invert(1); }
+.priority-buttons a.active img {
+  filter: brightness(0) invert(1);
+}
 
 .required-text {
   color: red;
