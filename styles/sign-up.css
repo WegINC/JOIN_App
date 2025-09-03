@@ -1,8 +1,7 @@
 body {
   background-color: #f6f7f8;
   margin: 0;
-  font-family: 'Inter';
-  max-width: 1920px;
+  font-family: "Inter";
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -44,7 +43,7 @@ h1 {
   height: 2px;
   background: #29abe2;
   border-radius: 999px;
-  margin: 8px auto 0; 
+  margin: 8px auto 0;
 }
 
 .arrow-left-button img {
@@ -195,17 +194,48 @@ h1 {
   height: auto;
   transform: none;
   z-index: 10;
+  padding-left: 350px;
 }
 
 @keyframes fromBottom {
-  0% { transform: translate(-50%, 80vh) scale(0.9); opacity: 0; }
-  60% { transform: translate(-50%, -52%) scale(1.06); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  0% {
+    transform: translate(-50%, 80vh) scale(0.9);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -52%) scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1132px) {
+  .join-logo-sign-up {
+    padding-left: 350px;
+  }
+}
+
+@media (max-width: 1104px) {
+  .join-logo-sign-up {
+    padding-left: 300px;
+  }
+}
+
+@media (max-width: 975px) {
+  .join-logo-sign-up {
+    padding-left: 200px;
+  }
 }
 
 @media (max-width: 768px) {
   .sign-up-container h1::after {
     width: 80px;
+  }
+  .join-logo-sign-up {
+    padding-left: 100px;
   }
 }
 
@@ -246,6 +276,9 @@ h1 {
     left: 16px;
     width: 26px;
     height: 26px;
+  }
+  .join-logo-sign-up {
+    padding-left: 0px;
   }
 }
 

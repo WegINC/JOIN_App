@@ -7,7 +7,9 @@ body {
 .nav-bar {
   display: flex;
   justify-content: right;
-  padding: 80px;
+  padding-right: 350px;
+  padding-top: 80px;
+  padding-bottom: 80px;
 }
 
 .nav-right {
@@ -213,6 +215,8 @@ body.loaded .join-logo {
   height: auto;
   transform: none;
   z-index: 10;
+  padding-left: 350px;
+  padding-top: 30px;
 }
 
 .login-content,
@@ -254,11 +258,33 @@ body.loaded .sign-up-content {
 .nav-right-responsive {
   display: none;
 }
+@media (max-width: 1646px) {
+  body.loaded .join-logo {
+    padding-left: 250px;
+  }
+  .nav-bar {
+    padding-right: 250px;
+  }
+}
+
+@media (max-width: 1360px) {
+  body.loaded .join-logo {
+    padding-left: 150px;
+  }
+  .nav-bar {
+    padding-right: 150px;
+  }
+}
 
 @media (max-width: 1024px) {
   .nav-bar {
     display: flex;
     flex-direction: row;
+    padding-right: 50px;
+  }
+
+  body.loaded .join-logo {
+    padding-left: 50px;
   }
 
   .login-container {
@@ -343,6 +369,11 @@ body.loaded .sign-up-content {
 @media (max-width: 548px) {
   .input-login {
     width: 70%;
+  }
+
+  body.loaded .join-logo {
+    padding-left: 30px;
+    padding-bottom: 80px;
   }
 
   .nav-button {
