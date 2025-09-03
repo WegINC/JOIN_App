@@ -388,7 +388,6 @@ body {
   .columns {
     grid-template-columns: 1fr;
     padding: 40px 16px 8px 16px;
-    height: 85%;
   }
 
   .column {
