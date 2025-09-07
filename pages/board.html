@@ -11,7 +11,11 @@
     <link rel="stylesheet" href="../assets/fonts/font.css" />
     <link rel="stylesheet" href="../styles/task_detail_overlay.css" />
     <link rel="stylesheet" href="../styles/summary.css" />
-    <link rel="shortcut icon" href="../assets/img/Capa 1.png" type="image/x-icon">
+    <link
+      rel="shortcut icon"
+      href="../assets/img/Capa 1.png"
+      type="image/x-icon"
+    />
   </head>
 
   <body onload="onloadBoard()" onclick="closeUserMenu(event)">
@@ -42,19 +46,25 @@
 
       <div class="content-area">
         <div class="top-navbar">
-          <img class="navbar-logo" src="../assets/img/Capa 2.png" alt="Logo" />
-          <span>Kanban Projekt Management Tool</span>
-          <div class="user-name">
-            <a class="help-link" href="./help.html"
-              ><img src="../assets/icons/help.png" alt=""
-            /></a>
-            <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
-              <button id="user-name" onclick="toggleUserMenu()">G</button>
-              <div id="user-dropdown" class="user-dropdown-menu hidden">
-                <a class="help-link-madia" href="./help.html">Help</a>
-                <a href="./privacy_policy.html">Privacy Policy</a>
-                <a href="./legal_notice.html">Legal Notice</a>
-                <a href="#" onclick="logout()">Log Out</a>
+          <div class="content_restr_navBar">
+            <img
+              class="navbar-logo"
+              src="../assets/img/Capa 2.png"
+              alt="Logo"
+            />
+            <span>Kanban Projekt Management Tool</span>
+            <div class="user-name">
+              <a class="help-link" href="./help.html"
+                ><img src="../assets/icons/help.png" alt=""
+              /></a>
+              <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
+                <button id="user-name" onclick="toggleUserMenu()">G</button>
+                <div id="user-dropdown" class="user-dropdown-menu hidden">
+                  <a class="help-link-madia" href="./help.html">Help</a>
+                  <a href="./privacy_policy.html">Privacy Policy</a>
+                  <a href="./legal_notice.html">Legal Notice</a>
+                  <a href="#" onclick="logout()">Log Out</a>
+                </div>
               </div>
             </div>
           </div>
@@ -114,8 +124,13 @@
       <div id="popup-container" style="display: none"></div>
       <div id="task-detail-container" style="display: none"></div>
 
-      <img id="alert-icon" src="../assets/img/signedUp-successfully.svg" alt="Alert Icon" class="hidden">
-  
+      <img
+        id="alert-icon"
+        src="../assets/img/signedUp-successfully.svg"
+        alt="Alert Icon"
+        class="hidden"
+      />
+
       <div id="alert-text-message" class="hidden"></div>
 
       <script src="../scripts/board.js"></script>

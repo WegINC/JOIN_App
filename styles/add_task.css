@@ -15,7 +15,7 @@ body {
 
 .add-task-content {
   width: 100%;
-  max-width: 1600px;
+  max-width: 1300px;
   margin: 0 auto;
 }
 
@@ -23,7 +23,9 @@ body {
   padding-top: 70px;
   padding-left: 96px;
   display: flex;
-  align-items: center;
+  align-items: start;
+  width: 100%;
+  max-width: 1500px;
 }
 
 .headline-text {
@@ -35,7 +37,6 @@ body {
   display: flex;
   gap: 32px;
   padding-left: 96px;
-  padding-right: 96px;
   padding-top: 40px;
   box-sizing: border-box;
   justify-content: space-between;

@@ -79,9 +79,10 @@
 .content-area {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   height: 100vh;
   overflow: hidden;
+  flex-grow: 1;
+  width: 100%;
 }
 
 .top-navbar {
@@ -160,4 +161,15 @@
 
 .hidden {
   display: none;
+}
+
+.content_restr_navBar {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  max-width: 1500px;
+}
+
+.content_restr_navBar span {
+  padding-top: 16px;
 }
