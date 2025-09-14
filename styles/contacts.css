@@ -4,7 +4,6 @@ body {
   background-color: #f6f7f8;
   height: 100vh;
   overflow: hidden;
-  max-width: 1920px;
 }
 
 .wrapper {
@@ -81,7 +80,7 @@ body {
   height: auto;
   margin-top: 80px;
   scroll-behavior: smooth;
-  
+  overflow-y: auto;
 }
 
 .contact-entry {
@@ -107,12 +106,12 @@ body {
 }
 
 .contact-item:hover {
-  background-color: #F6F7F8;
+  background-color: #f6f7f8;
 }
 
-.contact-item.active{
-background-color: #2a3647;
-color: white;
+.contact-item.active {
+  background-color: #2a3647;
+  color: white;
 }
 
 .contact-avatar {
@@ -642,14 +641,12 @@ h1 {
   cursor: pointer;
 }
 
-.back-arrow:active{
+.back-arrow:active {
   height: 40px;
   width: 40px;
   border-radius: 50%;
   background-color: #f0f0f0;
 }
-
-
 
 .contact-options-overlay {
   position: fixed;
