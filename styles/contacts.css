@@ -132,7 +132,7 @@ body {
 
 .contact-info a {
   text-decoration: none;
-  color: #007bff;
+  color: #3399ff;
 }
 
 .contact-info a:hover {
@@ -472,7 +472,6 @@ h1 {
 
 .cancel-btn:hover {
   color: #28abe2;
-  font-weight: 700;
   border: 1px solid #28abe2;
 }
 
@@ -497,7 +496,6 @@ h1 {
 .add-actions .cancel-btn:hover {
   border: 1px solid #29abe2;
   color: #29abe2;
-  font-weight: 700;
 }
 
 .save-btn,
@@ -517,7 +515,6 @@ h1 {
 .edit-actions .save-btn:hover,
 .add-actions .create-btn:hover {
   background-color: #29abe2;
-  font-weight: 700;
 }
 
 #alert-icon {
@@ -581,6 +578,22 @@ h1 {
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-right {
+  animation: slideInFromRight 250ms ease-out both;
+  will-change: transform, opacity;
 }
 
 .floating-btn {
@@ -662,7 +675,6 @@ h1 {
 
 .contact-options-overlay button:hover {
   color: #29abe2;
-  font-weight: 700;
 }
 .contact-options-overlay button:hover img {
   filter: brightness(0) saturate(100%) invert(46%) sepia(93%) saturate(405%)

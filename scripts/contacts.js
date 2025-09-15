@@ -113,20 +113,30 @@ function renderContactDetails(contact) {
   const content = document.getElementById('contact-details-content');
   content.innerHTML = getContactDetailsTemplate(contact);
 
+  content.classList.remove('slide-in-right');
+  void content.offsetWidth;
+  content.classList.add('slide-in-right');
+
   content.querySelector('.edit-btn').addEventListener('click', () => openEditOverlay(contact));
   content.querySelector('.delete-btn').addEventListener('click', () => deleteContact(contact));
 }
 
 async function deleteContact(contact) {
-  if (!confirm(`Möchtest du ${contact.name} wirklich löschen?`)) return;
+  if (!contact) return;
 
   try {
     await fetch(`${BASE_URL}/users/${contact.uid}.json`, { method: 'DELETE' });
-    contact.element.remove();
-    document.getElementById('contact-details-content').innerHTML = '';
-    closeEditOverlay();
+
+    if (contact.element) contact.element.remove();
+    const details = document.getElementById('contact-details-content');
+    if (details) details.innerHTML = '';
+
+    if (typeof closeEditOverlay === 'function') closeEditOverlay();
+    if (typeof closeContactOptionsOverlay === 'function') closeContactOptionsOverlay();
+
+    showMessage(`Kontakt gelöscht.`);
   } catch (err) {
-    showMessage("Fehler beim Löschen.");
+    showMessage('Fehler beim Löschen.');
   }
 }
 
@@ -372,16 +382,20 @@ function editContactOptions() {
 
 async function deleteContactOptions() {
   if (!selectedContactForOptions) return;
-  if (!confirm(`Möchtest du ${selectedContactForOptions.name} wirklich löschen?`)) return;
 
   try {
     await fetch(`${BASE_URL}/users/${selectedContactForOptions.uid}.json`, {
       method: 'DELETE',
     });
 
-    selectedContactForOptions.element.remove();
+    if (selectedContactForOptions.element) {
+      selectedContactForOptions.element.remove();
+    }
     document.getElementById('contact-details-content').innerHTML = '';
     closeContactOptionsOverlay();
+
+    showMessage(`Kontakt gelöscht.`);
+    selectedContactForOptions = null;
   } catch (err) {
     showMessage("Fehler beim Löschen.");
   }
