@@ -1,57 +1,84 @@
 async function onloadFunc() {
   const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedatabase.app";
-  const emailInput = document.querySelector('input[name="email"]').value.trim();
-  const passwordInput = document.querySelector('input[name="password"]').value;
+  const emailEl = document.querySelector('input[name="email"]');
+  const pwdEl   = document.querySelector('input[name="password"]');
 
-  hideLoginError();
+  clearAllErrors(emailEl, pwdEl);
 
-  if (!emailInput || !passwordInput) {
-    showLoginError("Bitte E-Mail und Passwort eingeben.");
-    return;
+  const email = (emailEl?.value || "").trim();
+  const pwd   = (pwdEl?.value || "");
+
+  let hasError = false;
+  if (!email) {
+    setInputError(emailEl, "Please enter your email.");
+    hasError = true;
   }
+  if (!pwd) {
+    setInputError(pwdEl, "Please enter your password.");
+    hasError = true;
+  }
+  if (hasError) return;
 
   try {
-    const response = await fetch(`${BASE_URL}/users.json`);
-    const users = await response.json();
+    const res   = await fetch(`${BASE_URL}/users.json`);
+    const users = await res.json();
 
-    let matchFound = false;
-
-    for (const [uid, user] of Object.entries(users)) {
-      if (user.email === emailInput && user.password === passwordInput) {
+    let ok = false;
+    for (const [uid, user] of Object.entries(users || {})) {
+      if (user.email === email && user.password === pwd) {
         const initials = user.name.split(" ").map(n => n[0]).join("").toUpperCase();
         localStorage.setItem("userInitial", initials);
         localStorage.setItem("userId", uid);
-        console.log("Login erfolgreich für:", user.name);
-        matchFound = true;
-        window.location.href = "./pages/summary.html";
+        ok = true;
         break;
       }
     }
 
-    if (!matchFound) {
-      showLoginError("E-Mail oder Passwort ist falsch.");
+    if (!ok) {
+      setInputError(emailEl);
+      setInputError(pwdEl, "Check your email and password. Please try again.");
+      return;
     }
-  } catch (error) {
-    console.error("Login-Fehler:", error);
-    showLoginError("Ein Fehler ist aufgetreten. Bitte später erneut versuchen.");
+
+    window.location.href = "./pages/summary.html";
+  } catch (e) {
+    setInputError(pwdEl, "Something went wrong. Please try again later.");
   }
 }
 
-function showLoginError(message) {
-  const errorDiv = document.getElementById("login-error");
-  if (errorDiv) {
-    errorDiv.innerText = message;
-    errorDiv.style.display = "block";
+function setInputError(input, message) {
+  if (!input) return;
+  input.classList.add("input-error");
+
+  let msg = input.nextElementSibling;
+  if (!msg || !msg.classList.contains("input-error-text")) {
+    msg = document.createElement("div");
+    msg.className = "input-error-text";
+    input.parentNode.insertBefore(msg, input.nextSibling);
+  }
+  msg.textContent = message || "";
+}
+
+function clearInputError(input) {
+  if (!input) return;
+  input.classList.remove("input-error");
+  const msg = input.nextElementSibling;
+  if (msg && msg.classList.contains("input-error-text")) {
+    msg.remove();
   }
 }
 
-function hideLoginError() {
-  const errorDiv = document.getElementById("login-error");
-  if (errorDiv) {
-    errorDiv.innerText = "";
-    errorDiv.style.display = "none";
-  }
+function clearAllErrors(...inputs) {
+  inputs.forEach(clearInputError);
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+  const emailEl = document.querySelector('input[name="email"]');
+  const pwdEl   = document.querySelector('input[name="password"]');
+  [emailEl, pwdEl].forEach(el => {
+    el?.addEventListener("input", () => clearInputError(el));
+  });
+});
 
 window.addEventListener("load", () => {
   const logo = document.querySelector(".join-logo");

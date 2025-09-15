@@ -258,6 +258,28 @@ body.loaded .sign-up-content {
 .nav-right-responsive {
   display: none;
 }
+
+.input-error {
+  border-color: #e53935 !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.08) inset;
+}
+
+.input-error::placeholder {
+  color: #e53935;
+  opacity: 0.9;
+}
+
+.input-error-text {
+  color: #e53935;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.input-login .input-error-text {
+  padding-left: 2px;
+}
+
 @media (max-width: 1646px) {
   body.loaded .join-logo {
     padding-left: 250px;
