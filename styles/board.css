@@ -155,7 +155,7 @@ body {
   flex: 1;
   min-height: 0;
   border-radius: 8px;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
   width: auto;
 }
@@ -389,7 +389,7 @@ body {
 @media (max-width: 863px) {
   .columns {
     grid-template-columns: 1fr;
-    padding: 40px 16px 8px 16px;
+    padding: 40px 16px 80px 16px;
   }
 
   .column {
@@ -404,11 +404,17 @@ body {
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 16px;
-    overflow-x: auto;
-    overflow-y: auto;
+    overflow-x: hidden;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
     padding-bottom: 4px;
+    cursor: grab;
+  }
+
+  .board-column.is-dragging {
+    cursor: grabbing;
+    user-select: none;
   }
 
   .task-card {
