@@ -1,4 +1,3 @@
-
 let contacts = [];
 let selectedContactForOptions = null;
 
@@ -13,6 +12,37 @@ import {
   getSuccessPopupTemplate,
 } from './contacts-template.js';
 
+function setFieldError(input, message) {
+  if (!input) return;
+  const group = input.closest('.input-group') || input.parentNode;
+  if (group) group.classList.add('has-error');
+  input.classList.add('input-error');
+
+  let msg = input.nextElementSibling;
+  if (!msg || !msg.classList.contains('input-error-text')) {
+    msg = document.createElement('div');
+    msg.className = 'input-error-text';
+    input.parentNode.insertBefore(msg, input.nextSibling);
+  }
+  msg.textContent = message;
+}
+
+function clearFieldError(input) {
+  if (!input) return;
+  const group = input.closest('.input-group') || input.parentNode;
+  input.classList.remove('input-error');
+  if (group) group.classList.remove('has-error');
+
+  const msg = input.nextElementSibling;
+  if (msg && msg.classList.contains('input-error-text')) {
+    msg.remove();
+  }
+}
+
+function isValidEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   loadContactsFromDatabase();
   window.openAddContactOverlay = openAddContactOverlay;
@@ -20,12 +50,14 @@ document.addEventListener('DOMContentLoaded', () => {
   window.createNewContact = createNewContact;
   const mobileAddBtn = document.getElementById('mobile-add-contact-btn');
   if (mobileAddBtn) {
-    mobileAddBtn.addEventListener('click', openAddContactMobileOverlay);}
+    mobileAddBtn.addEventListener('click', openAddContactMobileOverlay);
+  }
   document.body.addEventListener('click', (event) => {
     const target = event.target.closest('#contact-options-btn');
     if (target) {
       openMobileEditContactOverlay();
-    }});
+    }
+  });
   document.querySelector('.back-arrow').addEventListener('click', () => {
     returnToContactList();
     handleMobileButtons();
@@ -158,21 +190,57 @@ function closeEditOverlay() {
 }
 
 async function saveContactChanges(contact) {
-  const newName = document.getElementById('edit-name').value.trim();
-  const newEmail = document.getElementById('edit-email').value.trim();
+  const nameInput = document.getElementById('edit-name');
+  const emailInput = document.getElementById('edit-email');
   const phoneInput = document.getElementById('edit-phone');
-  const rawPhone = phoneInput.value.trim();
-  const { phone: newPhone } = ensurePhoneValid(phoneInput);
 
-  if (!newName || !newEmail || !rawPhone) return showMessage('Bitte fülle alle Felder aus!');
+  const newName = (nameInput?.value || '').trim();
+  const newEmail = (emailInput?.value || '').trim();
+  const rawPhone = (phoneInput?.value || '').trim();
+
+  clearFieldError(nameInput);
+  clearFieldError(emailInput);
+  clearFieldError(phoneInput);
+
+  let hasError = false;
+
+  if (!newName) {
+    setFieldError(nameInput, 'Please enter your name.');
+    hasError = true;
+  }
+  if (!newEmail) {
+    setFieldError(emailInput, 'Please enter your email.');
+    hasError = true;
+  } else if (!isValidEmail(newEmail)) {
+    setFieldError(emailInput, 'Please enter a valid email.');
+    hasError = true;
+  }
+  if (!rawPhone) {
+    setFieldError(phoneInput, 'Please enter a phone number.');
+    hasError = true;
+  } else {
+    const chk = ensurePhoneValid(phoneInput);
+    if (!chk.ok) {
+      setFieldError(phoneInput, 'Please enter a valid phone number.');
+      hasError = true;
+    }
+  }
+
+  if (hasError) {
+    [nameInput, emailInput, phoneInput].forEach(el => {
+      el?.addEventListener('input', () => clearFieldError(el), { once: true });
+    });
+    return;
+  }
 
   try {
+    const { phone: newPhone } = ensurePhoneValid(phoneInput);
     await updateContactInDB(contact.uid, { name: newName, email: newEmail, phone: newPhone });
     updateContactData(contact, newName, newEmail, newPhone);
     renderContactDetails(contact);
     closeEditOverlay();
   } catch (err) {
-    showMessage("Fehler beim Speichern der Änderungen.");
+    setFieldError(phoneInput, 'Saving failed. Please try again later.');
   }
 }
 
@@ -221,16 +289,51 @@ async function createNewContact() {
   const emailInput = overlay.querySelector("#new-email");
   const phoneInput = overlay.querySelector("#new-phone");
 
-  const name = nameInput?.value.trim();
-  const phone = phoneInput?.value.trim();
-  if (!name || !emailInput || !phone) return showMessage("Bitte fülle alle Felder aus!");
+  const name = (nameInput?.value || '').trim();
+  const emailRaw = (emailInput?.value || '').trim();
+  const phoneRaw = (phoneInput?.value || '').trim();
 
-  const chk = window.ensureEmailValid(emailInput);
-  if (!chk.ok) return showMessage(chk.msg);
-  const email = chk.email;
+  clearFieldError(nameInput);
+  clearFieldError(emailInput);
+  clearFieldError(phoneInput);
+
+  let hasError = false;
+
+  if (!name) {
+    setFieldError(nameInput, 'Please enter your name.');
+    hasError = true;
+  }
+  if (!emailRaw) {
+    setFieldError(emailInput, 'Please enter your email.');
+    hasError = true;
+  } else if (!isValidEmail(emailRaw)) {
+    setFieldError(emailInput, 'Please enter a valid email.');
+    hasError = true;
+  }
+  if (!phoneRaw) {
+    setFieldError(phoneInput, 'Please enter a phone number.');
+    hasError = true;
+  } else {
+    const chkPhone = ensurePhoneValid(phoneInput);
+    if (!chkPhone.ok) {
+      setFieldError(phoneInput, 'Please enter a valid phone number.');
+      hasError = true;
+    }
+  }
+
+  if (hasError) {
+    [nameInput, emailInput, phoneInput].forEach(el => {
+      el?.addEventListener('input', () => clearFieldError(el), { once: true });
+    });
+    return;
+  }
+
+  const email = emailRaw.toLowerCase();
 
   if (Array.isArray(contacts) && contacts.some(c => (c.email||"").trim().toLowerCase() === email)) {
-    return showMessage("E-Mail existiert bereits.");
+    setFieldError(emailInput, "E-Mail existiert bereits.");
+    emailInput.addEventListener('input', () => clearFieldError(emailInput), { once: true });
+    return;
   }
 
   try {
@@ -238,31 +341,15 @@ async function createNewContact() {
     const res = await fetch(`${BASE_URL}/users.json`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, phone, themeColor: color }),
+      body: JSON.stringify({ name, email, phone: phoneRaw, themeColor: color }),
     });
     const data = await res.json();
-    const contact = buildContactObject(data.name, { name, email, phone, themeColor: color });
-        contacts.push(contact);
-
-    const grouped = contacts.sort((a, b) => a.name.localeCompare(b.name, 'de'))
-      .reduce((acc, c) => {
-        const L = c.name[0].toUpperCase();
-        (acc[L] ||= []).push(c);
-        return acc;
-      }, {});
-
-    const simpleContacts = contacts.map(c => ({
-      name: c.name,
-      color: c.color || "#cccccc"
-    }));
-
-    localStorage.setItem("contacts", JSON.stringify(simpleContacts));
-
-    renderGroupedContacts(grouped);
+    const contact = buildContactObject(data.name, { name, email, phone: phoneRaw, themeColor: color });
+    renderContactListItem(contact);
     closeAddContactOverlay();
     showSuccessPopup();
   } catch (err) {
-    showMessage("Fehler beim Erstellen des Kontakts.");
+    setFieldError(emailInput, "Fehler beim Erstellen des Kontakts.");
   }
 }
 
@@ -285,7 +372,6 @@ function closeUserMenu(event) {
   const menu = document.getElementById('user-dropdown');
   const button = document.getElementById('user-name');
   const overlay = document.getElementById('contact-options-overlay');
-
 
   if (!menu.contains(event.target) && event.target !== button) {
     menu.classList.add('hidden');

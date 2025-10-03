@@ -697,6 +697,26 @@ h1 {
   height: 18px;
 }
 
+.input-group { position: relative; }
+
+.input-error { 
+  border-color: #e20000 !important;
+  box-shadow: 0 0 0 1px #e20000 inset;
+}
+
+.input-error-text{
+  position: absolute;
+  left: 0;
+  top: calc(100% + 4px);
+  font-size: 12px;
+  line-height: 1.2;
+  color: #e20000;
+}
+
+.input-group.has-error{
+  padding-bottom: 18px;
+}
+
 @keyframes slideDown {
   0% {
     opacity: 0;
