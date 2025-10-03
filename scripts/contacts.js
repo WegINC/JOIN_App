@@ -242,7 +242,23 @@ async function createNewContact() {
     });
     const data = await res.json();
     const contact = buildContactObject(data.name, { name, email, phone, themeColor: color });
-    renderContactListItem(contact);
+        contacts.push(contact);
+
+    const grouped = contacts.sort((a, b) => a.name.localeCompare(b.name, 'de'))
+      .reduce((acc, c) => {
+        const L = c.name[0].toUpperCase();
+        (acc[L] ||= []).push(c);
+        return acc;
+      }, {});
+
+    const simpleContacts = contacts.map(c => ({
+      name: c.name,
+      color: c.color || "#cccccc"
+    }));
+
+    localStorage.setItem("contacts", JSON.stringify(simpleContacts));
+
+    renderGroupedContacts(grouped);
     closeAddContactOverlay();
     showSuccessPopup();
   } catch (err) {
