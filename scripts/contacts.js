@@ -160,9 +160,11 @@ function closeEditOverlay() {
 async function saveContactChanges(contact) {
   const newName = document.getElementById('edit-name').value.trim();
   const newEmail = document.getElementById('edit-email').value.trim();
-  const newPhone = document.getElementById('edit-phone').value.trim();
+  const phoneInput = document.getElementById('edit-phone');
+  const rawPhone = phoneInput.value.trim();
+  const { phone: newPhone } = ensurePhoneValid(phoneInput);
 
-  if (!newName || !newEmail || !newPhone) return showMessage('Bitte fülle alle Felder aus!');
+  if (!newName || !newEmail || !rawPhone) return showMessage('Bitte fülle alle Felder aus!');
 
   try {
     await updateContactInDB(contact.uid, { name: newName, email: newEmail, phone: newPhone });

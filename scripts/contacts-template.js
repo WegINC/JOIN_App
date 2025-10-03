@@ -144,7 +144,7 @@ export function getContactSeparatorTemplate(letter) {
               <img src="../assets/icons/mail.png" alt="Mail icon" />
             </div>
             <div class="input-group">
-              <input type="tel" id="new-phone" value="${phone}" placeholder="Phone">
+              <input type="tel" id="new-phone" value="${phone}" placeholder="Phone" pattern="[0-9]*" inputmode="numeric" maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
               <img src="../assets/icons/call.png" alt="Call icon" />
             </div>
             <div class="add-actions">
