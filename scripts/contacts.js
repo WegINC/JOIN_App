@@ -316,6 +316,7 @@ async function createNewContact() {
   const name = (nameInput?.value || '').trim();
   const emailRaw = (emailInput?.value || '').trim();
   const phoneRaw = (phoneInput?.value || '').trim();
+  let normalizedPhone = '';
 
   clearFieldError(nameInput);
   clearFieldError(emailInput);
@@ -342,6 +343,8 @@ async function createNewContact() {
     if (!chkPhone.ok) {
       setFieldError(phoneInput, 'Please enter a valid phone number.');
       hasError = true;
+  } else {
+      normalizedPhone = chkPhone.phone;
     }
   }
 
@@ -365,11 +368,32 @@ async function createNewContact() {
     const res = await fetch(`${BASE_URL}/users.json`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, phone: phoneRaw, themeColor: color }),
+      body: JSON.stringify({ name, email, phone: normalizedPhone || phoneRaw, themeColor: color }),
     });
     const data = await res.json();
-    const contact = buildContactObject(data.name, { name, email, phone: phoneRaw, themeColor: color });
-    renderContactListItem(contact);
+    const newContact = buildContactObject(data.name, { name, email, phone: normalizedPhone || phoneRaw, themeColor: color });
+    contacts.push(newContact);
+
+    contacts.sort((a, b) => a.name.localeCompare(b.name, 'de'));
+    const grouped = contacts.reduce((acc, c) => {
+      const letter = (c.name || '').charAt(0).toUpperCase();
+      if (!letter) return acc;
+      (acc[letter] ||= []).push(c);
+      return acc;
+    }, {});
+
+    localStorage.setItem("contacts", JSON.stringify(contacts.map(c => ({
+      name: c.name,
+      color: c.color || '#cccccc'
+    }))));
+
+    renderGroupedContacts(grouped);
+
+    const createdContact = contacts.find(c => c.uid === newContact.uid);
+    if (createdContact?.element) {
+      selectContact(createdContact.element, createdContact);
+    }
+
     closeAddContactOverlay();
     showSuccessPopup();
   } catch (err) {
