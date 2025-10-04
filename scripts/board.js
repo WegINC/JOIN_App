@@ -226,6 +226,36 @@ async function loadFloatingAssigneeSuggestions() {
   }
 }
 
+function renderAssigneeChips(containerEl, assignees) {
+  if (!containerEl) return;
+  containerEl.innerHTML = "";
+  const max = 3;
+  const shown = assignees.slice(0, max);
+  const rest = Math.max(0, assignees.length - max);
+
+  shown.forEach(a => {
+    const chip = document.createElement("div");
+    chip.className = "task-user-initials assignee-chip";
+    chip.style.backgroundColor = a.color || "#2a3647";
+    chip.textContent = (a.initials || "").toUpperCase().slice(0, 3);
+    containerEl.appendChild(chip);
+  });
+
+  if (rest > 0) {
+    const more = document.createElement("div");
+    more.className = "assignee-chip more-chip";
+    more.textContent = `+${rest}`;
+    containerEl.appendChild(more);
+  }
+}
+
+function toAssigneeArray(uids, userMap) {
+  return uids.map(uid => {
+    const u = userMap[uid] || {};
+    return { initials: (u.initials || "G"), color: (u.themeColor || "#0038FF") };
+  });
+}
+
 function applyFloatingPreselection() {
     const cont = document.getElementById("fa-assigned-container");
     if (!cont) return;
@@ -427,48 +457,42 @@ function applyFloatingPreselection() {
   }
 
   async function loadTasks() {
-    const userInitialsMap = await fetchUsers();
+  const userInitialsMap = await fetchUsers();
 
-    fetch(`${BASE_URL}/tasks.json`)
-      .then((res) => res.json())
-      .then((tasks) => {
-        const columns = ["toDo", "inProgress", "awaitFeedback", "done"];
-        columns.forEach(id => {
-          const column = document.getElementById(id);
-          if (column) column.innerHTML = "";
-        });
+  fetch(`${BASE_URL}/tasks.json`)
+    .then((res) => res.json())
+    .then((tasks) => {
+      const columns = ["toDo", "inProgress", "awaitFeedback", "done"];
+      columns.forEach(id => {
+        const column = document.getElementById(id);
+        if (column) column.innerHTML = "";
+      });
 
-        if (!tasks) return;
+      if (!tasks) return;
 
-        for (let id in tasks) {
-          const task = tasks[id];
-          task.id = id;
+      for (let id in tasks) {
+        const task = tasks[id];
+        task.id = id;
 
-          const column = document.getElementById(task.status);
-          if (!column) continue;
+        const column = document.getElementById(task.status);
+        if (!column) continue;
 
-          const card = document.createElement("div");
-          card.classList.add("task-card");
-          card.setAttribute("data-id", id);
-          card.setAttribute("draggable", "true");
+        const card = document.createElement("div");
+        card.classList.add("task-card");
+        card.setAttribute("data-id", id);
+        card.setAttribute("draggable", "true");
 
-          card.addEventListener("dragstart", handleDragStart);
-          card.addEventListener("dragend", handleDragEnd);
+        card.addEventListener("dragstart", handleDragStart);
+        card.addEventListener("dragend", handleDragEnd);
+        card.addEventListener("click", () => openTaskDetailOverlay(task, id));
 
-          card.addEventListener("click", () => openTaskDetailOverlay(task, id));
+        const assignedUIDs = Object.keys(task.assignedTo || {});
+        const assigneeArr = toAssigneeArray(assignedUIDs, userInitialsMap);
 
-          const assignedUIDs = Object.keys(task.assignedTo || {});
-          const userBadges = assignedUIDs.map(uid => {
-            const user = userInitialsMap[uid];
-            const initials = user?.initials || "G";
-            const themeColor = user?.themeColor || "#0038FF";
-            return `<div class="task-user-initials" style="background-color: ${themeColor};">${initials}</div>`;
-          }).join("");
+        const color = categoryColors[task.category] || "#ccc";
+        const pr = getPriorityData(task.priority);
 
-          const color = categoryColors[task.category] || "#ccc";
-          const pr = getPriorityData(task.priority);
-
-          card.innerHTML = `
+        card.innerHTML = `
           <div class="task-category" style="background-color: ${color};">
             ${task.category}
           </div>
@@ -481,20 +505,21 @@ function applyFloatingPreselection() {
           </div>
 
           <div class="task-footer">
-            <div class="task-user">
-              ${userBadges}
-            </div>
+            <div class="task-user assignees-wrap"></div>
             <img class="task-priority-icon" src="${pr.icon}" alt="${pr.label}">
           </div>
         `;
 
-          column.appendChild(card);
-        }
-      })
-      .catch((error) => {
-        showMessage("Fehler beim Laden der Tasks:", error);
-      });
-  }
+        const chipsWrap = card.querySelector(".assignees-wrap");
+        renderAssigneeChips(chipsWrap, assigneeArr);
+
+        column.appendChild(card);
+      }
+    })
+    .catch((error) => {
+      showMessage("Fehler beim Laden der Tasks:", error);
+    });
+}
 
   let draggedCard = null;
 

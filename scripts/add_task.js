@@ -3,12 +3,18 @@ const BASE_URL = "https://join-applikation-default-rtdb.europe-west1.firebasedat
 let selectedPriority = "";
 let selectedAssignees = {};
 let assigneesLoaded = false;
+let pendingSubtasks = [];
+let editingSubtaskIndex = -1;
+
+function esc(t){ return (t || "").replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); }
 
 function initPage() {
   initUserInitial();
   setupPriorityButtons();
   populateCategoryDropdown();
   setDefaultPriority();
+  lockPastDates();
+  setupSubtaskInputBehaviour();
 }
 
 function setDefaultPriority() {
@@ -51,7 +57,7 @@ async function loadAssigneeSuggestions() {
 
   try {
     const res = await fetch(`${BASE_URL}/users.json`);
-    const data = await res.json() || {};
+    const data = (await res.json()) || {};
 
     const frag = document.createDocumentFragment();
     Object.entries(data).forEach(([uid, u]) => {
@@ -63,37 +69,54 @@ async function loadAssigneeSuggestions() {
       row.className = "assignee-option";
       row.dataset.uid = uid;
       row.dataset.initials = initials;
+      row.dataset.color = color;
+      row.dataset.name = name;
       row.innerHTML = `
         <div class="task-user-initials" style="background-color:${color}">${initials}</div>
         <span>${name}</span>
         <input type="checkbox" class="assignee-checkbox" />
       `;
-      frag.appendChild(row);
-    });
-    container.appendChild(frag);
 
-    container.addEventListener("click", (e) => {
-      const row = e.target.closest(".assignee-option");
-      if (!row) return;
-
-      const cb = row.querySelector(".assignee-checkbox");
-      const uid = row.dataset.uid;
-
-      if (e.target !== cb) e.preventDefault();
-
-      const willSelect = (e.target === cb) ? cb.checked : !row.classList.contains("selected");
-
-      row.classList.toggle("selected", willSelect);
-      cb.checked = willSelect;
-
-      if (willSelect) {
-        selectedAssignees[uid] = true;
-      } else {
-        delete selectedAssignees[uid];
+      if (selectedAssignees[uid]) {
+        row.classList.add("selected");
+        row.querySelector(".assignee-checkbox").checked = true;
       }
 
-      updateSelectedContactsView();
+      frag.appendChild(row);
     });
+
+    container.appendChild(frag);
+
+    if (!container.dataset.listenerAttached) {
+      container.addEventListener("click", (e) => {
+        const row = e.target.closest(".assignee-option");
+        if (!row) return;
+
+        const cb = row.querySelector(".assignee-checkbox");
+        const uid = row.dataset.uid;
+
+        if (e.target !== cb) e.preventDefault();
+
+        const willSelect = (e.target === cb) ? cb.checked : !row.classList.contains("selected");
+
+        row.classList.toggle("selected", willSelect);
+        cb.checked = willSelect;
+
+        if (willSelect) {
+          selectedAssignees[uid] = {
+            initials: row.dataset.initials,
+            color: row.dataset.color
+          };
+        } else {
+          delete selectedAssignees[uid];
+        }
+
+        updateSelectedContactsView();
+      });
+      container.dataset.listenerAttached = "true";
+    }
+
+    updateSelectedContactsView();
   } catch (e) {
     console.error("Fehler beim Laden der Kontakte:", e);
   }
@@ -105,12 +128,24 @@ function getInitials(name = "") {
 }
 
 function updateSelectedContactsView() {
-  const view = document.getElementById("fa-assigned-dropdown");
+  const trigger = document.getElementById("fa-assigned-dropdown");
+  const chipWrap = document.getElementById("fa-assigned-selected");
   const cont = document.getElementById("fa-assigned-container");
-  if (!view || !cont) return;
-  const initials = Array.from(cont.querySelectorAll(".assignee-option.selected"))
-    .map(el => el.dataset.initials);
-  view.innerText = initials.length ? initials.join(", ") : "Select contacts to assign";
+  if (!trigger || !chipWrap || !cont) return;
+
+  trigger.innerText = "Select contacts to assign";
+
+  const selectedRows = Array.from(cont.querySelectorAll(".assignee-option.selected"));
+  chipWrap.innerHTML = "";
+  selectedRows.forEach(row => {
+    const init = row.dataset.initials;
+    const color = row.dataset.color || "#0038ff";
+    const chip = document.createElement("div");
+    chip.className = "assignee-chip";
+    chip.style.backgroundColor = color;
+    chip.textContent = init;
+    chipWrap.appendChild(chip);
+  });
 }
 
 function createTask() {
@@ -120,22 +155,25 @@ function createTask() {
   const category = document.getElementById("category").value;
   const priority = selectedPriority || "low";
 
+  const isoToday = todayLocalISO();
+  if (!dueDate || dueDate < isoToday) {
+    showMessage("Das Datum kann nicht in Vergangenheit liegen.");
+    return;
+  }
+
   let selected = Object.keys(selectedAssignees).length
-    ? selectedAssignees
+    ? Object.fromEntries(Object.keys(selectedAssignees).map(uid => [uid, true]))
     : Object.fromEntries(
-      Array.from(document.querySelectorAll('#assigned-container .assignee-checkbox:checked'))
-        .map(cb => [cb.closest('.assignee-option').dataset.uid, true])
-    );
+        Array.from(document.querySelectorAll('#assigned-container .assignee-checkbox:checked'))
+          .map(cb => [cb.closest('.assignee-option').dataset.uid, true])
+      );
 
   if (!title || !dueDate || category === "Select task category" || !Object.keys(selected).length) {
     alert("Please fill all required fields");
     return;
   }
 
-  const subtasks = Array.from(document.querySelectorAll(".subtask-input"))
-    .map(i => i.value.trim())
-    .filter(Boolean)
-    .map(t => ({ title: t, done: false }));
+  const subtasks = pendingSubtasks.slice();
 
   const userInitials = localStorage.getItem("userInitial") || "G";
   const taskData = {
@@ -162,6 +200,27 @@ function createTask() {
       }, 1500);
     })
     .catch(err => showMessage("Fehler beim Erstellen des Tasks:", err));
+}
+
+function todayLocalISO() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+  return local.toISOString().split("T")[0];
+}
+
+function lockPastDates() {
+  const due = document.getElementById("due");
+  if (!due) return;
+
+  const iso = todayLocalISO();
+  due.setAttribute("min", iso);
+
+  due.addEventListener("change", () => {
+    if (due.value && due.value < iso) {
+      due.value = iso;
+    }
+  });
 }
 
 function initUserInitial() {
@@ -202,6 +261,125 @@ function populateCategoryDropdown() {
     option.textContent = cat;
     categorySelect.appendChild(option);
   });
+}
+
+function setupSubtaskInputBehaviour() {
+  const row   = document.getElementById("subtask-input-row");
+  const input = document.getElementById("subtask-input");
+  if (!row || !input) return;
+
+  input.addEventListener("input", () => {
+    const hasText = input.value.trim().length > 0;
+    row.classList.toggle("is-editing", hasText);
+  });
+}
+
+function cancelSubtask(){
+  const row   = document.getElementById("subtask-input-row");
+  const input = document.getElementById("subtask-input");
+  if (!row || !input) return;
+  input.value = "";
+  row.classList.remove("is-editing");
+}
+
+function confirmSubtask(){
+  const input = document.getElementById("subtask-input");
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) { cancelSubtask(); return; }
+  pendingSubtasks.push({ title: val, done: false });
+  cancelSubtask();
+  renderSubtaskList();
+}
+
+document.addEventListener("keydown", (e) => {
+  const input = document.getElementById("subtask-input");
+  if (!input) return;
+  const row = document.getElementById("subtask-input-row");
+  const editing = row.classList.contains("is-editing");
+  if (document.activeElement === input && editing){
+    if (e.key === "Enter"){ e.preventDefault(); confirmSubtask(); }
+    if (e.key === "Escape"){ e.preventDefault(); cancelSubtask(); }
+  }
+});
+
+function renderSubtaskList(){
+  const list = document.getElementById("subtask-list");
+  if (!list) return;
+
+  if (!pendingSubtasks.length){
+    list.innerHTML = "";
+    return;
+  }
+
+  const ul = document.createElement("ul");
+  ul.className = "subtask-bullet-list";
+
+  pendingSubtasks.forEach((st, i) => {
+    const li = document.createElement("li");
+    li.className = "subtask-li";
+
+    if (i === editingSubtaskIndex) {
+      li.innerHTML = `
+        <div class="subtask-edit-row">
+          <input id="st-edit-${i}" class="subtask-edit-input" type="text" value="${esc(st.title)}" />
+          <button class="subtask-icon-btn" onclick="deleteSubtask(${i})"><img src="../assets/icons/delete-button.png" alt="Delete" /></button>
+          <button class="subtask-icon-btn" onclick="confirmEditSubtask(${i})">✔</button>
+        </div>
+      `;
+      ul.appendChild(li);
+
+      const inp = li.querySelector(`#st-edit-${i}`);
+      if (inp) {
+        inp.focus();
+        inp.setSelectionRange(inp.value.length, inp.value.length);
+        inp.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") { e.preventDefault(); confirmEditSubtask(i); }
+          else if (e.key === "Escape") { e.preventDefault(); cancelEditSubtask(); }
+        });
+      }
+      return;
+    }
+
+    li.innerHTML = `
+      <span class="subtask-title-text">${esc(st.title)}</span>
+      <div class="subtask-actions-right">
+        <button class="subtask-icon-btn" onclick="startEditSubtask(${i})"><img src="../assets/icons/edit-button.png" alt="Edit" /></button>
+        <button class="subtask-icon-btn" onclick="deleteSubtask(${i})"><img src="../assets/icons/delete-button.png" alt="Delete" /></button>
+      </div>
+    `;
+    li.querySelector(".subtask-title-text").addEventListener("dblclick", () => startEditSubtask(i));
+    ul.appendChild(li);
+  });
+
+  list.innerHTML = "";
+  list.appendChild(ul);
+}
+
+function startEditSubtask(i){
+  editingSubtaskIndex = i;
+  renderSubtaskList();
+}
+
+function cancelEditSubtask(){
+  editingSubtaskIndex = -1;
+  renderSubtaskList();
+}
+
+function confirmEditSubtask(i){
+  const inp = document.getElementById(`st-edit-${i}`);
+  if (!inp) return;
+  const val = inp.value.trim();
+  if (!val) { deleteSubtask(i); return; }
+  pendingSubtasks[i].title = val;
+  editingSubtaskIndex = -1;
+  renderSubtaskList();
+}
+
+function deleteSubtask(i){
+  pendingSubtasks.splice(i, 1);
+  if (editingSubtaskIndex === i) editingSubtaskIndex = -1;
+  renderSubtaskList();
 }
 
 function addSubtaskInput() {

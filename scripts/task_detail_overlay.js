@@ -20,174 +20,88 @@ function openTaskDetailOverlay(task, taskId) {
     .catch(err => showMessage("Fehler beim Öffnen des Task-Overlays:", err));
 }
 
-document.addEventListener("taskDataReady", function (e) {
-  fillTaskDetails(e.detail);
-});
+document.addEventListener("taskDataReady", (e) => fillTaskDetails(e.detail));
 
-function renderSubtasksList() {
-  const subtaskList = document.getElementById("subtask-list");
-  if (!subtaskList) return;
+async function fetchUsersSafe() {
+  try {
+    if (typeof fetchUsers === "function") {
+      const u = await fetchUsers();
+      if (u && typeof u === "object") return u;
+    }
+  } catch (_) { }
 
-  if (document.querySelector(".task-detail-card.editing")) {
-    subtaskList.innerHTML = `
-      <div class="subtask-add-row">
-        <input id="new-subtask-input" type="text" placeholder="Neue Subtask hinzufügen" />
-        <button onclick="addNewSubtask()">+</button>
-      </div>
-    `;
-  } else {
-    subtaskList.innerHTML = "";
+  try {
+    const res = await fetch(`${BASE_URL}/users.json`);
+    return (await res.json()) || {};
+  } catch (_) {
+    return {};
   }
-
-  const subtasks = window.currentTaskData.subtasks || [];
-  subtasks.forEach((sub, idx) => {
-    const subDiv = document.createElement("div");
-    subDiv.className = "subtask-item";
-    subDiv.innerHTML = `
-      <input 
-        type="checkbox" 
-        ${sub.done ? "checked" : ""} 
-        onchange="toggleSubtask(${idx})" 
-        class="subtask-checkbox"
-      />
-      <span class="subtask-title ${sub.done ? 'done' : ''}">
-        ${sub.title}
-      </span>
-    `;
-    subtaskList.appendChild(subDiv);
-  });
 }
 
+
 async function fillTaskDetails(task) {
-  const categoryColors = {
-    "Technical Task": "#1FD7C1",
-    "User Story": "#0038FF"
-  };
+  const categoryColors = { "Technical Task": "#1FD7C1", "User Story": "#0038FF" };
 
   const categoryEl = document.getElementById("task-category");
   const category = task.category || "-";
-  const color = categoryColors[category] || "#ccc";
-
   categoryEl.textContent = category;
-  categoryEl.style.backgroundColor = color;
+  categoryEl.style.backgroundColor = categoryColors[category] || "#ccc";
 
   document.getElementById("task-title").textContent = task.title || "";
   document.getElementById("task-description").textContent = task.description || "";
   document.getElementById("task-due-date").textContent = task.dueDate || "-";
 
-  const priority = task.priority || "-";
-  document.getElementById("task-priority").textContent = priority.charAt(0).toUpperCase() + priority.slice(1);
-  document.getElementById("task-priority-icon").innerHTML = getPriorityIcon(priority);
+  const prText = String(task.priority || "-").trim();
+  document.getElementById("task-priority").textContent =
+    prText.charAt(0).toUpperCase() + prText.slice(1).toLowerCase();
+  document.getElementById("task-priority-icon").innerHTML = getPriorityIcon(prText);
 
+  const usersMap = await fetchUsersSafe();
   const assignedTo = task.assignedTo || {};
-  const users = await fetchUsers();
-  const container = document.getElementById("assigned-users");
-  container.innerHTML = "";
-
-  for (let uid in assignedTo) {
-    if (users[uid]) {
-      const user = users[uid];
-      const badge = document.createElement("div");
-      badge.className = "task-user-initials";
-      badge.style.backgroundColor = user.themeColor || "#0038ff";
-      badge.textContent = user.initials || "G";
-      container.appendChild(badge);
-    }
-  }
+  const assignees = Object.keys(assignedTo).map(uid => ({
+    initials: usersMap[uid]?.initials || "G",
+    color: usersMap[uid]?.themeColor || "#0038FF"
+  }));
+  renderOverlayAssigneeChips(document.getElementById("assigned-users"), assignees, 3);
 
   const subtaskList = document.getElementById("subtask-list");
   subtaskList.innerHTML = "";
-
   const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
-
   subtasks.forEach((sub, idx) => {
-    const subDiv = document.createElement("div");
-    subDiv.className = "subtask-item";
-
-    subDiv.innerHTML = `
-      <input 
-        type="checkbox" 
-        ${sub.done ? "checked" : ""} 
-        onchange="toggleSubtask(${idx})" 
-        class="subtask-checkbox"
-      />
-      <span 
-        class="subtask-title ${sub.done ? 'done' : ''}"
-      >
-        ${sub.title}
-      </span>
+    const row = document.createElement("div");
+    row.className = "subtask-item";
+    row.innerHTML = `
+      <input type="checkbox" ${sub.done ? "checked" : ""} onchange="toggleSubtask(${idx})" class="subtask-checkbox" />
+      <span class="subtask-title ${sub.done ? "done" : ""}">${sub.title}</span>
     `;
-
-    subtaskList.appendChild(subDiv);
+    subtaskList.appendChild(row);
   });
+
+  const badges = document.getElementById("assigned-users");
+  if (badges) badges.style.display = "flex";
 }
 
-function toggleSubtask(index) {
-  const task = window.currentTaskData;
-  if (!task.subtasks || !task.subtasks[index]) return;
-
-  task.subtasks[index].done = !task.subtasks[index].done;
-  
-  updateSubtasksInFirebase(
-    window.currentTaskId,
-    task.subtasks
-  );
-}
-
-function editSubtask(index, newText) {
-  const task = window.currentTaskData;
-  if (!task.subtasks || !task.subtasks[index]) return;
-
-  task.subtasks[index].title = newText.trim();
-  updateSubtasksInFirebase(task.id || window.currentTaskId, task.subtasks);
-}
-
-function addNewSubtask() {
-  const input = document.getElementById("new-subtask-input");
-  const text = input.value.trim();
-  if (!text) return;
-
-  const task = window.currentTaskData;
-  task.subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
-  task.subtasks.push({ title: text, done: false });
-  input.value = "";
-  renderSubtasksList();
-}
-
-function updateSubtasksInFirebase(taskId, subtasks) {
-  fetch(`${BASE_URL}/tasks/${taskId}.json`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ subtasks }),
-  })
-    .then(() => {
-      fillTaskDetails(window.currentTaskData);
-      loadTasks();
-    })
-    .catch((err) => showMessage("Fehler beim Subtask-Update:", err));
-}
-
-function getPriorityIcon(priority) {
-  if (priority === "Urgent" || priority === "urgent") {
-    return `<img src="../assets/icons/urgent.svg" alt="Urgent Icon" class="priority-icon">`;
-  }
-  if (priority === "Medium" || priority === "medium") {
-    return `<img src="../assets/icons/medium.svg" alt="Medium Icon" class="priority-icon">`;
-  }
-  if (priority === "Low" || priority === "low") {
-    return `<img src="../assets/icons/low.svg" alt="Low Icon" class="priority-icon">`;
-  }
-  return "";
-}
-
-function closeTaskOverlay() {
-  const container = document.getElementById("task-detail-container");
+function renderOverlayAssigneeChips(container, list, max = 3) {
   if (!container) return;
-  const card = container.querySelector(".task-detail-card");
-  if (card) card.classList.remove("editing");
-  container.style.display = "none";
   container.innerHTML = "";
+  const visible = list.slice(0, max);
+  const rest = list.length - visible.length;
+  visible.forEach(a => {
+    const chip = document.createElement("div");
+    chip.className = "task-user-initials";
+    chip.style.backgroundColor = a.color;
+    chip.textContent = a.initials;
+    container.appendChild(chip);
+  });
+  if (rest > 0) {
+    const more = document.createElement("div");
+    more.className = "task-user-initials more-chip";
+    more.textContent = `+${rest}`;
+    container.appendChild(more);
+  }
 }
+
+let overlaySubtasks = [];
 
 function editTask() {
   const card = document.querySelector(".task-detail-card");
@@ -219,8 +133,7 @@ function setupEditableFields() {
   document.getElementById("description-span").style.display = "block";
 
   const due = window.currentTaskData.dueDate || "";
-  document.getElementById("task-due-date").innerHTML =
-    `<input type="date" id="edit-due-date" value="${due}">`;
+  document.getElementById("task-due-date").innerHTML = `<input type="date" id="edit-due-date" value="${due}">`;
 }
 
 function setupPriorityEditor() {
@@ -238,7 +151,7 @@ function setupPriorityEditor() {
     if (val === current) b.classList.add("active", val);
     b.onclick = (e) => {
       e.preventDefault();
-      btns.forEach(x => x.classList.remove("active", "urgent", "medium", "low"));
+      btns.forEach(x => x.classList.remove("active","urgent","medium","low"));
       b.classList.add("active", val);
       document.getElementById("edit-priority").setAttribute("data-selected", val);
     };
@@ -246,30 +159,106 @@ function setupPriorityEditor() {
 }
 
 function setupSubtaskEditor() {
-  const list = document.getElementById("subtask-list");
-  if (!list) return;
-  list.innerHTML = `
-    <div class="subtask-add-row">
-      <div class="subtask-input-wrapper">
-        <input id="new-subtask-input" type="text" placeholder="Neue Subtask hinzufügen" />
-        <button type="button" class="subtask-add-btn" onclick="addNewSubtask()">＋</button>
-      </div>
-    </div>
-  `;
+  overlaySubtasks = Array.isArray(window.currentTaskData.subtasks)
+    ? window.currentTaskData.subtasks.map(s => ({...s}))
+    : [];
+
+  const row   = document.getElementById("subtask-input-row");
+  const input = document.getElementById("subtask-input");
+  row.style.display = "";
+  input.value = "";
+  row.classList.remove("is-editing");
+  input.oninput = () => {
+    const hasText = input.value.trim().length > 0;
+    row.classList.toggle("is-editing", hasText);
+  };
+
+  renderOverlaySubtaskList();
 }
 
+function renderOverlaySubtaskList() {
+  const host = document.getElementById("subtask-list");
+  host.innerHTML = "";
+  const ul = document.createElement("ul");
+  ul.className = "subtask-bullet-list";
+
+  overlaySubtasks.forEach((st, i) => {
+    const li = document.createElement("li");
+    li.className = "subtask-li";
+    li.innerHTML = `
+      <span>${escapeHtml(st.title)}</span>
+      <span class="subtask-actions-right">
+        <button type="button" class="subtask-icon-btn" title="Edit" onclick="startOverlaySubtaskEdit(${i})"><img src="../assets/icons/edit-button.png" alt="Edit" /></button>
+        <button type="button" class="subtask-icon-btn" title="Delete" onclick="deleteOverlaySubtask(${i})"><img src="../assets/icons/delete-button.png" alt="Delete" /></button>
+      </span>
+    `;
+    ul.appendChild(li);
+  });
+
+  host.appendChild(ul);
+}
+
+function cancelOverlaySubtask() {
+  const row   = document.getElementById("subtask-input-row");
+  const input = document.getElementById("subtask-input");
+  input.value = "";
+  row.classList.remove("is-editing");
+}
+
+function confirmOverlaySubtask() {
+  const input = document.getElementById("subtask-input");
+  const val = input.value.trim();
+  if (!val) { cancelOverlaySubtask(); return; }
+  overlaySubtasks.push({ title: val, done: false });
+  cancelOverlaySubtask();
+  renderOverlaySubtaskList();
+}
+
+function startOverlaySubtaskEdit(index) {
+  const host = document.getElementById("subtask-list");
+  const li = host.querySelectorAll(".subtask-li")[index];
+  const current = overlaySubtasks[index]?.title || "";
+
+  li.innerHTML = `
+    <div class="subtask-edit-row">
+      <input class="subtask-edit-input" id="st-edit-${index}" value="${escapeHtml(current)}">
+      <button type="button" class="subtask-icon-btn" title="Delete" onclick="deleteOverlaySubtask(${index})"><img src="../assets/icons/delete-button.png" alt="Delete" /></button>
+      <button type="button" class="subtask-icon-btn" title="Save" onclick="applyOverlaySubtaskEdit(${index})">✔</button>
+    </div>
+  `;
+  const inp = document.getElementById(`st-edit-${index}`);
+  inp.focus();
+  inp.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); applyOverlaySubtaskEdit(index); }
+    if (e.key === "Escape") { e.preventDefault(); renderOverlaySubtaskList(); }
+  });
+}
+
+function applyOverlaySubtaskEdit(index) {
+  const inp = document.getElementById(`st-edit-${index}`);
+  const val = (inp?.value || "").trim();
+  if (!val) { deleteOverlaySubtask(index); return; }
+  overlaySubtasks[index].title = val;
+  renderOverlaySubtaskList();
+}
+
+function deleteOverlaySubtask(index) {
+  overlaySubtasks.splice(index, 1);
+  renderOverlaySubtaskList();
+}
+
+function escapeHtml(s){return (s||"").replace(/[&<>"']/g,c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}
 
 function initAssigneeDropdown() {
   const badges  = document.getElementById("assigned-users");
-  if (badges) badges.style.display = "none";
+  if (badges) badges.style.display = "";
 
   const trigger = document.getElementById("fa-assigned-dropdown");
   const menu    = document.getElementById("fa-assigned-container");
-  if (!trigger || !menu) {
-    showMessage("Assignee-Trigger oder -Container nicht gefunden (fa-assigned-*).");
-    return;
-  }
+  if (!trigger || !menu) { showMessage("Assignee-UI fehlt."); return; }
+
   trigger.classList.remove("hidden");
+  menu.addEventListener("click", e => e.stopPropagation());
 
   window.overlaySelectedAssignees = {};
   Object.keys(window.currentTaskData.assignedTo || {}).forEach(uid => {
@@ -277,7 +266,7 @@ function initAssigneeDropdown() {
   });
 
   loadAssigneeOptionsInto(menu, trigger).then(() => {
-    updateAssigneeTriggerText(menu, trigger);
+    updateAssigneePreviewChips(menu);
   });
 
   if (window._overlayOutsideHandler) {
@@ -293,17 +282,17 @@ function initAssigneeDropdown() {
   document.addEventListener("click", window._overlayOutsideHandler);
 }
 
-async function loadAssigneeOptionsInto(menu, trigger) {
-  const res   = await fetch(`${BASE_URL}/users.json`);
+async function loadAssigneeOptionsInto(menu) {
+  const res = await fetch(`${BASE_URL}/users.json`);
   const users = (await res.json()) || {};
 
   menu.innerHTML = "";
   const frag = document.createDocumentFragment();
 
   Object.entries(users).forEach(([uid, u]) => {
-    const name  = u.name || "Unnamed";
+    const name = u.name || "Unnamed";
     const color = u.themeColor || "#0038ff";
-    const initials = (name.trim().split(/\s+/).map(p => p[0]).slice(0,2).join("") || name.slice(0,2)).toUpperCase();
+    const initials = (name.trim().split(/\s+/).map(p=>p[0]).slice(0,2).join("") || name.slice(0,2)).toUpperCase();
 
     const row = document.createElement("label");
     row.className = "assignee-option";
@@ -314,46 +303,54 @@ async function loadAssigneeOptionsInto(menu, trigger) {
       <span>${name}</span>
       <input type="checkbox" class="assignee-checkbox" />
     `;
-
     if (window.overlaySelectedAssignees[uid]) {
       row.classList.add("selected");
       row.querySelector(".assignee-checkbox").checked = true;
     }
     frag.appendChild(row);
   });
+
   menu.appendChild(frag);
 
-  menu.onclick = (e) => {
+  menu.addEventListener("click", (e) => {
     const row = e.target.closest(".assignee-option");
-    if (!row) return;
-    const cb  = row.querySelector(".assignee-checkbox");
+    if (!row || e.target.classList.contains("assignee-checkbox")) return;
+    e.preventDefault();
+    const cb = row.querySelector(".assignee-checkbox");
+    const newState = !cb.checked;
+    cb.checked = newState;
+    row.classList.toggle("selected", newState);
     const uid = row.dataset.uid;
+    if (newState) window.overlaySelectedAssignees[uid] = true;
+    else delete window.overlaySelectedAssignees[uid];
+    updateAssigneePreviewChips(menu);
+  });
 
-    if (row.classList.contains("selected")) {
-      row.classList.remove("selected");
-      if (cb) cb.checked = false;
-      delete window.overlaySelectedAssignees[uid];
-    } else {
-      row.classList.add("selected");
-      if (cb) cb.checked = true;
-      window.overlaySelectedAssignees[uid] = true;
-    }
-    updateAssigneeTriggerText(menu, trigger);
-  };
+  menu.addEventListener("change", (e) => {
+    if (!e.target.classList.contains("assignee-checkbox")) return;
+    const row = e.target.closest(".assignee-option");
+    const checked = e.target.checked;
+    row.classList.toggle("selected", checked);
+    const uid = row.dataset.uid;
+    if (checked) window.overlaySelectedAssignees[uid] = true;
+    else delete window.overlaySelectedAssignees[uid];
+    updateAssigneePreviewChips(menu);
+  });
 }
 
-function updateAssigneeTriggerText(menu, trigger) {
-  const initials = [...menu.querySelectorAll(".assignee-option.selected")]
-    .map(el => el.dataset.initials);
-  trigger.innerText = initials.length ? initials.join(", ") : "Select contacts to assign";
+function updateAssigneePreviewChips(menu, max = 3) {
+  const container = document.getElementById("assigned-users");
+  if (!container) return;
+  const list = [...menu.querySelectorAll(".assignee-option.selected")].map(el => ({
+    initials: el.dataset.initials,
+    color: el.querySelector(".task-user-initials")?.style.backgroundColor || "#0038FF"
+  }));
+  renderOverlayAssigneeChips(container, list, max);
 }
 
 function saveEditedTask() {
   const taskId = window.currentTaskId;
-  if (!taskId) {
-    showMessage("Fehlende Task-ID");
-    return;
-  }
+  if (!taskId) { showMessage("Fehlende Task-ID"); return; }
 
   const priorityEl    = document.getElementById("edit-priority");
   const newPriority   = priorityEl ? priorityEl.getAttribute("data-selected") : null;
@@ -372,63 +369,63 @@ function saveEditedTask() {
     description: document.getElementById("task-description").textContent.trim(),
     dueDate:     document.getElementById("edit-due-date").value,
     priority:    finalPriority,
-    subtasks:    window.currentTaskData.subtasks || [],
-    assignedTo 
+    subtasks:    overlaySubtasks,             // <— neue Liste
+    assignedTo
   };
 
   fetch(`${BASE_URL}/tasks/${taskId}.json`, {
-    method:  "PATCH",
+    method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body:    JSON.stringify(updatedTask),
+    body: JSON.stringify(updatedTask),
   })
-    .then(() => {
-      window.currentTaskData = { ...window.currentTaskData, ...updatedTask };
-      loadTasks();
-      openTaskDetailOverlay(window.currentTaskData, taskId);
-    })
-    .catch((err) => showMessage("Fehler beim Speichern:", err));
+  .then(() => {
+    window.currentTaskData = { ...window.currentTaskData, ...updatedTask };
+    loadTasks();
+    openTaskDetailOverlay(window.currentTaskData, taskId);
+  })
+  .catch((err) => showMessage("Fehler beim Speichern:", err));
 }
 
 function deleteTask() {
   const taskId = window.currentTaskId;
-  if (!taskId) {
-    showMessage("Task-ID fehlt!");
-    return;
-  }
+  if (!taskId) { showMessage("Task-ID fehlt!"); return; }
+  if (!confirm("Möchtest du diese Aufgabe wirklich löschen?")) return;
 
-  const confirmDelete = confirm("Möchtest du diese Aufgabe wirklich löschen?");
-  if (!confirmDelete) return;
-
-  fetch(`${BASE_URL}/tasks/${taskId}.json`, {
-    method: "DELETE",
-  })
-    .then(() => {
-      showMessage(`Task ${taskId} gelöscht`);
-      closeTaskOverlay();
-      loadTasks();
-    })
+  fetch(`${BASE_URL}/tasks/${taskId}.json`, { method: "DELETE" })
+    .then(() => { showMessage(`Task ${taskId} gelöscht`); closeTaskOverlay(); loadTasks(); })
     .catch((err) => showMessage("Fehler beim Löschen:", err));
 }
 
-function showIcon(src, duration = 1500) {
-  const icon = document.getElementById("alert-icon");
-  if (!icon) return;
-  icon.src = src;
-  icon.classList.remove("hidden");
-  setTimeout(() => {
-    icon.classList.add("hidden");
-  }, duration);
+function toggleSubtask(index) {
+  const task = window.currentTaskData;
+  if (!task.subtasks || !task.subtasks[index]) return;
+  task.subtasks[index].done = !task.subtasks[index].done;
+  updateSubtasksInFirebase(window.currentTaskId, task.subtasks);
 }
 
-function showMessage(message, duration = 1500) {
-  const msg = document.getElementById("alert-text-message");
-  if (!msg) return;
+function updateSubtasksInFirebase(taskId, subtasks) {
+  fetch(`${BASE_URL}/tasks/${taskId}.json`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ subtasks }),
+  })
+  .then(() => { fillTaskDetails(window.currentTaskData); loadTasks(); })
+  .catch((err) => showMessage("Fehler beim Subtask-Update:", err));
+}
 
-  msg.textContent = message;
-  msg.classList.remove("hidden");
-  void msg.offsetWidth;
+function getPriorityIcon(priority) {
+  const pr = String(priority || "").trim().toLowerCase();
+  if (pr === "urgent") return `<img src="../assets/icons/urgent.svg" alt="Urgent Icon" class="priority-icon">`;
+  if (pr === "medium") return `<img src="../assets/icons/medium.svg" alt="Medium Icon" class="priority-icon">`;
+  if (pr === "low")    return `<img src="../assets/icons/low.svg"    alt="Low Icon" class="priority-icon">`;
+  return "";
+}
 
-  setTimeout(() => {
-    msg.classList.add("hidden");
-  }, duration);
+function closeTaskOverlay() {
+  const container = document.getElementById("task-detail-container");
+  if (!container) return;
+  const card = container.querySelector(".task-detail-card");
+  if (card) card.classList.remove("editing");
+  container.style.display = "none";
+  container.innerHTML = "";
 }

@@ -8,9 +8,7 @@
     <span id="title-span" style="font-size: 20px; display: none">Title</span>
     <h2 id="task-title">Task Title</h2>
 
-    <span id="description-span" style="font-size: 20px; display: none"
-      >Description</span
-    >
+    <span id="description-span" style="font-size: 20px; display: none">Description</span>
     <p class="task-description" id="task-description">Task Description</p>
 
     <div class="task-info">
@@ -30,16 +28,23 @@
       <div id="assigned-users" class="assigned-users"></div>
 
       <div class="assignee-dropdown-wrapper">
-        <div id="fa-assigned-dropdown" class="dropdown-trigger hidden">
-          Select contacts to assign
-        </div>
+        <div id="fa-assigned-dropdown" class="dropdown-trigger hidden">Select contacts to assign</div>
         <div id="fa-assigned-container" class="dropdown-menu hidden"></div>
       </div>
     </div>
 
     <div class="subtasks-section">
       <span>Subtasks</span>
-      <div id="subtask-list" class="subtask-list"></div>
+
+      <div id="subtask-input-row" class="subtask-input-row">
+        <input type="text" id="subtask-input" class="subtask-input" placeholder="Neue Subtask hinzufügen" />
+        <div id="subtask-actions" class="subtask-actions">
+          <button type="button" class="subtask-icon" onclick="cancelOverlaySubtask()">✕</button>
+          <button type="button" class="subtask-icon" onclick="confirmOverlaySubtask()">✔</button>
+        </div>
+      </div>
+
+      <div id="subtask-list"></div>
     </div>
 
     <div class="task-actions">
@@ -54,5 +59,4 @@
 </div>
 
 <img id="alert-icon" src="../assets/img/signedUp-successfully.svg" alt="Alert Icon" class="hidden">
-  
 <div id="alert-text-message" class="hidden"></div>

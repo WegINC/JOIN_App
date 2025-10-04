@@ -12,35 +12,59 @@ import {
   getSuccessPopupTemplate,
 } from './contacts-template.js';
 
-function setFieldError(input, message) {
-  if (!input) return;
-  const group = input.closest('.input-group') || input.parentNode;
-  if (group) group.classList.add('has-error');
-  input.classList.add('input-error');
+function ensurePhoneValid(inputEl) {
+  const raw = (inputEl?.value || "").trim();
+  if (!raw) return { ok: false, msg: "Bitte gib eine Telefonnummer ein." };
 
-  let msg = input.nextElementSibling;
-  if (!msg || !msg.classList.contains('input-error-text')) {
-    msg = document.createElement('div');
-    msg.className = 'input-error-text';
-    input.parentNode.insertBefore(msg, input.nextSibling);
+  let normalized;
+  if (raw.startsWith("+")) {
+    normalized = "+" + raw.slice(1).replace(/\D/g, "");
+  } else {
+    normalized = raw.replace(/\D/g, "");
   }
-  msg.textContent = message;
+
+  const digitsCount = normalized.startsWith("+")
+    ? normalized.slice(1).length
+    : normalized.length;
+
+  if (digitsCount < 7 || digitsCount > 15) {
+    return { ok: false, msg: "Bitte gib eine gültige Telefonnummer ein." };
+  }
+
+  return { ok: true, phone: normalized };
 }
 
-function clearFieldError(input) {
-  if (!input) return;
-  const group = input.closest('.input-group') || input.parentNode;
-  input.classList.remove('input-error');
-  if (group) group.classList.remove('has-error');
-
-  const msg = input.nextElementSibling;
-  if (msg && msg.classList.contains('input-error-text')) {
-    msg.remove();
-  }
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email || "").trim());
 }
 
-function isValidEmail(v) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+function setFieldError(inputEl, msg) {
+  if (!inputEl) return;
+  const group = inputEl.closest('.input-group') || inputEl.parentElement;
+
+  inputEl.classList.add('input-error');
+  if (group && group.classList) group.classList.add('has-error');
+
+  let err = group.querySelector('.input-error-text');
+  if (!err) {
+    err = document.createElement('div');
+    err.className = 'input-error-text';
+    group.appendChild(err);
+  }
+  err.textContent = msg;
+}
+
+function clearFieldError(inputEl) {
+  if (!inputEl) return;
+  const group = inputEl.closest('.input-group') || inputEl.parentElement;
+
+  inputEl.classList.remove('input-error');
+  if (group && group.classList) group.classList.remove('has-error');
+
+  const err = group && group.querySelector
+    ? group.querySelector('.input-error-text')
+    : null;
+  if (err) err.remove();
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -306,6 +306,31 @@ body {
   background-color: #f0f0f0;
 }
 
+.assignees-wrap {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.assignee-chip {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  flex: 0 0 auto;
+}
+
+.assignee-chip.more-chip {
+  background: #e6e6e6;
+  color: #2a3647;
+}
+
 .hidden {
   display: none;
 }
